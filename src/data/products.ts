@@ -32,6 +32,774 @@ export interface Product {
 
 export const products: Product[] = [
   {
+    "id": 120,
+    "name": "Macaquinho Fitness Alcinha Costas Abertas Zero Transparencia",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 5,3 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lm-mmj2atq4ltdz52",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lm-mmj2atq4ltdz52",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lb-mmj2atq4hlon35",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lt-mmj2atq4j09322",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mf-mmj1t79j7vuu50"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/60TBfZcbA5",
+    "category": "Moda Feminina",
+    "sold": 10000,
+    "createdAt": "2026-11-15T13:07:13.396Z"
+  },
+  {
+    "id": 121,
+    "name": "Kit calças jeans masculina skinny com elastano original direto da fabrica NF",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 3,2 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m8k6ynton21d33",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m8k6ynton21d33",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m58vug5mepvp88",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m58vug5m3hc5c8",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m58vug5m7p1h25"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6VPSGUah9C",
+    "category": "Moda Masculina",
+    "sold": 6000,
+    "createdAt": "2026-11-15T13:06:13.396Z"
+  },
+  {
+    "id": 122,
+    "name": "Kit 20 Potes Herméticos 2,3litros 1,1litro 480ml Organização",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 9,7 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820ld-mp8722qtssg1d3",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820ld-mp8722qtssg1d3",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m1fpfu37tln589",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m1fpfu37qsi9da",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m1fpfu37s72p0a"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6L624BbKUB",
+    "category": "Cozinha",
+    "sold": 20000,
+    "createdAt": "2026-11-15T13:05:13.396Z"
+  },
+  {
+    "id": 123,
+    "name": "Lavadora De Alta Pressão Vonder C/ Rodas, 1.600 lbf/pol² 1400w Super Potente - Original Vonder",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 4,7 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m86573g91ngx80",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m86573g91ngx80",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m0j139dxyl5s0d",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m0j139idtie506",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m0j139dxylc1b0"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6q2If6ZQTI",
+    "category": "Casa e Limpeza",
+    "sold": 8000,
+    "createdAt": "2026-11-15T13:04:13.396Z"
+  },
+  {
+    "id": 124,
+    "name": "Jogo de Panelas 6 Peças Antiaderentes com Tampa de Vidro Temperada com 4 Utensílios de Cozinha",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 4,3 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134201-820lv-mqygt8lrf7r9a0",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134201-820lv-mqygt8lrf7r9a0",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ln-mnmwg66y4sn42d",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ma-mozjlo2qx72e7d",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l6-mnmwg66xcpa9b7"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6fisSna3oH",
+    "category": "Cozinha",
+    "sold": 7000,
+    "createdAt": "2026-11-15T13:03:13.396Z"
+  },
+  {
+    "id": 125,
+    "name": "Omeleteira Elétrica Agratto Mr Cheff Inox Dupla Prepara 2 Omeletes Sem Óleo Cuba Antiaderente 127V",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 860 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820ll-mmc8h9uyaoee6b",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820ll-mmc8h9uyaoee6b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820le-mmc8h9v1yps018",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l4-mmc7zbgy1bt296",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lz-mmc8h9uo89vqc8"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/70LirQm4GO",
+    "category": "Cozinha",
+    "sold": 1000,
+    "createdAt": "2026-11-15T13:02:13.396Z"
+  },
+  {
+    "id": 126,
+    "name": "Principia Kit Anti-Acne Trio c/ Gel de Limpeza GL-01 + Sérum Mix-01 + Protetor Solar Facial PS-01",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 3,6 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820l4-mm1wtgtpyd4w38",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820l4-mm1wtgtpyd4w38",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lu-mm1wtgtq169sbc",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l8-mm1wtgtpzrpc6b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lt-mm1wtgtq2ku83c"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/7Af93jlQvR",
+    "category": "Beleza",
+    "sold": 30000,
+    "createdAt": "2026-11-15T13:01:13.396Z"
+  },
+  {
+    "id": 127,
+    "name": "Conjunto De Pincéis De Maquiagem De 15 Peças Em Alta : Kit Multifuncional Com 12 E 3 Puffs",
+    "description": "Um dos mais vendidos da Shopee. Nota 5,0 de 5 em 509 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/sg-11134201-823p7-mp4n4y19ucjyf9",
+    "images": [
+      "https://down-br.img.susercontent.com/file/sg-11134201-823p7-mp4n4y19ucjyf9",
+      "https://down-br.img.susercontent.com/file/cn-11134207-7ras8-maz7emvst19o39",
+      "https://down-br.img.susercontent.com/file/cn-11134207-7ras8-maz7emvsrmlt94",
+      "https://down-br.img.susercontent.com/file/cn-11134207-7ras8-maz7emvsq84sbc"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6fisSonKwM",
+    "category": "Beleza",
+    "sold": 100000,
+    "createdAt": "2026-11-15T13:00:13.396Z"
+  },
+  {
+    "id": 128,
+    "name": "Kit Shampoo V-Floc Cera Tok Final Sintra Fast Intense Vonixx",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 13 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lv-mqhng85hlxxcfc",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lv-mqhng85hlxxcfc",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lw03vk1zlleade",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lw03vk1zoej608",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lw03vk1zmzyqfb"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6q2If7mhbP",
+    "category": "Automotivo",
+    "sold": 20000,
+    "createdAt": "2026-11-15T12:59:13.396Z"
+  },
+  {
+    "id": 129,
+    "name": "Inova Bateria Portátil Power Bank 20.000mah/10.000mah Universal carregador 22,5W Com Displaya Visor",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 9,9 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-manzmd5jc0l56b",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-manzmd5jc0l56b",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-manzmd5jj1fddf",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-manzmd5jetq157",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-manzmd5jg8ah99"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/7fbPeejWua",
+    "category": "Eletrônicos",
+    "sold": 20000,
+    "createdAt": "2026-11-15T12:58:13.396Z"
+  },
+  {
+    "id": 130,
+    "name": "Espelho de vidro Oval 80x50 cm Borda Polida Lapidada com Led Banheiro Escritorio sala",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 3,3 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjbea0fkfwue8e",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjbea0fkfwue8e",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjbea0ft55hf1a",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjbea0fvogea1a",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjbea0fkvd3a58"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/2qW9tmJOKA",
+    "category": "Sala",
+    "sold": 9000,
+    "createdAt": "2026-11-15T12:57:13.396Z"
+  },
+  {
+    "id": 131,
+    "name": "Copo Garrafa Térmica Grande Em Aço Inox Com Alça E Canudo Metal 1200ML",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,7 de 5 em 2,2 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m72datd30p4gdb",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m72datd30p4gdb",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m72datd323owfb",
+      "https://down-br.img.susercontent.com/file/br-11134201-820mc-mr4t1hwfkqvb29",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m72datd3eqswe6"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/2gCjhTK1f9",
+    "category": "Cozinha",
+    "sold": 4000,
+    "createdAt": "2026-11-15T12:56:13.396Z"
+  },
+  {
+    "id": 132,
+    "name": "Kit Estética Automotiva Vonixx V-Floc Tok Final Intense 240ml Pneu Pretinho Pano Pincel E Aplicador",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 3,2 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lt-mqhpbloq1q0x0e",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lt-mqhpbloq1q0x0e",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l9-mo88nisg5tdsee",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m3-mo88nisg8mio50",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mb-mo88nisg77y8b1"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3qOh5cFaIO",
+    "category": "Automotivo",
+    "sold": 7000,
+    "createdAt": "2026-11-15T12:55:13.396Z"
+  },
+  {
+    "id": 133,
+    "name": "Parafusadeira Furadeira 1X Bateria 25V Nakasaki Sem Fio Profissional Kit Completo com Maleta",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 3,3 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m5-mv3iib53t4owb4",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m5-mv3iib53t4owb4",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lp-mv3iib4z0cua2a",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mb-mv3iib4yyy9u01",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lo-mv3iib4z35z6a5"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3g5GtJGDdN",
+    "category": "Ferramentas",
+    "sold": 8000,
+    "createdAt": "2026-11-15T12:54:13.396Z"
+  },
+  {
+    "id": 134,
+    "name": "Frigideira Antiaderente de Alumínio Revestimento Cerâmico Premium Funda Cabo Madeira Não Gruda",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 21 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lox5qa66tvw20e",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lox5qa66tvw20e",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m1wqbf87kssx7d",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rblc-lox63gnqfoli2b",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rbkx-lox63mopm5w7f6"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3Vlqh0GqyM",
+    "category": "Cozinha",
+    "sold": 40000,
+    "createdAt": "2026-11-15T12:53:13.396Z"
+  },
+  {
+    "id": 135,
+    "name": "Creatina Monohidratada Pura 1kg, 500g, 600, 300g, 300g Refil e 150g - Dark Lab",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 147 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820ld-ms0e8jfsnb45e1",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820ld-ms0e8jfsnb45e1",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m2-mtfl4v3u4mbkf6",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lv-ms2tbwcdy9zbec",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mf-ms0e8jfsopol21"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3Vlqh0YS6g",
+    "category": "Fitness",
+    "sold": 200000,
+    "createdAt": "2026-11-15T12:52:13.396Z"
+  },
+  {
+    "id": 136,
+    "name": "Espelho Orgânico 120X50cm e 95x40cm Lapidado Moderno Grande Forms C/ SUPORTE ou LED TOUCH (FORM",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 9,7 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820ll-mslrmo2fppfq1b",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820ll-mslrmo2fppfq1b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ld-mslrmo2foava72",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m85geahxr20h75",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m0-mu0pw2x3i2gx3a"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3LSQUhZ5Rf",
+    "category": "Sala",
+    "sold": 20000,
+    "createdAt": "2026-11-15T12:51:13.396Z"
+  },
+  {
+    "id": 137,
+    "name": "Garrafa Térmica Inox Com Copo 500ml Água Café Chá Caneca Frio Quente Com duas Xicaras",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,7 de 5 em 3,9 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m94hrb2w4gle32",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m94hrb2w4gle32",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lu0sc1x6tkdc3a",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lu0sc1x6uyxs6d",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lu0sc1x6wdi84b"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/7Af93kKUfQ",
+    "category": "Cozinha",
+    "sold": 8000,
+    "createdAt": "2026-11-15T12:50:13.396Z"
+  },
+  {
+    "id": 138,
+    "name": "Kit Conjunto Masculina Dry Fit Camisa + Bermuda Academy Training",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 617 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjov1cuh05c344",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjov1cuh05c344",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjov1cuh1jwj72",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjov1cuh2ygz02",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjov1cuh4d1f2d"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/70LirRL80P",
+    "category": "Moda Masculina",
+    "sold": 1000,
+    "createdAt": "2026-11-15T12:49:13.396Z"
+  },
+  {
+    "id": 139,
+    "name": "Oito Conjunto De Pincéis De Maquiagem Profissional, Blush, Contorno, Sombra, Pincel Iluminador",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 963 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/8ec046e24b8ccaec347b915f85dfbecc",
+    "images": [
+      "https://down-br.img.susercontent.com/file/8ec046e24b8ccaec347b915f85dfbecc",
+      "https://down-br.img.susercontent.com/file/cbfc84fb2c3ac4249247720e01e56076",
+      "https://down-br.img.susercontent.com/file/7dce0ed2dab2cd14768354dc6784382c",
+      "https://down-br.img.susercontent.com/file/ed82352f1e627bb1fe19d810d62a97f3"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6q2If8LlLO",
+    "category": "Beleza",
+    "sold": 300000,
+    "createdAt": "2026-11-15T12:48:13.396Z"
+  },
+  {
+    "id": 140,
+    "name": "Garrafa Inox Térmica Com Capinha Protetora De Silicone Antiderrapante",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 4,6 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m5-mt00jk3e0eme7b",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m5-mt00jk3e0eme7b",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-md27jo7ubtiq65",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-md1zxqkzlj41a8",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-md27jo7ud83688"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6L624EabBe",
+    "category": "Cozinha",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:47:13.396Z"
+  },
+  {
+    "id": 141,
+    "name": "Carregador Portátil Mini Power Bank 10000mAh Com 02 Saídas Tipo-C / Lightning",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,6 de 5 em 7,7 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/sg-11134201-81zvk-mik9ovwbhszk62",
+    "images": [
+      "https://down-br.img.susercontent.com/file/sg-11134201-81zvk-mik9ovwbhszk62",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l9-mutj8i7xaq6adf",
+      "https://down-br.img.susercontent.com/file/sg-11134201-81ztg-mik9ouc1hzpc84",
+      "https://down-br.img.susercontent.com/file/sg-11134201-81zvc-mik9oy1x22v79e"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6VPSGXZxqh",
+    "category": "Eletrônicos",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:46:13.396Z"
+  },
+  {
+    "id": 142,
+    "name": "Cortina Blackout para sala com voil PVC- Cortinas para sala 3 00 x 2 70 - cortina blackout quarto",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 1,6 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lo-mr15jijnn6klf6",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lo-mr15jijnn6klf6",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lk-mr15jijnhkat5a",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m2-mr15jijnkdfp1c",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ln-mqv3x2jeez9e41"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6fisSqZKVk",
+    "category": "Sala",
+    "sold": 3000,
+    "createdAt": "2026-11-15T12:45:13.396Z"
+  },
+  {
+    "id": 143,
+    "name": "Kit Jogo de Lençol 4 Peças Percal 400 Fios Toque Macio Jogo de Lençol Casal Queen Size/ King Size",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 13 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzjg7ohpxy1h41",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzjg7ohpxy1h41",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzjg7ohpzclx3b",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzjg7ohq0r6d4f",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lzjg7ohpqx7967"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/6q2If9YhAn",
+    "category": "Quarto",
+    "sold": 20000,
+    "createdAt": "2026-11-15T12:44:13.396Z"
+  },
+  {
+    "id": 144,
+    "name": "Kit 3 peças Cropped Canelado Algodão Manga Curta",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,7 de 5 em 1,1 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820le-mv3o7ov95ypsf3",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820le-mv3o7ov95ypsf3",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lb-mv3o7ov94k5cfe",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lw-mv3o7ov935kw43",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mb-mv3o7ov91r0g1a"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/70LirSY3pq",
+    "category": "Moda Feminina",
+    "sold": 2000,
+    "createdAt": "2026-11-15T12:43:13.396Z"
+  },
+  {
+    "id": 145,
+    "name": "Árvore de Natal 1,50cm 400 Galhos Pinheiro Verde Resistente Desmontável Pé de Ferro e Plástico",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 569 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lh-msn53tgvj952b7",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lh-msn53tgvj952b7",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ly-mso9a90iszd329",
+      "https://down-br.img.susercontent.com/file/br-11134207-820li-msn41q7jhukn3e",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mb-msn41q7jdmvb6f"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/AKcApacpgV",
+    "category": "Sala",
+    "sold": 1000,
+    "createdAt": "2026-11-15T12:42:13.396Z"
+  },
+  {
+    "id": 146,
+    "name": "Garrafa Térmica 550ml Sem Bpa Ideal Para Academia Aço Inox Base Silicone",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 1,5 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mk9turzwd1c2ae",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mk9turzwd1c2ae",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mk9tus00ukn49f",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mk9tus00vz7k0a",
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mk9tus00xds099"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/8AXgFbl556",
+    "category": "Fitness",
+    "sold": 3000,
+    "createdAt": "2026-11-15T12:41:13.396Z"
+  },
+  {
+    "id": 147,
+    "name": "Kit Potes Herméticos Porta Mantimentos Acrílico Empilháveis Quadrado Resistente Cozinha Dispensa",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 15 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m9rdlxmqva61f6",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m9rdlxmqva61f6",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lwspd0rsqhyueb",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lwspd0rsupo698",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m9rdlxmr2b09ab"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/80EG3IliQ5",
+    "category": "Cozinha",
+    "sold": 30000,
+    "createdAt": "2026-11-15T12:40:13.396Z"
+  },
+  {
+    "id": 148,
+    "name": "Kit Potes de Vidro Âmbar Liso Hermético Tampa de Bambu Luxo P M G Porta Mantimentos Cozinha",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 832 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-81ztc-miuldcp26nszd8",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-miuldcp26nszd8",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ln-mojw6d1rpedic1",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mh-mojw6d1rqsxyf1",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lr-mojw6d1rtm2u95"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/8VAWeDjoPC",
+    "category": "Cozinha",
+    "sold": 1000,
+    "createdAt": "2026-11-15T12:39:13.396Z"
+  },
+  {
+    "id": 149,
+    "name": "40 Peças / 46 Peças Jogo De Chave Catraca Caixa De Ferramentas para Reparo de Carros / Conjuntos de",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 218 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820l9-mqt86n8incape7",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820l9-mqt86n8incape7",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lb-mr61n2k5fpja63",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ly-mr61n2k5h43q81",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lv-mr61n2k5eayu21"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/8Kr6RukRkB",
+    "category": "Ferramentas",
+    "sold": 400000,
+    "createdAt": "2026-11-15T12:38:13.396Z"
+  },
+  {
+    "id": 150,
+    "name": "Fone de Ouvido Sem Fio Com Cancelamento De Ruído Bluetooth Pop-Up",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 43 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/sg-11134201-7rffm-m4f5wo6pi7mjaa",
+    "images": [
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rffm-m4f5wo6pi7mjaa",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rfgq-m4f5wr636fsz75",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rfgt-m4f5wt9a322p9a",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rfhm-m4f5wv4pccg4fd"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/9pfuEfwTMI",
+    "category": "Eletrônicos",
+    "sold": 100000,
+    "createdAt": "2026-11-15T12:37:13.396Z"
+  },
+  {
+    "id": 151,
+    "name": "Fone de ouvido Wireless sem fio Bluetooth 760BT Microfone Pure Bass Cancelamento Ativo de Ruído Mp3",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 860 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m1-mtdw9dzq5vcw6e",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m1-mtdw9dzq5vcw6e",
+      "https://down-br.img.susercontent.com/file/br-11134207-820md-mt41ehh69jb87a",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lp-mt41ehh62ih060",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m4-mt418h3rbb478e"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/9fMU2Mx6hH",
+    "category": "Eletrônicos",
+    "sold": 2000,
+    "createdAt": "2026-11-15T12:36:13.396Z"
+  },
+  {
+    "id": 152,
+    "name": "Ralador de Queijo Fatiador Legumes Cortador Vegetais Manual 3 em 1 Multiuso Cozinha",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,6 de 5 em 4,9 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134201-820lr-msqyyinvzbie82",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134201-820lr-msqyyinvzbie82",
+      "https://down-br.img.susercontent.com/file/sg-11134201-22120-0prp7aoibxkvff",
+      "https://down-br.img.susercontent.com/file/sg-11134201-22120-ea342ooibxkvb3",
+      "https://down-br.img.susercontent.com/file/sg-11134201-22120-icx4qdpibxkvd9"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/AAIkdHvCgO",
+    "category": "Cozinha",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:35:13.396Z"
+  },
+  {
+    "id": 153,
+    "name": "Frigideira Antiaderente 3 Divisórias Multiuso para Ovos Hambúrgueres e Panquecas Cinza",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 5,8 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-7r98p-lmmic3dlzj0652",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98p-lmmic3dlzj0652",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98r-lmmgktjrmjna41",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lnd141towq0977",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7qvev-ljas258hfzbjd9"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/9zzKQyvq1N",
+    "category": "Cozinha",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:34:13.396Z"
+  },
+  {
+    "id": 154,
+    "name": "Mini Processador Triturador Sem Fio Elétrico 250ML De Alimentos Para Legumes Alho Gengibre",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,7 de 5 em 20 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820l7-mn8111xe6olea5",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820l7-mn8111xe6olea5",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ll-mn8kuzlng0zk9a",
+      "https://down-br.img.susercontent.com/file/br-11134207-820le-mn8111xe835u79",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lw-mn8kuzlkmw3ld1"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/AUvb1ttw0U",
+    "category": "Cozinha",
+    "sold": 40000,
+    "createdAt": "2026-11-15T12:33:13.396Z"
+  },
+  {
+    "id": 155,
+    "name": "Espelho Flame Com Moldura Em Couro Orgânico Hall Sala Closet Quarto Luxo",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 4,8 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m8-ms35tbxdrqiu49",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m8-ms35tbxdrqiu49",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l8-ms35tbx9zhfpaf",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l6-ms35tbxd5a870c",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ln-ms35tbxdm51j8b"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3LSQUkgft5",
+    "category": "Sala",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:32:13.396Z"
+  },
+  {
+    "id": 156,
+    "name": "Parafusadeira Chave Fenda a Bateria Speed Pró Compacta C/Led Bits E Carregador + chave catraca Bits",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 6,1 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m4-mudvt9wpcm4gd5",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m4-mudvt9wpcm4gd5",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m16yyb2ah85sf5",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m16yyb2aa7bk9b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m0-mudvt9wpe0owdd"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/3B90IRhJE4",
+    "category": "Ferramentas",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:31:13.396Z"
+  },
+  {
+    "id": 157,
+    "name": "Espelho Redondo Adnet Moderno Lavabo Quarto Sala Banheiro Alça Em Couro 60cm C/ Pino Suporte",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 11 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjsv53wx62o3d6",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-81ztc-mjsv53wx62o3d6",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mckpkareppfl5a",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mckt0iv4ersi83",
+      "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mckpkarezjep5d"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/30pa68hwZ3",
+    "category": "Sala",
+    "sold": 20000,
+    "createdAt": "2026-11-15T12:30:13.396Z"
+  },
+  {
+    "id": 158,
+    "name": "Escova De Shampoo Massageador De Couro Cabeludo, Purificador PP E TPE Para Limpeza Profunda",
+    "description": "Um dos mais vendidos da Shopee. Nota 5,0 de 5 em 193 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/sg-11134201-8259f-mq36i3vp58nha7",
+    "images": [
+      "https://down-br.img.susercontent.com/file/sg-11134201-8259f-mq36i3vp58nha7",
+      "https://down-br.img.susercontent.com/file/sg-11134301-823ra-moqjhzavgdmo34",
+      "https://down-br.img.susercontent.com/file/sg-11134301-7rau4-ma168yurnfh235",
+      "https://down-br.img.susercontent.com/file/sg-11134301-7ravj-ma169156dn3g56"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/2qW9tpiZu2",
+    "category": "Beleza",
+    "sold": 90000,
+    "createdAt": "2026-11-15T12:29:13.396Z"
+  },
+  {
+    "id": 159,
+    "name": "Chaleira Elétrica Inox 1,8L 1000W - Aquecimento Rápido, Fácil Limpeza, Design Moderno e Durável",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 2,4 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m1-mmabfixk90qv68",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m1-mmabfixk90qv68",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lf-mmabfixk67lze7",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lq-mmabfixk7m6fe8",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m9-mmabfixinfgk8f"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/2gCjhWjDF1",
+    "category": "Cozinha",
+    "sold": 6000,
+    "createdAt": "2026-11-15T12:28:13.396Z"
+  },
+  {
+    "id": 160,
+    "name": "Kit 4 Lençol Casal Padrão Elástico + 8 Fronhas / 1 Jogo / 2 Jogos / 3 Jogos",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,6 de 5 em 7,3 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfb4cplksop3af",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfb4cplksop3af",
+      "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfb4cpll143rf6",
+      "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfb6saela4ue7b",
+      "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfb4cplkyayv5b"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/AUvb1vWzT7",
+    "category": "Quarto",
+    "sold": 10000,
+    "createdAt": "2026-11-15T12:27:13.396Z"
+  },
+  {
+    "id": 161,
+    "name": "Unidades de Marmitas PotesTravas Laterais hermeticas - Livres de BPA Alimentos organiza congelador",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 4,8 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m9-motpgsu8s45i43",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m9-motpgsu8s45i43",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m4-motpgsu8nwg662",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m1-motpgsu8pb0md8",
+      "https://down-br.img.susercontent.com/file/br-11134201-820l6-mr5syds3p43p5c"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/9zzKR0YtU2",
+    "category": "Cozinha",
+    "sold": 9000,
+    "createdAt": "2026-11-15T12:26:13.396Z"
+  },
+  {
+    "id": 162,
+    "name": "Utensílios Silicone Cozinha Antiaderente Fácil Limpeza Alta Resistência",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 2,4 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820me-mneaqb9op8n481",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820me-mneaqb9op8n481",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l4-mneaqb9oqn7kf3",
+      "https://down-br.img.susercontent.com/file/br-11134207-820li-mneaqb9otgcg33",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m9-mneaqb9oz2m87c"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/AAIkdJYG95",
+    "category": "Cozinha",
+    "sold": 4000,
+    "createdAt": "2026-11-15T12:25:13.396Z"
+  },
+  {
+    "id": 163,
+    "name": "Chinelo Bandeirinha Original Sandalia De Dedo Unissex Verão. Presente para o Dia dos Pais",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,7 de 5 em 63 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/sg-11134201-824hw-me1mqqajx1c73f",
+    "images": [
+      "https://down-br.img.susercontent.com/file/sg-11134201-824hw-me1mqqajx1c73f",
+      "https://down-br.img.susercontent.com/file/sg-11134201-824iq-me1mqsnrwef5ab",
+      "https://down-br.img.susercontent.com/file/sg-11134201-824ie-me1mqvgej0n5b0",
+      "https://down-br.img.susercontent.com/file/sg-11134201-824gf-me1mqxx3ln9d14"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/9fMU2OaAA0",
+    "category": "Moda Feminina",
+    "sold": 100000,
+    "createdAt": "2026-11-15T12:24:13.396Z"
+  },
+  {
+    "id": 164,
+    "name": "Máquina de Cortar Cabelo Dragão Aparador de Barba Masculino Sem Fio USB",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 30 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m9-mnqfxvmmdwjo82",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m9-mnqfxvmmdwjo82",
+      "https://down-br.img.susercontent.com/file/sg-11134201-825zq-mjis1sxq3keb90",
+      "https://down-br.img.susercontent.com/file/br-11134207-820ln-mnqfxvmmb3es9a",
+      "https://down-br.img.susercontent.com/file/br-11134207-820le-mnqfxvmm6vpg62"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/9pfuEhZWp3",
+    "category": "Beleza",
+    "sold": 70000,
+    "createdAt": "2026-11-15T12:23:13.396Z"
+  },
+  {
+    "id": 165,
+    "name": "Kit Jogo de Ferramentas Completo com Soquetes Chaves e Maleta Organizadora para Oficina e Uso",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,8 de 5 em 13 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lk-mvghpi7124g30b",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lk-mvghpi7124g30b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mf-mvg4vlcbod8i88",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l6-mvg4vlcbprsybc",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mb-mvg4vlcbmyo265"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/8VAWeFwCfE",
+    "category": "Ferramentas",
+    "sold": 20000,
+    "createdAt": "2026-11-15T12:22:13.396Z"
+  },
+  {
+    "id": 166,
+    "name": "Capa Capinha Magnética MagSafe Fosca Antichoque para iPhone 11 12 13 14 15 16 17 18 Pro Max 16E 17E",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 14 mil avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820lf-ms05va2pzzlyeb",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820lf-ms05va2pzzlyeb",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l4-ms05va2q1e6e0b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820m4-ms05va2q2squ2e",
+      "https://down-br.img.susercontent.com/file/sg-11134201-7rat1-may91kv2yb1f18"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/8Kr6Rwwq0D",
+    "category": "Eletrônicos",
+    "sold": 30000,
+    "createdAt": "2026-11-15T12:21:13.396Z"
+  },
+  {
+    "id": 167,
+    "name": "Porta Temperos Giratório 360 Graus 6, 9 ou 12 Potes de Vidro Organizador Cozinha Tampa Dosadora",
+    "description": "Um dos mais vendidos da Shopee. Nota 4,9 de 5 em 794 avaliações.",
+    "image": "https://down-br.img.susercontent.com/file/br-11134207-820m3-ms4c1u5vebd0fe",
+    "images": [
+      "https://down-br.img.susercontent.com/file/br-11134207-820m3-ms4c1u5vebd0fe",
+      "https://down-br.img.susercontent.com/file/br-11134207-820l5-ms4c1u5wluys1b",
+      "https://down-br.img.susercontent.com/file/br-11134207-820mh-ms4c1u5k2yo55a",
+      "https://down-br.img.susercontent.com/file/br-11134207-820lv-ms4c1u5k05j999"
+    ],
+    "affiliateLink": "https://s.shopee.com.br/8AXgFdxTLC",
+    "category": "Cozinha",
+    "sold": 1000,
+    "createdAt": "2026-11-15T12:20:13.396Z"
+  },
+  {
     "id": 1,
     "name": "Dispenser De Gelo Bandeja Caixa 48 Cubos Com Gaveta Botão Solta Gelo E Pegador Luxo",
     "description": "Transforme a maneira como você faz gelo com esta forma de gelo automática inovadora! Compacta e funcional, ela é perfeita para quem busca praticidade e estilo na cozinha.",
@@ -42,7 +810,7 @@ export const products: Product[] = [
     ],
     "affiliateLink": "https://s.shopee.com.br/5LDUJ5HpA5",
     "category": "Cozinha",
-    "createdAt": "2025-12-26T00:00:00.000Z"
+    "createdAt": "2026-11-15T12:19:13.396Z"
   },
   {
     "id": 2,
@@ -58,7 +826,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/1BxvHR6N1",
     "category": "Ferramentas",
     "sold": 8202,
-    "createdAt": "2026-11-15T03:51:05.859Z"
+    "createdAt": "2026-11-15T12:18:13.396Z"
   },
   {
     "id": 3,
@@ -74,7 +842,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/1BNvJQMf0G",
     "category": "Eletrônicos",
     "sold": 9441,
-    "createdAt": "2026-11-15T03:50:05.859Z"
+    "createdAt": "2026-11-15T12:17:13.396Z"
   },
   {
     "id": 4,
@@ -90,7 +858,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/114V77NILF",
     "category": "Cozinha",
     "sold": 21718,
-    "createdAt": "2026-11-15T03:49:05.859Z"
+    "createdAt": "2026-11-15T12:16:13.396Z"
   },
   {
     "id": 5,
@@ -106,7 +874,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/ql4uoNvgE",
     "category": "Beleza",
     "sold": 4644,
-    "createdAt": "2026-11-15T03:48:05.859Z"
+    "createdAt": "2026-11-15T12:15:13.396Z"
   },
   {
     "id": 6,
@@ -122,7 +890,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/gReiVOZ1D",
     "category": "Moda Feminina",
     "sold": 44989,
-    "createdAt": "2026-11-15T03:47:05.859Z"
+    "createdAt": "2026-11-15T12:14:13.396Z"
   },
   {
     "id": 7,
@@ -138,7 +906,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7fbP3QwA6z",
     "category": "Quarto",
     "sold": 55551,
-    "createdAt": "2026-11-15T03:46:05.859Z"
+    "createdAt": "2026-11-15T12:13:13.396Z"
   },
   {
     "id": 8,
@@ -154,7 +922,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7VHyr7wnRy",
     "category": "Quarto",
     "sold": 50516,
-    "createdAt": "2026-11-15T03:45:05.859Z"
+    "createdAt": "2026-11-15T12:12:13.396Z"
   },
   {
     "id": 9,
@@ -170,7 +938,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7KyYeoxQmx",
     "category": "Casa e Limpeza",
     "sold": 9311,
-    "createdAt": "2026-11-15T03:44:05.859Z"
+    "createdAt": "2026-11-15T12:11:13.396Z"
   },
   {
     "id": 10,
@@ -186,7 +954,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7Af8SVy47w",
     "category": "Moda Feminina",
     "sold": 23592,
-    "createdAt": "2026-11-15T03:43:05.859Z"
+    "createdAt": "2026-11-15T12:10:13.396Z"
   },
   {
     "id": 11,
@@ -202,7 +970,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/70LiGCyhSv",
     "category": "Moda Masculina",
     "sold": 8257,
-    "createdAt": "2026-11-15T03:42:05.859Z"
+    "createdAt": "2026-11-15T12:09:13.396Z"
   },
   {
     "id": 12,
@@ -218,7 +986,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8Kr5qfBI9R",
     "category": "Moda Masculina",
     "sold": 5463,
-    "createdAt": "2026-11-15T03:41:05.859Z"
+    "createdAt": "2026-11-15T12:08:13.396Z"
   },
   {
     "id": 13,
@@ -234,7 +1002,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8AXfeMBvUQ",
     "category": "Quarto",
     "sold": 15134,
-    "createdAt": "2026-11-15T03:40:05.859Z"
+    "createdAt": "2026-11-15T12:07:13.396Z"
   },
   {
     "id": 14,
@@ -250,7 +1018,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/80EFS3CYpP",
     "category": "Quarto",
     "sold": 37440,
-    "createdAt": "2026-11-15T03:39:05.859Z"
+    "createdAt": "2026-11-15T12:06:13.396Z"
   },
   {
     "id": 15,
@@ -266,7 +1034,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9AQCqC87Se",
     "category": "Beleza",
     "sold": 12539,
-    "createdAt": "2026-11-15T03:38:05.859Z"
+    "createdAt": "2026-11-15T12:05:13.396Z"
   },
   {
     "id": 16,
@@ -282,7 +1050,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/906mdt8knd",
     "category": "Moda Masculina",
     "sold": 26260,
-    "createdAt": "2026-11-15T03:37:05.859Z"
+    "createdAt": "2026-11-15T12:04:13.396Z"
   },
   {
     "id": 17,
@@ -298,7 +1066,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9pftdQMlgH",
     "category": "Papelaria e Mochilas",
     "sold": 4870,
-    "createdAt": "2026-11-15T03:36:05.859Z"
+    "createdAt": "2026-11-15T12:03:13.396Z"
   },
   {
     "id": 18,
@@ -314,7 +1082,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9Kjd2VOfhC",
     "category": "Infantil",
     "sold": 6761,
-    "createdAt": "2026-11-15T03:35:05.859Z"
+    "createdAt": "2026-11-15T12:02:13.396Z"
   },
   {
     "id": 19,
@@ -330,7 +1098,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9V33EoO2MF",
     "category": "Quarto",
     "sold": 13525,
-    "createdAt": "2026-11-15T03:34:05.859Z"
+    "createdAt": "2026-11-15T12:01:13.396Z"
   },
   {
     "id": 20,
@@ -346,23 +1114,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/AKcAELKrfQ",
     "category": "Moda Feminina",
     "sold": 15749,
-    "createdAt": "2026-11-15T03:33:05.859Z"
-  },
-  {
-    "id": 21,
-    "name": "40 Peças / 46 Peças Jogo De Chave Catraca Caixa De Ferramentas para Reparo de Carros / Conjuntos de",
-    "description": "Campeão de vendas da Shopee em Kit de Ferramentas. Nota 4,8 de 5 em 218 mil avaliações.",
-    "image": "https://down-br.img.susercontent.com/file/br-11134207-820l9-mqt86n8incape7",
-    "images": [
-      "https://down-br.img.susercontent.com/file/br-11134207-820l9-mqt86n8incape7",
-      "https://down-br.img.susercontent.com/file/br-11134207-820lb-mr61n2k5fpja63",
-      "https://down-br.img.susercontent.com/file/br-11134207-820ly-mr61n2k5h43q81",
-      "https://down-br.img.susercontent.com/file/br-11134207-820lv-mr61n2k5eayu21"
-    ],
-    "affiliateLink": "https://s.shopee.com.br/AUvaQeKEKT",
-    "category": "Ferramentas",
-    "sold": 15010,
-    "createdAt": "2026-11-15T03:32:05.859Z"
+    "createdAt": "2026-11-15T12:00:13.396Z"
   },
   {
     "id": 22,
@@ -378,7 +1130,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9Kjd2aEGUI",
     "category": "Quarto",
     "sold": 14485,
-    "createdAt": "2026-11-15T03:31:05.859Z"
+    "createdAt": "2026-11-15T11:59:13.396Z"
   },
   {
     "id": 23,
@@ -394,7 +1146,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9V33EtDd9L",
     "category": "Sala",
     "sold": 6990,
-    "createdAt": "2026-11-15T03:30:05.859Z"
+    "createdAt": "2026-11-15T11:58:13.396Z"
   },
   {
     "id": 24,
@@ -407,7 +1159,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/906mdyFXAG",
     "category": "Quarto",
     "sold": 1736,
-    "createdAt": "2026-11-15T03:29:05.859Z"
+    "createdAt": "2026-11-15T11:57:13.396Z"
   },
   {
     "id": 25,
@@ -423,7 +1175,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9AQCqHEtpJ",
     "category": "Moda Feminina",
     "sold": 13167,
-    "createdAt": "2026-11-15T03:28:05.859Z"
+    "createdAt": "2026-11-15T11:56:13.396Z"
   },
   {
     "id": 26,
@@ -439,7 +1191,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8fTwFMGnqE",
     "category": "Moda Feminina",
     "sold": 9348,
-    "createdAt": "2026-11-15T03:27:05.859Z"
+    "createdAt": "2026-11-15T11:55:13.396Z"
   },
   {
     "id": 27,
@@ -455,7 +1207,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/2gCj6KvJPf",
     "category": "Moda Feminina",
     "sold": 6254,
-    "createdAt": "2026-11-15T03:26:05.859Z"
+    "createdAt": "2026-11-15T11:54:13.396Z"
   },
   {
     "id": 28,
@@ -471,7 +1223,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3qOgUTqs2u",
     "category": "Quarto",
     "sold": 10077,
-    "createdAt": "2026-11-15T03:25:05.859Z"
+    "createdAt": "2026-11-15T11:53:13.396Z"
   },
   {
     "id": 29,
@@ -487,7 +1239,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3g5GIArVNt",
     "category": "Papelaria e Mochilas",
     "sold": 21175,
-    "createdAt": "2026-11-15T03:24:05.859Z"
+    "createdAt": "2026-11-15T11:52:13.396Z"
   },
   {
     "id": 30,
@@ -503,7 +1255,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3Vlq5rs8is",
     "category": "Cozinha",
     "sold": 11010,
-    "createdAt": "2026-11-15T03:23:05.859Z"
+    "createdAt": "2026-11-15T11:51:13.396Z"
   },
   {
     "id": 31,
@@ -518,7 +1270,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3LSPtYsm3r",
     "category": "Casa e Limpeza",
     "sold": 3365,
-    "createdAt": "2026-11-15T03:22:05.859Z"
+    "createdAt": "2026-11-15T11:50:13.396Z"
   },
   {
     "id": 32,
@@ -534,7 +1286,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4fxnU14odn",
     "category": "Casa e Limpeza",
     "sold": 3528,
-    "createdAt": "2026-11-15T03:21:05.859Z"
+    "createdAt": "2026-11-15T11:49:13.396Z"
   },
   {
     "id": 33,
@@ -550,7 +1302,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4VeNHi5Rym",
     "category": "Sala",
     "sold": 8455,
-    "createdAt": "2026-11-15T03:20:05.859Z"
+    "createdAt": "2026-11-15T11:48:13.396Z"
   },
   {
     "id": 34,
@@ -566,7 +1318,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4LKx5P65Jl",
     "category": "Quarto",
     "sold": 4213,
-    "createdAt": "2026-11-15T03:19:05.859Z"
+    "createdAt": "2026-11-15T11:47:13.396Z"
   },
   {
     "id": 35,
@@ -582,7 +1334,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4B1Wt66iek",
     "category": "Beleza",
     "sold": 16618,
-    "createdAt": "2026-11-15T03:18:05.859Z"
+    "createdAt": "2026-11-15T11:46:13.396Z"
   },
   {
     "id": 36,
@@ -598,7 +1350,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/40i6gn7Lzj",
     "category": "Sala",
     "sold": 10763,
-    "createdAt": "2026-11-15T03:17:05.859Z"
+    "createdAt": "2026-11-15T11:45:13.396Z"
   },
   {
     "id": 37,
@@ -612,7 +1364,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6L61T6XGSt",
     "category": "Moda Feminina",
     "sold": 4055,
-    "createdAt": "2026-11-15T03:16:05.859Z"
+    "createdAt": "2026-11-15T11:44:13.396Z"
   },
   {
     "id": 38,
@@ -628,7 +1380,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6q2I41VMS0",
     "category": "Cozinha",
     "sold": 10571,
-    "createdAt": "2026-11-15T03:15:05.859Z"
+    "createdAt": "2026-11-15T11:43:13.396Z"
   },
   {
     "id": 39,
@@ -644,7 +1396,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6firriVzmz",
     "category": "Cozinha",
     "sold": 6277,
-    "createdAt": "2026-11-15T03:14:05.859Z"
+    "createdAt": "2026-11-15T11:42:13.396Z"
   },
   {
     "id": 40,
@@ -660,7 +1412,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7Af8SdU5m6",
     "category": "Casa e Limpeza",
     "sold": 9363,
-    "createdAt": "2026-11-15T03:13:05.859Z"
+    "createdAt": "2026-11-15T11:41:13.396Z"
   },
   {
     "id": 41,
@@ -673,7 +1425,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/70LiGKUj75",
     "category": "Moda Feminina",
     "sold": 11646,
-    "createdAt": "2026-11-15T03:12:05.859Z"
+    "createdAt": "2026-11-15T11:40:13.396Z"
   },
   {
     "id": 42,
@@ -689,7 +1441,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/80EFSAiWCe",
     "category": "Moda Feminina",
     "sold": 5325,
-    "createdAt": "2026-11-15T03:11:05.859Z"
+    "createdAt": "2026-11-15T11:39:13.396Z"
   },
   {
     "id": 43,
@@ -705,7 +1457,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8AXfeThsrh",
     "category": "Moda Feminina",
     "sold": 3126,
-    "createdAt": "2026-11-15T03:10:05.859Z"
+    "createdAt": "2026-11-15T11:38:13.396Z"
   },
   {
     "id": 44,
@@ -721,7 +1473,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8Kr5qmhFWk",
     "category": "Banheiro",
     "sold": 13963,
-    "createdAt": "2026-11-15T03:09:05.859Z"
+    "createdAt": "2026-11-15T11:37:13.396Z"
   },
   {
     "id": 45,
@@ -737,7 +1489,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8VAW35gcBn",
     "category": "Sala",
     "sold": 13026,
-    "createdAt": "2026-11-15T03:08:05.859Z"
+    "createdAt": "2026-11-15T11:36:13.396Z"
   },
   {
     "id": 46,
@@ -753,7 +1505,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8fTwFOfyqq",
     "category": "Cozinha",
     "sold": 6180,
-    "createdAt": "2026-11-15T03:07:05.859Z"
+    "createdAt": "2026-11-15T11:35:13.396Z"
   },
   {
     "id": 47,
@@ -769,7 +1521,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9fMTREu7H4",
     "category": "Banheiro",
     "sold": 4264,
-    "createdAt": "2026-11-15T03:06:05.859Z"
+    "createdAt": "2026-11-15T11:34:13.396Z"
   },
   {
     "id": 48,
@@ -785,7 +1537,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9pftdXtTw7",
     "category": "Casa e Limpeza",
     "sold": 7451,
-    "createdAt": "2026-11-15T03:05:05.859Z"
+    "createdAt": "2026-11-15T11:33:13.396Z"
   },
   {
     "id": 49,
@@ -801,7 +1553,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/ql4v0RkCO",
     "category": "Moda Feminina",
     "sold": 4026,
-    "createdAt": "2026-11-15T03:04:05.859Z"
+    "createdAt": "2026-11-15T11:32:13.396Z"
   },
   {
     "id": 50,
@@ -817,7 +1569,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/gReihSNXN",
     "category": "Moda Feminina",
     "sold": 8013,
-    "createdAt": "2026-11-15T03:03:05.859Z"
+    "createdAt": "2026-11-15T11:31:13.396Z"
   },
   {
     "id": 51,
@@ -833,7 +1585,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/1BNvJcQTWU",
     "category": "Cozinha",
     "sold": 5522,
-    "createdAt": "2026-11-15T03:02:05.859Z"
+    "createdAt": "2026-11-15T11:30:13.396Z"
   },
   {
     "id": 52,
@@ -849,7 +1601,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3Vlq5vq2gQ",
     "category": "Casa e Limpeza",
     "sold": 7054,
-    "createdAt": "2026-11-15T03:01:05.859Z"
+    "createdAt": "2026-11-15T11:29:13.396Z"
   },
   {
     "id": 53,
@@ -865,7 +1617,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3LSPtcqg1P",
     "category": "Eletrônicos",
     "sold": 6554,
-    "createdAt": "2026-11-15T03:00:05.859Z"
+    "createdAt": "2026-11-15T11:28:13.396Z"
   },
   {
     "id": 54,
@@ -878,7 +1630,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7Af8Sfc5FA",
     "category": "Infantil",
     "sold": 4471,
-    "createdAt": "2026-11-15T02:59:05.859Z"
+    "createdAt": "2026-11-15T11:27:13.396Z"
   },
   {
     "id": 55,
@@ -894,7 +1646,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/70LiGMcia9",
     "category": "Cozinha",
     "sold": 9170,
-    "createdAt": "2026-11-15T02:58:05.859Z"
+    "createdAt": "2026-11-15T11:26:13.396Z"
   },
   {
     "id": 56,
@@ -910,7 +1662,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6q2I43dLv8",
     "category": "Banheiro",
     "sold": 11666,
-    "createdAt": "2026-11-15T02:57:05.859Z"
+    "createdAt": "2026-11-15T11:25:13.396Z"
   },
   {
     "id": 57,
@@ -926,7 +1678,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3LSPtd8cTD",
     "category": "Casa e Limpeza",
     "sold": 4265,
-    "createdAt": "2026-11-15T02:56:05.859Z"
+    "createdAt": "2026-11-15T11:24:13.396Z"
   },
   {
     "id": 58,
@@ -942,7 +1694,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3B8zhK9FoC",
     "category": "Cozinha",
     "sold": 10221,
-    "createdAt": "2026-11-15T02:55:05.859Z"
+    "createdAt": "2026-11-15T11:23:13.396Z"
   },
   {
     "id": 59,
@@ -955,7 +1707,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/30pZV19t9B",
     "category": "Sala",
     "sold": 1623,
-    "createdAt": "2026-11-15T02:54:05.859Z"
+    "createdAt": "2026-11-15T11:22:13.396Z"
   },
   {
     "id": 60,
@@ -971,7 +1723,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/2qW9IiAWUA",
     "category": "Eletrônicos",
     "sold": 7052,
-    "createdAt": "2026-11-15T02:53:05.859Z"
+    "createdAt": "2026-11-15T11:21:13.396Z"
   },
   {
     "id": 61,
@@ -987,7 +1739,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/2gCj6PB9p9",
     "category": "Eletrônicos",
     "sold": 7938,
-    "createdAt": "2026-11-15T02:52:05.859Z"
+    "createdAt": "2026-11-15T11:20:13.396Z"
   },
   {
     "id": 62,
@@ -1000,7 +1752,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/40i6grNgEY",
     "category": "Ferramentas",
     "sold": 1978,
-    "createdAt": "2026-11-15T02:51:05.859Z"
+    "createdAt": "2026-11-15T11:19:13.396Z"
   },
   {
     "id": 63,
@@ -1016,7 +1768,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4B1WtAN2tb",
     "category": "Quarto",
     "sold": 19514,
-    "createdAt": "2026-11-15T02:50:05.859Z"
+    "createdAt": "2026-11-15T11:18:13.396Z"
   },
   {
     "id": 64,
@@ -1032,7 +1784,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3g5GIFOwuW",
     "category": "Moda Masculina",
     "sold": 5515,
-    "createdAt": "2026-11-15T02:49:05.859Z"
+    "createdAt": "2026-11-15T11:17:13.396Z"
   },
   {
     "id": 65,
@@ -1048,7 +1800,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3qOgUYOJZZ",
     "category": "Beleza",
     "sold": 11434,
-    "createdAt": "2026-11-15T02:48:05.859Z"
+    "createdAt": "2026-11-15T11:16:13.396Z"
   },
   {
     "id": 66,
@@ -1064,7 +1816,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3LSPtdQDaU",
     "category": "Infantil",
     "sold": 10339,
-    "createdAt": "2026-11-15T02:47:05.859Z"
+    "createdAt": "2026-11-15T11:15:13.396Z"
   },
   {
     "id": 67,
@@ -1080,7 +1832,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7KyYf0jvEK",
     "category": "Quarto",
     "sold": 11150,
-    "createdAt": "2026-11-15T02:46:05.859Z"
+    "createdAt": "2026-11-15T11:14:13.396Z"
   },
   {
     "id": 68,
@@ -1096,7 +1848,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7VHyrJjHtN",
     "category": "Moda Feminina",
     "sold": 13476,
-    "createdAt": "2026-11-15T02:45:05.859Z"
+    "createdAt": "2026-11-15T11:13:13.396Z"
   },
   {
     "id": 69,
@@ -1109,7 +1861,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7fbP3cieYQ",
     "category": "Sala",
     "sold": 2322,
-    "createdAt": "2026-11-15T02:44:05.859Z"
+    "createdAt": "2026-11-15T11:12:13.396Z"
   },
   {
     "id": 70,
@@ -1125,7 +1877,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7pupFvi1DT",
     "category": "Casa e Limpeza",
     "sold": 2492,
-    "createdAt": "2026-11-15T02:43:05.859Z"
+    "createdAt": "2026-11-15T11:11:13.396Z"
   },
   {
     "id": 71,
@@ -1141,7 +1893,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5LDUHKrXI0",
     "category": "Moda Feminina",
     "sold": 7809,
-    "createdAt": "2026-11-15T02:42:05.859Z"
+    "createdAt": "2026-11-15T11:10:13.396Z"
   },
   {
     "id": 72,
@@ -1154,7 +1906,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5LDUHL948b",
     "category": "Moda Masculina",
     "sold": 2071,
-    "createdAt": "2026-11-15T02:41:05.859Z"
+    "createdAt": "2026-11-15T11:09:13.396Z"
   },
   {
     "id": 73,
@@ -1170,7 +1922,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5q9ksG7A7i",
     "category": "Quarto",
     "sold": 11492,
-    "createdAt": "2026-11-15T02:40:05.859Z"
+    "createdAt": "2026-11-15T11:08:13.396Z"
   },
   {
     "id": 74,
@@ -1186,7 +1938,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5fqKfx7nSh",
     "category": "Papelaria e Mochilas",
     "sold": 7580,
-    "createdAt": "2026-11-15T02:39:05.859Z"
+    "createdAt": "2026-11-15T11:07:13.396Z"
   },
   {
     "id": 76,
@@ -1202,7 +1954,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/AAIk2DqfKa",
     "category": "Ferramentas",
     "sold": 2893,
-    "createdAt": "2026-11-15T02:37:05.859Z"
+    "createdAt": "2026-11-15T11:06:13.396Z"
   },
   {
     "id": 77,
@@ -1218,7 +1970,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9zzJpurIfZ",
     "category": "Cozinha",
     "sold": 7178,
-    "createdAt": "2026-11-15T02:36:05.859Z"
+    "createdAt": "2026-11-15T11:05:13.396Z"
   },
   {
     "id": 78,
@@ -1234,7 +1986,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7KyYf1J7Tw",
     "category": "Quarto",
     "sold": 6019,
-    "createdAt": "2026-11-15T02:35:05.859Z"
+    "createdAt": "2026-11-15T11:04:13.396Z"
   },
   {
     "id": 79,
@@ -1250,7 +2002,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7VHyrKIU8z",
     "category": "Quarto",
     "sold": 14059,
-    "createdAt": "2026-11-15T02:34:05.859Z"
+    "createdAt": "2026-11-15T11:03:13.396Z"
   },
   {
     "id": 80,
@@ -1266,7 +2018,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7fbP3dHqo2",
     "category": "Quarto",
     "sold": 6434,
-    "createdAt": "2026-11-15T02:33:05.859Z"
+    "createdAt": "2026-11-15T11:02:13.396Z"
   },
   {
     "id": 81,
@@ -1282,7 +2034,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7pupFwHDT5",
     "category": "Quarto",
     "sold": 8358,
-    "createdAt": "2026-11-15T02:32:05.859Z"
+    "createdAt": "2026-11-15T11:01:13.396Z"
   },
   {
     "id": 82,
@@ -1295,7 +2047,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5LDUHLQjXc",
     "category": "Quarto",
     "sold": 3919,
-    "createdAt": "2026-11-15T02:31:05.859Z"
+    "createdAt": "2026-11-15T11:00:13.396Z"
   },
   {
     "id": 83,
@@ -1311,7 +2063,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9fMTRKnMTB",
     "category": "Quarto",
     "sold": 2108,
-    "createdAt": "2026-11-15T02:30:05.859Z"
+    "createdAt": "2026-11-15T10:59:13.396Z"
   },
   {
     "id": 84,
@@ -1324,7 +2076,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9V33F1nzoA",
     "category": "Sala",
     "sold": 1499,
-    "createdAt": "2026-11-15T02:29:05.859Z"
+    "createdAt": "2026-11-15T10:58:13.396Z"
   },
   {
     "id": 85,
@@ -1340,7 +2092,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9Kjd2iod99",
     "category": "Moda Feminina",
     "sold": 3196,
-    "createdAt": "2026-11-15T02:28:05.859Z"
+    "createdAt": "2026-11-15T10:57:13.396Z"
   },
   {
     "id": 86,
@@ -1356,7 +2108,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/AUvaQrkBmO",
     "category": "Casa e Limpeza",
     "sold": 4874,
-    "createdAt": "2026-11-15T02:27:05.859Z"
+    "createdAt": "2026-11-15T10:56:13.396Z"
   },
   {
     "id": 87,
@@ -1372,7 +2124,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/AKcAEYkp7N",
     "category": "Banheiro",
     "sold": 16646,
-    "createdAt": "2026-11-15T02:26:05.859Z"
+    "createdAt": "2026-11-15T10:55:13.396Z"
   },
   {
     "id": 88,
@@ -1388,7 +2140,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8Kr5qt5hop",
     "category": "Moda Feminina",
     "sold": 8193,
-    "createdAt": "2026-11-15T02:25:05.859Z"
+    "createdAt": "2026-11-15T10:54:13.396Z"
   },
   {
     "id": 89,
@@ -1404,7 +2156,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8pnMRo3nnw",
     "category": "Beleza",
     "sold": 11212,
-    "createdAt": "2026-11-15T02:24:05.859Z"
+    "createdAt": "2026-11-15T10:53:13.396Z"
   },
   {
     "id": 90,
@@ -1420,7 +2172,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/8fTwFV4R8v",
     "category": "Casa e Limpeza",
     "sold": 7221,
-    "createdAt": "2026-11-15T02:23:05.859Z"
+    "createdAt": "2026-11-15T10:52:13.396Z"
   },
   {
     "id": 91,
@@ -1436,7 +2188,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/9AQCqQ2X82",
     "category": "Banheiro",
     "sold": 4541,
-    "createdAt": "2026-11-15T02:22:05.859Z"
+    "createdAt": "2026-11-15T10:51:13.396Z"
   },
   {
     "id": 92,
@@ -1449,7 +2201,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/906me73AT1",
     "category": "Cozinha",
     "sold": 1668,
-    "createdAt": "2026-11-15T02:21:05.859Z"
+    "createdAt": "2026-11-15T10:50:13.396Z"
   },
   {
     "id": 93,
@@ -1465,7 +2217,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4fxnU9fasQ",
     "category": "Casa e Limpeza",
     "sold": 8299,
-    "createdAt": "2026-11-15T02:20:05.859Z"
+    "createdAt": "2026-11-15T10:49:13.396Z"
   },
   {
     "id": 94,
@@ -1481,7 +2233,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4qHDgSexXT",
     "category": "Moda Feminina",
     "sold": 6112,
-    "createdAt": "2026-11-15T02:19:05.859Z"
+    "createdAt": "2026-11-15T10:48:13.396Z"
   },
   {
     "id": 95,
@@ -1497,7 +2249,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/30pZV5lwG8",
     "category": "Moda Feminina",
     "sold": 6603,
-    "createdAt": "2026-11-15T02:18:05.859Z"
+    "createdAt": "2026-11-15T10:47:13.396Z"
   },
   {
     "id": 96,
@@ -1513,7 +2265,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/3B8zhOlIvB",
     "category": "Sala",
     "sold": 3210,
-    "createdAt": "2026-11-15T02:17:05.859Z"
+    "createdAt": "2026-11-15T10:46:13.396Z"
   },
   {
     "id": 97,
@@ -1529,7 +2281,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/2gCj6TnCw6",
     "category": "Moda Feminina",
     "sold": 5380,
-    "createdAt": "2026-11-15T02:16:05.859Z"
+    "createdAt": "2026-11-15T10:45:13.396Z"
   },
   {
     "id": 98,
@@ -1545,7 +2297,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4B1WtGBxcs",
     "category": "Moda Feminina",
     "sold": 2637,
-    "createdAt": "2026-11-15T02:15:05.859Z"
+    "createdAt": "2026-11-15T10:44:13.396Z"
   },
   {
     "id": 99,
@@ -1561,7 +2313,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/40i6gxCaxr",
     "category": "Moda Masculina",
     "sold": 9341,
-    "createdAt": "2026-11-15T02:14:05.859Z"
+    "createdAt": "2026-11-15T10:43:13.396Z"
   },
   {
     "id": 100,
@@ -1577,7 +2329,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6VPRfY34tM",
     "category": "Cozinha",
     "sold": 4155,
-    "createdAt": "2026-11-15T02:13:05.859Z"
+    "createdAt": "2026-11-15T10:42:13.396Z"
   },
   {
     "id": 101,
@@ -1593,7 +2345,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6L61TF3iEL",
     "category": "Sala",
     "sold": 6320,
-    "createdAt": "2026-11-15T02:12:05.859Z"
+    "createdAt": "2026-11-15T10:41:13.396Z"
   },
   {
     "id": 102,
@@ -1609,7 +2361,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6AmbGw4LZK",
     "category": "Beleza",
     "sold": 4364,
-    "createdAt": "2026-11-15T02:11:05.859Z"
+    "createdAt": "2026-11-15T10:40:13.396Z"
   },
   {
     "id": 103,
@@ -1622,7 +2374,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/60TB4dMa12",
     "category": "Moda Feminina",
     "sold": 2033,
-    "createdAt": "2026-11-15T02:10:05.859Z"
+    "createdAt": "2026-11-15T10:39:13.396Z"
   },
   {
     "id": 104,
@@ -1638,7 +2390,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6AmbGwLwg5",
     "category": "Cozinha",
     "sold": 4008,
-    "createdAt": "2026-11-15T02:09:05.859Z"
+    "createdAt": "2026-11-15T10:38:13.396Z"
   },
   {
     "id": 105,
@@ -1654,7 +2406,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6L61TFLJL8",
     "category": "Moda Feminina",
     "sold": 3036,
-    "createdAt": "2026-11-15T02:08:05.859Z"
+    "createdAt": "2026-11-15T10:37:13.396Z"
   },
   {
     "id": 106,
@@ -1670,7 +2422,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/6VPRfYKg0B",
     "category": "Cozinha",
     "sold": 4069,
-    "createdAt": "2026-11-15T02:07:05.859Z"
+    "createdAt": "2026-11-15T10:36:13.396Z"
   },
   {
     "id": 107,
@@ -1686,7 +2438,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5LDUHPP7My",
     "category": "Cozinha",
     "sold": 7738,
-    "createdAt": "2026-11-15T02:06:05.859Z"
+    "createdAt": "2026-11-15T10:35:13.396Z"
   },
   {
     "id": 108,
@@ -1702,7 +2454,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5VWuTig58m",
     "category": "Moda Feminina",
     "sold": 6717,
-    "createdAt": "2026-11-15T02:05:05.859Z"
+    "createdAt": "2026-11-15T10:34:13.396Z"
   },
   {
     "id": 109,
@@ -1718,7 +2470,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5LDUHPgiTl",
     "category": "Infantil",
     "sold": 10941,
-    "createdAt": "2026-11-15T02:04:05.859Z"
+    "createdAt": "2026-11-15T10:33:13.396Z"
   },
   {
     "id": 110,
@@ -1734,7 +2486,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5q9ksKeoSs",
     "category": "Cozinha",
     "sold": 2877,
-    "createdAt": "2026-11-15T02:03:05.859Z"
+    "createdAt": "2026-11-15T10:32:13.396Z"
   },
   {
     "id": 111,
@@ -1750,7 +2502,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/5fqKg1fRnr",
     "category": "Banheiro",
     "sold": 2494,
-    "createdAt": "2026-11-15T02:02:05.859Z"
+    "createdAt": "2026-11-15T10:31:13.396Z"
   },
   {
     "id": 112,
@@ -1763,7 +2515,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/7VHyrOYT5E",
     "category": "Moda Feminina",
     "sold": 547,
-    "createdAt": "2026-11-15T02:01:05.859Z"
+    "createdAt": "2026-11-15T10:30:13.396Z"
   },
   {
     "id": 113,
@@ -1778,7 +2530,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4B1WtI1s65",
     "category": "Casa e Limpeza",
     "sold": 3122,
-    "createdAt": "2026-11-15T02:00:05.859Z"
+    "createdAt": "2026-11-15T10:29:13.396Z"
   },
   {
     "id": 114,
@@ -1794,7 +2546,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4LKx5b1El8",
     "category": "Eletrônicos",
     "sold": 5374,
-    "createdAt": "2026-11-15T01:59:05.859Z"
+    "createdAt": "2026-11-15T10:28:13.396Z"
   },
   {
     "id": 115,
@@ -1810,7 +2562,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4VeNHu0bQB",
     "category": "Sala",
     "sold": 2809,
-    "createdAt": "2026-11-15T01:58:05.859Z"
+    "createdAt": "2026-11-15T10:27:13.396Z"
   },
   {
     "id": 116,
@@ -1826,7 +2578,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4fxnUCzy5E",
     "category": "Casa e Limpeza",
     "sold": 5072,
-    "createdAt": "2026-11-15T01:57:05.859Z"
+    "createdAt": "2026-11-15T10:26:13.396Z"
   },
   {
     "id": 117,
@@ -1839,7 +2591,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4qHDgVzKkH",
     "category": "Casa e Limpeza",
     "sold": 985,
-    "createdAt": "2026-11-15T01:56:05.859Z"
+    "createdAt": "2026-11-15T10:25:13.396Z"
   },
   {
     "id": 118,
@@ -1855,7 +2607,7 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4LKx5bJJjw",
     "category": "Eletrônicos",
     "sold": 10163,
-    "createdAt": "2026-11-15T01:55:05.859Z"
+    "createdAt": "2026-11-15T10:24:13.396Z"
   },
   {
     "id": 119,
@@ -1868,6 +2620,6 @@ export const products: Product[] = [
     "affiliateLink": "https://s.shopee.com.br/4VeNHuIgOz",
     "category": "Cozinha",
     "sold": 704,
-    "createdAt": "2026-11-15T01:54:05.859Z"
+    "createdAt": "2026-11-15T10:23:13.396Z"
   }
 ]

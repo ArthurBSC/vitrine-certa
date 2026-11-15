@@ -88,8 +88,8 @@ export default function Home() {
               <section id="produtos" className="mb-12">
                 {!selectedCategory && (
                   <div className="mb-6">
-                    <h3 className="text-xl font-semibold text-slate-900">Mais vendidos agora</h3>
-                    <p className="text-sm text-slate-600">Os campeões de cada categoria no ranking da Shopee.</p>
+                    <h3 className="text-xl font-semibold text-slate-900">Destaques da semana</h3>
+                    <p className="text-sm text-slate-600">Os produtos mais vendidos e mais bem avaliados da Shopee.</p>
                   </div>
                 )}
                 {selectedCategory && (
