@@ -6,6 +6,7 @@
 set -euo pipefail
 
 BASE=/opt/vitrine
+REPO=https://github.com/ArthurBSC/vitrine-certa.git
 IP="$(curl -4 -fsS https://ifconfig.me || hostname -I | awk '{print $1}')"
 DASH="${IP//./-}"
 N8N_HOST="n8n.${DASH}.sslip.io"
@@ -21,13 +22,24 @@ if ! command -v docker >/dev/null 2>&1; then
   echo ">> Instalando Docker..."
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq
-  apt-get install -y -qq ca-certificates curl gnupg >/dev/null
+  apt-get install -y -qq ca-certificates curl gnupg git >/dev/null
   curl -fsSL https://get.docker.com | sh
 fi
+command -v git >/dev/null 2>&1 || apt-get install -y -qq git >/dev/null
 systemctl enable --now docker >/dev/null 2>&1 || true
 
 # ---------- 2. Pastas ----------
 mkdir -p "$BASE"/{caddy/data,caddy/config,n8n/data,n8n/files,midia/pub,pg}
+
+# ---------- 2b. Codigo do projeto (fluxos do n8n) ----------
+if [ -d "$BASE/repo/.git" ]; then
+  echo ">> Atualizando o repositorio..."
+  git -C "$BASE/repo" pull --ff-only
+else
+  echo ">> Clonando o repositorio..."
+  git clone --depth 1 "$REPO" "$BASE/repo"
+fi
+
 chown -R 1000:1000 "$BASE/n8n" "$BASE/midia"
 
 # ---------- 3. .env (segredos gerados uma unica vez) ----------
@@ -116,6 +128,7 @@ services:
       - ./n8n/data:/home/node/.n8n
       - ./n8n/files:/files
       - ./midia:/midia
+      - ./repo/automacao/n8n/workflows:/fluxos:ro
 YMLEOF
 
 # ---------- 5. Caddyfile ----------
@@ -139,7 +152,35 @@ if command -v ufw >/dev/null 2>&1 && ufw status | grep -q "Status: active"; then
   ufw allow 443/tcp >/dev/null 2>&1 || true
 fi
 
-# ---------- 7. Subir ----------
+# ---------- 7. Atalhos ----------
+cat > "$BASE/importar-fluxos.sh" <<'IMPEOF'
+#!/usr/bin/env bash
+# Importa (ou reimporta) os 3 fluxos da Vitrine Certa no n8n.
+# Rode DEPOIS de criar a conta de dono no painel do n8n.
+set -euo pipefail
+cd /opt/vitrine
+docker compose exec -u node n8n n8n import:workflow --separate --input=/fluxos
+echo
+echo "Fluxos importados. Agora, no painel do n8n:"
+echo "  1. Crie as credenciais Google Sheets, Google Drive e Anthropic."
+echo "  2. Troque COLE_O_ID_DA_PLANILHA e os ids das pastas do Drive."
+echo "  3. Ative um por um, comecando pelos fluxos 2 e 3."
+IMPEOF
+chmod +x "$BASE/importar-fluxos.sh"
+
+cat > "$BASE/atualizar.sh" <<'UPDEOF'
+#!/usr/bin/env bash
+# Puxa a versao nova dos fluxos e atualiza o n8n.
+set -euo pipefail
+git -C /opt/vitrine/repo pull --ff-only
+cd /opt/vitrine
+docker compose pull -q
+docker compose up -d
+echo "Pronto. Para reimportar os fluxos: /opt/vitrine/importar-fluxos.sh"
+UPDEOF
+chmod +x "$BASE/atualizar.sh"
+
+# ---------- 8. Subir ----------
 cd "$BASE"
 docker compose pull -q
 docker compose up -d
@@ -150,6 +191,12 @@ echo " n8n no ar (aguarde ~40s o certificado HTTPS):"
 echo "   https://${N8N_HOST}"
 echo " Midia publica:"
 echo "   https://${MIDIA_HOST}/pub/"
+echo
+echo " PROXIMO PASSO"
+echo "   1. Abra o n8n no link acima e crie a conta de dono."
+echo "   2. Rode:  /opt/vitrine/importar-fluxos.sh"
+echo
+echo " Para atualizar depois:  /opt/vitrine/atualizar.sh"
 echo
 echo " Segredos e tokens ficam em: $ENV"
 echo " Token de verificacao do webhook da Meta:"

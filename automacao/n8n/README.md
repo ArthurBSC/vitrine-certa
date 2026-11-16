@@ -20,26 +20,36 @@ No terminal do servidor, como root:
 curl -fsSL https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/install.sh | bash
 ```
 
-Instala Docker, Postgres, n8n e Caddy (HTTPS automático), e cria:
+Instala Docker, Postgres, n8n e Caddy (HTTPS automático), clona este repositório em `/opt/vitrine/repo` e cria:
 
 - `https://n8n.72-60-115-84.sslip.io` — o painel do n8n
 - `https://midia.72-60-115-84.sslip.io/pub/` — a mídia pública que o Instagram vai baixar
 - `/opt/vitrine/.env` — onde ficam os segredos e os tokens
 
-Primeiro acesso ao n8n: ele pede para criar o usuário dono. Use um e-mail seu e uma senha forte.
+Depois abra o painel, crie a conta de dono (e-mail seu e senha forte) e importe os três fluxos de uma vez:
+
+```bash
+/opt/vitrine/importar-fluxos.sh
+```
 
 ### Comandos do dia a dia
+
+Ver se está tudo de pé:
 
 ```bash
 cd /opt/vitrine && docker compose ps
 ```
 
+Acompanhar o que o n8n está fazendo:
+
 ```bash
 cd /opt/vitrine && docker compose logs -f n8n
 ```
 
+Atualizar o n8n e os fluxos (puxa o que mudou aqui no repositório):
+
 ```bash
-cd /opt/vitrine && docker compose pull && docker compose up -d
+/opt/vitrine/atualizar.sh
 ```
 
 ---
@@ -97,7 +107,7 @@ cd /opt/vitrine && nano .env && docker compose up -d --force-recreate n8n
 
 ## 5. Importar os fluxos
 
-No n8n: *Workflows → ⋯ → Import from File*, um por vez, com os arquivos de `automacao/n8n/workflows/`.
+O `importar-fluxos.sh` do passo 1 já traz os três de uma vez. Se preferir na mão: *Workflows → ⋯ → Import from File*, com os arquivos de `automacao/n8n/workflows/`.
 
 Depois, em cada um, preencha o que está marcado:
 
