@@ -14,7 +14,9 @@ A arquitetura: **Google Sheets é o cérebro** (data, hora, arquivo, legenda, li
 
 ## 1. Instalar no VPS
 
-No terminal do servidor, como root:
+> **Servidor com Easypanel, Coolify, Dokploy, nginx ou Apache já no ar?** Use o guia [easypanel.md](easypanel.md) em vez desta seção. O script abaixo sobe um Caddy próprio nas portas 80/443 e derrubaria o proxy que já existe — ele detecta isso e para antes de mexer em nada, mas o caminho certo nesse caso é o outro guia. É o caso do servidor 72.60.115.84.
+
+Em **servidor limpo**, no terminal, como root:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/install.sh | bash

@@ -14,6 +14,36 @@ MIDIA_HOST="midia.${DASH}.sslip.io"
 TZ_APP="America/Sao_Paulo"
 
 echo ">> IP detectado: $IP"
+
+# ---------- 0. O servidor esta livre? ----------
+# Este instalador sobe um Caddy proprio nas portas 80 e 443. Se ja existe
+# um proxy ali (Easypanel/Traefik, Coolify, Dokploy, nginx, Apache), subir
+# o Caddy derruba o que esta no ar. Nesse caso NAO instale por aqui:
+# use o guia automacao/n8n/easypanel.md.
+ocupadas=""
+for porta in 80 443; do
+  if ss -lnt "( sport = :$porta )" 2>/dev/null | grep -q LISTEN; then
+    ocupadas="$ocupadas $porta"
+  fi
+done
+
+if [ -n "$ocupadas" ] && [ ! -f "$BASE/docker-compose.yml" ]; then
+  echo
+  echo "!! PAREI ANTES DE MEXER EM NADA."
+  echo "!! As portas$ocupadas ja estao em uso neste servidor:"
+  ss -lntp "( sport = :80 or sport = :443 )" 2>/dev/null | tail -n +2 || true
+  if docker ps --format '{{.Image}}' 2>/dev/null | grep -qiE 'traefik|easypanel'; then
+    echo
+    echo "!! Parece Easypanel com Traefik. Instale o n8n como app do painel:"
+    echo "!!   automacao/n8n/easypanel.md"
+  else
+    echo
+    echo "!! Tem um proxy ou servidor web ai. Subir outro quebraria o que roda hoje."
+  fi
+  echo
+  exit 1
+fi
+
 echo ">> n8n   ->  https://${N8N_HOST}"
 echo ">> midia ->  https://${MIDIA_HOST}"
 
