@@ -34,3 +34,6 @@ next-env.d.ts
 
 # Claude
 .claude/
+
+# Fotos e videos para postagem (nao vao para o site)
+/midia/
