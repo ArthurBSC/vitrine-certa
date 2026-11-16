@@ -1,4 +1,5 @@
 {
+  "id": "vitrinecertapub01",
   "name": "VC 1 · Publicador automático (Drive → Instagram)",
   "nodes": [
     {
@@ -11,7 +12,10 @@
       "name": "LEIA-ME",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-1340, -220]
+      "position": [
+        -1340,
+        -220
+      ]
     },
     {
       "parameters": {
@@ -28,7 +32,10 @@
       "name": "Horários do dia",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [-860, 0]
+      "position": [
+        -860,
+        0
+      ]
     },
     {
       "parameters": {
@@ -48,7 +55,10 @@
       "name": "Planilha: calendário",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [-640, 0]
+      "position": [
+        -640,
+        0
+      ]
     },
     {
       "parameters": {
@@ -58,7 +68,10 @@
       "name": "Escolher post de agora",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-420, 0]
+      "position": [
+        -420,
+        0
+      ]
     },
     {
       "parameters": {
@@ -74,14 +87,21 @@
           "whatToSearch": "files"
         },
         "options": {
-          "fields": ["id", "name", "mimeType"]
+          "fields": [
+            "id",
+            "name",
+            "mimeType"
+          ]
         }
       },
       "id": "drive-find",
       "name": "Drive: achar arquivo",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [-200, 0]
+      "position": [
+        -200,
+        0
+      ]
     },
     {
       "parameters": {
@@ -112,7 +132,10 @@
       "name": "Nome exato",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
-      "position": [20, 0]
+      "position": [
+        20,
+        0
+      ]
     },
     {
       "parameters": {
@@ -130,7 +153,10 @@
       "name": "Drive: baixar",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [240, 0]
+      "position": [
+        240,
+        0
+      ]
     },
     {
       "parameters": {
@@ -143,7 +169,10 @@
       "name": "Salvar em /midia/pub",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
-      "position": [460, 0]
+      "position": [
+        460,
+        0
+      ]
     },
     {
       "parameters": {
@@ -154,7 +183,10 @@
       "name": "Montar chamada do IG",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [680, 0]
+      "position": [
+        680,
+        0
+      ]
     },
     {
       "parameters": {
@@ -175,7 +207,10 @@
       "name": "IG: criar container",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [900, 0]
+      "position": [
+        900,
+        0
+      ]
     },
     {
       "parameters": {
@@ -185,7 +220,10 @@
       "name": "Montar publicação",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1120, 0]
+      "position": [
+        1120,
+        0
+      ]
     },
     {
       "parameters": {
@@ -217,7 +255,10 @@
       "name": "É carrossel?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [1340, 0]
+      "position": [
+        1340,
+        0
+      ]
     },
     {
       "parameters": {
@@ -232,7 +273,10 @@
       "name": "IG: container do carrossel",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1560, -120]
+      "position": [
+        1560,
+        -120
+      ]
     },
     {
       "parameters": {
@@ -242,7 +286,10 @@
       "name": "ID do carrossel",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1780, -120]
+      "position": [
+        1780,
+        -120
+      ]
     },
     {
       "parameters": {},
@@ -250,7 +297,10 @@
       "name": "Container pronto",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [2000, 0]
+      "position": [
+        2000,
+        0
+      ]
     },
     {
       "parameters": {
@@ -260,7 +310,10 @@
       "name": "Esperar 20s",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [2220, 0],
+      "position": [
+        2220,
+        0
+      ],
       "webhookId": "vc-wait-publicador"
     },
     {
@@ -275,7 +328,10 @@
       "name": "IG: status do upload",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2440, 0]
+      "position": [
+        2440,
+        0
+      ]
     },
     {
       "parameters": {
@@ -306,7 +362,10 @@
       "name": "Processou?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [2660, 0]
+      "position": [
+        2660,
+        0
+      ]
     },
     {
       "parameters": {
@@ -337,7 +396,10 @@
       "name": "Já tentei 15x?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [2660, 240]
+      "position": [
+        2660,
+        240
+      ]
     },
     {
       "parameters": {
@@ -352,7 +414,10 @@
       "name": "IG: publicar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2880, -120]
+      "position": [
+        2880,
+        -120
+      ]
     },
     {
       "parameters": {
@@ -362,7 +427,10 @@
       "name": "Resultado: ok",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3100, -120]
+      "position": [
+        3100,
+        -120
+      ]
     },
     {
       "parameters": {
@@ -372,7 +440,10 @@
       "name": "Resultado: erro",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2880, 380]
+      "position": [
+        2880,
+        380
+      ]
     },
     {
       "parameters": {
@@ -389,7 +460,9 @@
         },
         "columns": {
           "mappingMode": "autoMapInputData",
-          "matchingColumns": ["id"],
+          "matchingColumns": [
+            "id"
+          ],
           "value": {},
           "schema": []
         },
@@ -399,81 +472,264 @@
       "name": "Planilha: anotar resultado",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [3320, 120]
+      "position": [
+        3320,
+        120
+      ]
     }
   ],
   "connections": {
     "Horários do dia": {
-      "main": [[{ "node": "Planilha: calendário", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Planilha: calendário",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Planilha: calendário": {
-      "main": [[{ "node": "Escolher post de agora", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Escolher post de agora",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Escolher post de agora": {
-      "main": [[{ "node": "Drive: achar arquivo", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Drive: achar arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Drive: achar arquivo": {
-      "main": [[{ "node": "Nome exato", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Nome exato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Nome exato": {
-      "main": [[{ "node": "Drive: baixar", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Drive: baixar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Drive: baixar": {
-      "main": [[{ "node": "Salvar em /midia/pub", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Salvar em /midia/pub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Salvar em /midia/pub": {
-      "main": [[{ "node": "Montar chamada do IG", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Montar chamada do IG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Montar chamada do IG": {
-      "main": [[{ "node": "IG: criar container", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "IG: criar container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "IG: criar container": {
-      "main": [[{ "node": "Montar publicação", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Montar publicação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Montar publicação": {
-      "main": [[{ "node": "É carrossel?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "É carrossel?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "É carrossel?": {
       "main": [
-        [{ "node": "IG: container do carrossel", "type": "main", "index": 0 }],
-        [{ "node": "Container pronto", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "IG: container do carrossel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Container pronto",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IG: container do carrossel": {
-      "main": [[{ "node": "ID do carrossel", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "ID do carrossel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "ID do carrossel": {
-      "main": [[{ "node": "Container pronto", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Container pronto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Container pronto": {
-      "main": [[{ "node": "Esperar 20s", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Esperar 20s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Esperar 20s": {
-      "main": [[{ "node": "IG: status do upload", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "IG: status do upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "IG: status do upload": {
-      "main": [[{ "node": "Processou?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Processou?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Processou?": {
       "main": [
-        [{ "node": "IG: publicar", "type": "main", "index": 0 }],
-        [{ "node": "Já tentei 15x?", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "IG: publicar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Já tentei 15x?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Já tentei 15x?": {
       "main": [
-        [{ "node": "Resultado: erro", "type": "main", "index": 0 }],
-        [{ "node": "Esperar 20s", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Resultado: erro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar 20s",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IG: publicar": {
-      "main": [[{ "node": "Resultado: ok", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Resultado: ok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Resultado: ok": {
-      "main": [[{ "node": "Planilha: anotar resultado", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Planilha: anotar resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Resultado: erro": {
-      "main": [[{ "node": "Planilha: anotar resultado", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Planilha: anotar resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -486,6 +742,5 @@
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false
-  },
-  "tags": [{ "name": "Vitrine Certa" }]
+  }
 }

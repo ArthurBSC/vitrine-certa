@@ -1,4 +1,5 @@
 {
+  "id": "vitrinecertaleg01",
   "name": "VC 3 · Legenda + narração IA (novo arquivo no Drive)",
   "nodes": [
     {
@@ -11,12 +12,19 @@
       "name": "LEIA-ME",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-1200, -240]
+      "position": [
+        -1200,
+        -240
+      ]
     },
     {
       "parameters": {
         "pollTimes": {
-          "item": [{ "mode": "everyMinute" }]
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
         },
         "triggerOn": "specificFolder",
         "folderToWatch": {
@@ -31,7 +39,10 @@
       "name": "Novo arquivo na pasta",
       "type": "n8n-nodes-base.googleDriveTrigger",
       "typeVersion": 1,
-      "position": [-700, 0]
+      "position": [
+        -700,
+        0
+      ]
     },
     {
       "parameters": {
@@ -41,7 +52,10 @@
       "name": "Dados do arquivo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-480, 0]
+      "position": [
+        -480,
+        0
+      ]
     },
     {
       "parameters": {
@@ -55,7 +69,10 @@
       "name": "Vitrine: achar o produto",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [-260, 0]
+      "position": [
+        -260,
+        0
+      ]
     },
     {
       "parameters": {
@@ -74,7 +91,10 @@
       "name": "IA: escrever legenda",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
-      "position": [-40, 0]
+      "position": [
+        -40,
+        0
+      ]
     },
     {
       "parameters": {
@@ -93,7 +113,10 @@
       "name": "Claude",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.3,
-      "position": [-120, 240]
+      "position": [
+        -120,
+        240
+      ]
     },
     {
       "parameters": {
@@ -104,7 +127,10 @@
       "name": "Formato da resposta",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
-      "position": [120, 240]
+      "position": [
+        120,
+        240
+      ]
     },
     {
       "parameters": {
@@ -114,7 +140,10 @@
       "name": "Montar linha do calendário",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [180, 0]
+      "position": [
+        180,
+        0
+      ]
     },
     {
       "parameters": {
@@ -140,7 +169,10 @@
       "name": "Planilha: gravar linha",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [400, 0]
+      "position": [
+        400,
+        0
+      ]
     },
     {
       "parameters": {
@@ -156,7 +188,11 @@
               "id": "c-el",
               "leftValue": "={{ $env.ELEVEN_API_KEY || '' }}",
               "rightValue": "",
-              "operator": { "type": "string", "operation": "notEmpty", "singleValue": true }
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -168,7 +204,10 @@
       "name": "Tem ElevenLabs?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [620, 0]
+      "position": [
+        620,
+        0
+      ]
     },
     {
       "parameters": {
@@ -177,7 +216,10 @@
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "xi-api-key", "value": "={{ $env.ELEVEN_API_KEY }}" }
+            {
+              "name": "xi-api-key",
+              "value": "={{ $env.ELEVEN_API_KEY }}"
+            }
           ]
         },
         "sendBody": true,
@@ -196,7 +238,10 @@
       "name": "ElevenLabs: narrar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [840, -120]
+      "position": [
+        840,
+        -120
+      ]
     },
     {
       "parameters": {
@@ -219,42 +264,123 @@
       "name": "Drive: salvar narração",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1060, -120]
+      "position": [
+        1060,
+        -120
+      ]
     }
   ],
   "connections": {
     "Novo arquivo na pasta": {
-      "main": [[{ "node": "Dados do arquivo", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Dados do arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Dados do arquivo": {
-      "main": [[{ "node": "Vitrine: achar o produto", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Vitrine: achar o produto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Vitrine: achar o produto": {
-      "main": [[{ "node": "IA: escrever legenda", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "IA: escrever legenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Claude": {
-      "ai_languageModel": [[{ "node": "IA: escrever legenda", "type": "ai_languageModel", "index": 0 }]]
+      "ai_languageModel": [
+        [
+          {
+            "node": "IA: escrever legenda",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Formato da resposta": {
-      "ai_outputParser": [[{ "node": "IA: escrever legenda", "type": "ai_outputParser", "index": 0 }]]
+      "ai_outputParser": [
+        [
+          {
+            "node": "IA: escrever legenda",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
     },
     "IA: escrever legenda": {
-      "main": [[{ "node": "Montar linha do calendário", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Montar linha do calendário",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Montar linha do calendário": {
-      "main": [[{ "node": "Planilha: gravar linha", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Planilha: gravar linha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Planilha: gravar linha": {
-      "main": [[{ "node": "Tem ElevenLabs?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Tem ElevenLabs?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Tem ElevenLabs?": {
       "main": [
-        [{ "node": "ElevenLabs: narrar", "type": "main", "index": 0 }],
+        [
+          {
+            "node": "ElevenLabs: narrar",
+            "type": "main",
+            "index": 0
+          }
+        ],
         []
       ]
     },
     "ElevenLabs: narrar": {
-      "main": [[{ "node": "Drive: salvar narração", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Drive: salvar narração",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -263,6 +389,7 @@
     "saveExecutionProgress": true
   },
   "pinData": {},
-  "meta": { "templateCredsSetupCompleted": false },
-  "tags": [{ "name": "Vitrine Certa" }]
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
 }

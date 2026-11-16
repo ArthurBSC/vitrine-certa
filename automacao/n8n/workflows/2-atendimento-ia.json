@@ -1,4 +1,5 @@
 {
+  "id": "vitrinecertaatd01",
   "name": "VC 2 · Atendimento IA (comentários + direct)",
   "nodes": [
     {
@@ -11,13 +12,19 @@
       "name": "LEIA-ME",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-1180, -240]
+      "position": [
+        -1180,
+        -240
+      ]
     },
     {
       "parameters": {
         "httpMethod": "POST",
         "multipleMethods": true,
-        "httpMethods": ["GET", "POST"],
+        "httpMethods": [
+          "GET",
+          "POST"
+        ],
         "path": "instagram",
         "responseMode": "responseNode",
         "options": {}
@@ -26,7 +33,10 @@
       "name": "Entrada da Meta",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [-700, 0],
+      "position": [
+        -700,
+        0
+      ],
       "webhookId": "vc-instagram-webhook"
     },
     {
@@ -58,7 +68,10 @@
       "name": "É a verificação da Meta?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [-480, 0]
+      "position": [
+        -480,
+        0
+      ]
     },
     {
       "parameters": {
@@ -70,7 +83,10 @@
       "name": "Devolver o challenge",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [-260, -160]
+      "position": [
+        -260,
+        -160
+      ]
     },
     {
       "parameters": {
@@ -82,7 +98,10 @@
       "name": "Responder 200 na hora",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [-260, 120]
+      "position": [
+        -260,
+        120
+      ]
     },
     {
       "parameters": {
@@ -92,7 +111,10 @@
       "name": "Normalizar evento",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-40, 120]
+      "position": [
+        -40,
+        120
+      ]
     },
     {
       "parameters": {
@@ -106,7 +128,10 @@
       "name": "Atendente IA",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
-      "position": [200, 120]
+      "position": [
+        200,
+        120
+      ]
     },
     {
       "parameters": {
@@ -125,7 +150,10 @@
       "name": "Claude",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.3,
-      "position": [120, 360]
+      "position": [
+        120,
+        360
+      ]
     },
     {
       "parameters": {
@@ -137,7 +165,10 @@
       "name": "Memória da conversa",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
-      "position": [280, 360]
+      "position": [
+        280,
+        360
+      ]
     },
     {
       "parameters": {
@@ -159,7 +190,10 @@
       "name": "catalogo_vitrine",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
-      "position": [440, 360]
+      "position": [
+        440,
+        360
+      ]
     },
     {
       "parameters": {
@@ -178,7 +212,10 @@
                     "id": "r-com",
                     "leftValue": "={{ $('Normalizar evento').item.json.tipo }}",
                     "rightValue": "comentario",
-                    "operator": { "type": "string", "operation": "equals" }
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
                   }
                 ],
                 "combinator": "and"
@@ -199,7 +236,10 @@
                     "id": "r-dm",
                     "leftValue": "={{ $('Normalizar evento').item.json.tipo }}",
                     "rightValue": "dm",
-                    "operator": { "type": "string", "operation": "equals" }
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
                   }
                 ],
                 "combinator": "and"
@@ -216,7 +256,10 @@
       "name": "Comentário ou direct?",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
-      "position": [580, 120]
+      "position": [
+        580,
+        120
+      ]
     },
     {
       "parameters": {
@@ -231,7 +274,10 @@
       "name": "IG: responder o comentário",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [820, 0]
+      "position": [
+        820,
+        0
+      ]
     },
     {
       "parameters": {
@@ -255,7 +301,10 @@
       "name": "IG: mandar no direct também",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1040, 0]
+      "position": [
+        1040,
+        0
+      ]
     },
     {
       "parameters": {
@@ -273,7 +322,10 @@
       "name": "IG: responder o direct",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [820, 240]
+      "position": [
+        820,
+        240
+      ]
     },
     {
       "parameters": {
@@ -283,7 +335,10 @@
       "name": "Montar log",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1260, 120]
+      "position": [
+        1260,
+        120
+      ]
     },
     {
       "parameters": {
@@ -309,54 +364,169 @@
       "name": "Planilha: log do atendimento",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [1480, 120]
+      "position": [
+        1480,
+        120
+      ]
     }
   ],
   "connections": {
     "Entrada da Meta": {
-      "main": [[{ "node": "É a verificação da Meta?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "É a verificação da Meta?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "É a verificação da Meta?": {
       "main": [
-        [{ "node": "Devolver o challenge", "type": "main", "index": 0 }],
-        [{ "node": "Responder 200 na hora", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Devolver o challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder 200 na hora",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Responder 200 na hora": {
-      "main": [[{ "node": "Normalizar evento", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Normalizar evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Normalizar evento": {
-      "main": [[{ "node": "Atendente IA", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Atendente IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Claude": {
-      "ai_languageModel": [[{ "node": "Atendente IA", "type": "ai_languageModel", "index": 0 }]]
+      "ai_languageModel": [
+        [
+          {
+            "node": "Atendente IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Memória da conversa": {
-      "ai_memory": [[{ "node": "Atendente IA", "type": "ai_memory", "index": 0 }]]
+      "ai_memory": [
+        [
+          {
+            "node": "Atendente IA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     },
     "catalogo_vitrine": {
-      "ai_tool": [[{ "node": "Atendente IA", "type": "ai_tool", "index": 0 }]]
+      "ai_tool": [
+        [
+          {
+            "node": "Atendente IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Atendente IA": {
-      "main": [[{ "node": "Comentário ou direct?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Comentário ou direct?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Comentário ou direct?": {
       "main": [
-        [{ "node": "IG: responder o comentário", "type": "main", "index": 0 }],
-        [{ "node": "IG: responder o direct", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "IG: responder o comentário",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IG: responder o direct",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IG: responder o comentário": {
-      "main": [[{ "node": "IG: mandar no direct também", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "IG: mandar no direct também",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "IG: mandar no direct também": {
-      "main": [[{ "node": "Montar log", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Montar log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "IG: responder o direct": {
-      "main": [[{ "node": "Montar log", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Montar log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Montar log": {
-      "main": [[{ "node": "Planilha: log do atendimento", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Planilha: log do atendimento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -365,6 +535,7 @@
     "saveExecutionProgress": true
   },
   "pinData": {},
-  "meta": { "templateCredsSetupCompleted": false },
-  "tags": [{ "name": "Vitrine Certa" }]
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
 }
