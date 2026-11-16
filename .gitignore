@@ -37,3 +37,4 @@ next-env.d.ts
 
 # Fotos e videos para postagem (nao vao para o site)
 /midia/
+/midia.zip

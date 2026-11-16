@@ -1,0 +1,370 @@
+{
+  "name": "VC 2 · Atendimento IA (comentários + direct)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está em `/opt/vitrine/.env`.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial da Anthropic (ou troque o nó do modelo por OpenAI).\n- `IG_USER_ID` e `IG_TOKEN` no `.env` do VPS.\n- O endpoint `/api/catalogo` da vitrine no ar.",
+        "height": 440,
+        "width": 420
+      },
+      "id": "nota-2",
+      "name": "LEIA-ME",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1180, -240]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "multipleMethods": true,
+        "httpMethods": ["GET", "POST"],
+        "path": "instagram",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh",
+      "name": "Entrada da Meta",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-700, 0],
+      "webhookId": "vc-instagram-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c-sub",
+              "leftValue": "={{ $json.query && $json.query['hub.mode'] ? $json.query['hub.mode'] : '' }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "if-verif",
+      "name": "É a verificação da Meta?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-480, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {}
+      },
+      "id": "resp-chal",
+      "name": "Devolver o challenge",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [-260, -160]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "EVENT_RECEIVED",
+        "options": {}
+      },
+      "id": "resp-ack",
+      "name": "Responder 200 na hora",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [-260, 120]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $('Entrada da Meta').first().json.body || {};\nconst out = [];\n\nfor (const entry of body.entry || []) {\n  // Comentários\n  for (const ch of entry.changes || []) {\n    const v = ch.value || {};\n    if (ch.field === 'comments' && v.id) {\n      out.push({ json: {\n        tipo: 'comentario',\n        comment_id: v.id,\n        texto: v.text || '',\n        autor: (v.from && v.from.username) || '',\n        autor_id: (v.from && v.from.id) || '',\n        media_id: (v.media && v.media.id) || ''\n      } });\n    }\n  }\n  // Directs\n  for (const m of entry.messaging || []) {\n    if (m.message && m.message.text && !m.message.is_echo) {\n      out.push({ json: {\n        tipo: 'dm',\n        sender_id: m.sender && m.sender.id,\n        texto: m.message.text,\n        autor: '',\n        autor_id: (m.sender && m.sender.id) || ''\n      } });\n    }\n  }\n}\n\n// Não responde a si mesmo\nreturn out.filter(o => String(o.json.autor_id) !== String($env.IG_USER_ID || ''));"
+      },
+      "id": "norm",
+      "name": "Normalizar evento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-40, 120]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.tipo === 'comentario' ? ('Comentário de @' + $json.autor + ': ' + $json.texto) : ('Direct: ' + $json.texto) }}",
+        "options": {
+          "systemMessage": "Você é o atendimento da Vitrine Certa (@vitrinecertaooficial), uma vitrine de achadinhos da Shopee.\n\nComo responder:\n- Português do Brasil, simpático, direto, no máximo 2 frases curtas. Pode usar 1 emoji.\n- SEMPRE use a ferramenta catalogo_vitrine antes de falar de qualquer produto. Nunca invente nome, preço ou link.\n- Quando achar o produto, responda com o nome curto e o link de afiliado exatamente como vem da ferramenta.\n- Se não achar nada parecido, diga que vai verificar e convide a pessoa a ver a vitrine completa: {{ $env.VITRINE_URL }}\n- Pergunta sobre entrega, pagamento, troca ou rastreio: explique que a compra e o suporte são feitos dentro da Shopee, pelo app.\n- Nunca prometa prazo, desconto, frete grátis ou devolução.\n- Nunca peça CPF, endereço, telefone, e-mail, foto de documento ou dado de cartão. Se a pessoa mandar, não repita o dado.\n- Se for elogio, agradeça em uma frase. Se for ofensa ou spam, responda apenas com um agradecimento neutro.\n- Se perguntarem se você é um robô, assuma que é um atendimento automático da Vitrine Certa.\n- Somos afiliados: ganhamos comissão da Shopee quando alguém compra pelo nosso link. Se perguntarem, diga isso sem rodeio.\n\nResponda apenas com o texto da resposta, sem aspas e sem assinatura."
+        }
+      },
+      "id": "agente",
+      "name": "Atendente IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [200, 120]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-5-5",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-5-5"
+        },
+        "options": {
+          "maxTokensToSample": 400,
+          "temperature": 0.4
+        }
+      },
+      "id": "modelo",
+      "name": "Claude",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [120, 360]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.autor_id || $json.sender_id || 'anon' }}",
+        "contextWindowLength": 8
+      },
+      "id": "memoria",
+      "name": "Memória da conversa",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [280, 360]
+    },
+    {
+      "parameters": {
+        "toolDescription": "Busca produtos na vitrine da Shopee por palavra-chave e devolve nome, categoria, descrição, quantos já venderam e o link de afiliado. Use sempre que a pessoa citar um produto, uma categoria ou pedir indicação.",
+        "url": "={{ $env.VITRINE_URL }}/api/catalogo",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "q",
+              "valueProvider": "modelRequired",
+              "description": "Palavra-chave do produto em português, por exemplo: projetor, potes, furadeira"
+            }
+          ]
+        },
+        "optimizeResponse": false
+      },
+      "id": "tool-cat",
+      "name": "catalogo_vitrine",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [440, 360]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "r-com",
+                    "leftValue": "={{ $('Normalizar evento').item.json.tipo }}",
+                    "rightValue": "comentario",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "comentario"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "r-dm",
+                    "leftValue": "={{ $('Normalizar evento').item.json.tipo }}",
+                    "rightValue": "dm",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "direct"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "sw",
+      "name": "Comentário ou direct?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [580, 120]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Normalizar evento').item.json.comment_id }}/replies",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ message: $json.output, access_token: $env.IG_TOKEN }) }}",
+        "options": {}
+      },
+      "id": "ig-reply",
+      "name": "IG: responder o comentário",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/messages",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ access_token: $env.IG_TOKEN }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ recipient: { comment_id: $('Normalizar evento').item.json.comment_id }, message: { text: $('Atendente IA').item.json.output } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "ig-priv",
+      "name": "IG: mandar no direct também",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/messages",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ access_token: $env.IG_TOKEN }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ recipient: { id: $('Normalizar evento').item.json.sender_id }, message: { text: $json.output } }) }}",
+        "options": {}
+      },
+      "id": "ig-dm",
+      "name": "IG: responder o direct",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ev = $('Normalizar evento').first().json;\nconst resp = $('Atendente IA').first().json.output;\nreturn [{ json: {\n  quando: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),\n  tipo: ev.tipo,\n  autor: ev.autor || ev.autor_id || '',\n  mensagem: ev.texto,\n  resposta: resp\n} }];"
+      },
+      "id": "log",
+      "name": "Montar log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 120]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "COLE_O_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Atendimento",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "log-sheet",
+      "name": "Planilha: log do atendimento",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1480, 120]
+    }
+  ],
+  "connections": {
+    "Entrada da Meta": {
+      "main": [[{ "node": "É a verificação da Meta?", "type": "main", "index": 0 }]]
+    },
+    "É a verificação da Meta?": {
+      "main": [
+        [{ "node": "Devolver o challenge", "type": "main", "index": 0 }],
+        [{ "node": "Responder 200 na hora", "type": "main", "index": 0 }]
+      ]
+    },
+    "Responder 200 na hora": {
+      "main": [[{ "node": "Normalizar evento", "type": "main", "index": 0 }]]
+    },
+    "Normalizar evento": {
+      "main": [[{ "node": "Atendente IA", "type": "main", "index": 0 }]]
+    },
+    "Claude": {
+      "ai_languageModel": [[{ "node": "Atendente IA", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "Memória da conversa": {
+      "ai_memory": [[{ "node": "Atendente IA", "type": "ai_memory", "index": 0 }]]
+    },
+    "catalogo_vitrine": {
+      "ai_tool": [[{ "node": "Atendente IA", "type": "ai_tool", "index": 0 }]]
+    },
+    "Atendente IA": {
+      "main": [[{ "node": "Comentário ou direct?", "type": "main", "index": 0 }]]
+    },
+    "Comentário ou direct?": {
+      "main": [
+        [{ "node": "IG: responder o comentário", "type": "main", "index": 0 }],
+        [{ "node": "IG: responder o direct", "type": "main", "index": 0 }]
+      ]
+    },
+    "IG: responder o comentário": {
+      "main": [[{ "node": "IG: mandar no direct também", "type": "main", "index": 0 }]]
+    },
+    "IG: mandar no direct também": {
+      "main": [[{ "node": "Montar log", "type": "main", "index": 0 }]]
+    },
+    "IG: responder o direct": {
+      "main": [[{ "node": "Montar log", "type": "main", "index": 0 }]]
+    },
+    "Montar log": {
+      "main": [[{ "node": "Planilha: log do atendimento", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveExecutionProgress": true
+  },
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": [{ "name": "Vitrine Certa" }]
+}

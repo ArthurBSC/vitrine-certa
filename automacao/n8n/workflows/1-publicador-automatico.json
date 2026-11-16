@@ -1,0 +1,491 @@
+{
+  "name": "VC 1 · Publicador automático (Drive → Instagram)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Acha o arquivo no Drive pelo nome da coluna `arquivo`, baixa e republica em `https://midia.SEU-IP.sslip.io/pub/...` (o Instagram exige URL pública).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\n- Os dois nós de planilha: id da planilha.\n- O nó **Drive: achar arquivo**: id da pasta do Drive.\n- No VPS, em `/opt/vitrine/.env`: `IG_USER_ID` e `IG_TOKEN`.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
+        "height": 480,
+        "width": 420
+      },
+      "id": "nota-1",
+      "name": "LEIA-ME",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1340, -220]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9,13,19,20 * * *"
+            }
+          ]
+        }
+      },
+      "id": "sched",
+      "name": "Horários do dia",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-860, 0]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "COLE_O_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Calendario",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "sheet-read",
+      "name": "Planilha: calendário",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [-640, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const linhas = $input.all().map(i => i.json);\nconst tz = 'America/Sao_Paulo';\nconst agora = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));\nconst p = n => String(n).padStart(2, '0');\nconst hoje = `${agora.getFullYear()}-${p(agora.getMonth() + 1)}-${p(agora.getDate())}`;\nconst hora = agora.getHours();\n\nconst alvo = linhas.find(l =>\n  String(l.data || '').trim().slice(0, 10) === hoje &&\n  parseInt(String(l.hora || '-1'), 10) === hora &&\n  String(l.status || '').toUpperCase() !== 'POSTADO'\n);\n\n// Nada marcado para esta hora: a execução simplesmente termina aqui.\nif (!alvo) return [];\n\nconst arquivos = String(alvo.arquivo || '').split('|').map(s => s.trim()).filter(Boolean);\nif (!arquivos.length) throw new Error('Linha sem arquivo: ' + JSON.stringify(alvo));\n\nconst story = String(alvo.tipo || '').toLowerCase().startsWith('story');\nconst legenda = [alvo.legenda, alvo.link ? '🔗 ' + alvo.link : '', alvo.hashtags]\n  .filter(Boolean).join('\\n\\n');\n\nreturn arquivos.map((arquivo, i) => {\n  const video = /\\.(mp4|mov)$/i.test(arquivo);\n  return {\n    json: {\n      linha_id: alvo.id,\n      arquivo,\n      total: arquivos.length,\n      indice: i,\n      carrossel: arquivos.length > 1,\n      story,\n      video,\n      media_type: story ? 'STORIES' : (video ? 'REELS' : 'IMAGE'),\n      legenda,\n      produto: alvo.produto,\n      link: alvo.link,\n      data: alvo.data,\n      hora: alvo.hora,\n      tipo: alvo.tipo\n    }\n  };\n});"
+      },
+      "id": "escolher",
+      "name": "Escolher post de agora",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-420, 0]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.arquivo }}",
+        "limit": 10,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "COLE_O_ID_DA_PASTA_DO_DRIVE",
+            "mode": "id"
+          },
+          "whatToSearch": "files"
+        },
+        "options": {
+          "fields": ["id", "name", "mimeType"]
+        }
+      },
+      "id": "drive-find",
+      "name": "Drive: achar arquivo",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-200, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "={{ $('Escolher post de agora').item.json.arquivo }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "filtro-nome",
+      "name": "Nome exato",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [20, 0]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "drive-down",
+      "name": "Drive: baixar",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/midia/pub/{{ $('Escolher post de agora').item.json.arquivo }}",
+        "dataPropertyName": "data",
+        "options": {}
+      },
+      "id": "salvar",
+      "name": "Salvar em /midia/pub",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [460, 0]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const d = $('Escolher post de agora').item.json;\nconst url = $env.MIDIA_BASE_URL + '/pub/' + encodeURIComponent(d.arquivo);\n\nlet q;\nif (d.carrossel) {\n  q = d.video\n    ? { media_type: 'VIDEO', video_url: url, is_carousel_item: true }\n    : { image_url: url, is_carousel_item: true };\n} else if (d.media_type === 'STORIES') {\n  q = d.video\n    ? { media_type: 'STORIES', video_url: url }\n    : { media_type: 'STORIES', image_url: url };\n} else if (d.media_type === 'REELS') {\n  q = { media_type: 'REELS', video_url: url, caption: d.legenda, share_to_feed: true };\n} else {\n  q = { image_url: url, caption: d.legenda };\n}\nq.access_token = $env.IG_TOKEN;\n\nreturn { json: { ...d, url, ig_query: q } };"
+      },
+      "id": "montar",
+      "name": "Montar chamada do IG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/media",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify($json.ig_query) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "ig-container",
+      "name": "IG: criar container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ids = $input.all().map(i => i.json.id);\nconst base = $('Escolher post de agora').first().json;\nconst comum = {\n  linha_id: base.linha_id,\n  legenda: base.legenda,\n  produto: base.produto,\n  data: base.data,\n  hora: base.hora,\n  tipo: base.tipo,\n  carrossel: !!base.carrossel\n};\n\nif (!base.carrossel) {\n  return [{ json: { ...comum, creation_id: ids[0] } }];\n}\nreturn [{ json: { ...comum, children: ids.join(',') } }];"
+      },
+      "id": "montar-pub",
+      "name": "Montar publicação",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c-carr",
+              "leftValue": "={{ $json.carrossel }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "if-carr",
+      "name": "É carrossel?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1340, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/media",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ media_type: 'CAROUSEL', children: $json.children, caption: $json.legenda, access_token: $env.IG_TOKEN }) }}",
+        "options": {}
+      },
+      "id": "ig-carr",
+      "name": "IG: container do carrossel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, -120]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ...$('Montar publicação').first().json, creation_id: $input.first().json.id } }];"
+      },
+      "id": "carr-id",
+      "name": "ID do carrossel",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, -120]
+    },
+    {
+      "parameters": {},
+      "id": "container-ok",
+      "name": "Container pronto",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2000, 0]
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "id": "esperar",
+      "name": "Esperar 20s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2220, 0],
+      "webhookId": "vc-wait-publicador"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Container pronto').first().json.creation_id }}",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ fields: 'status_code,status', access_token: $env.IG_TOKEN }) }}",
+        "options": {}
+      },
+      "id": "ig-status",
+      "name": "IG: status do upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2440, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c-fin",
+              "leftValue": "={{ $json.status_code }}",
+              "rightValue": "FINISHED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "if-pronto",
+      "name": "Processou?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2660, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c-giveup",
+              "leftValue": "={{ $runIndex }}",
+              "rightValue": 15,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "if-desistir",
+      "name": "Já tentei 15x?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2660, 240]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/media_publish",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ creation_id: $('Container pronto').first().json.creation_id, access_token: $env.IG_TOKEN }) }}",
+        "options": {}
+      },
+      "id": "ig-publicar",
+      "name": "IG: publicar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2880, -120]
+    },
+    {
+      "parameters": {
+        "jsCode": "const base = $('Container pronto').first().json;\nconst agora = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });\nreturn [{\n  json: {\n    id: base.linha_id,\n    status: 'POSTADO',\n    post_id: $input.first().json.id || '',\n    postado_em: agora\n  }\n}];"
+      },
+      "id": "res-ok",
+      "name": "Resultado: ok",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3100, -120]
+    },
+    {
+      "parameters": {
+        "jsCode": "const base = $('Container pronto').first().json;\nconst agora = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });\nreturn [{\n  json: {\n    id: base.linha_id,\n    status: 'ERRO',\n    post_id: '',\n    postado_em: agora + ' — o Instagram não terminou de processar o vídeo'\n  }\n}];"
+      },
+      "id": "res-erro",
+      "name": "Resultado: erro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2880, 380]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "COLE_O_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Calendario",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": ["id"],
+          "value": {},
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "sheet-write",
+      "name": "Planilha: anotar resultado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [3320, 120]
+    }
+  ],
+  "connections": {
+    "Horários do dia": {
+      "main": [[{ "node": "Planilha: calendário", "type": "main", "index": 0 }]]
+    },
+    "Planilha: calendário": {
+      "main": [[{ "node": "Escolher post de agora", "type": "main", "index": 0 }]]
+    },
+    "Escolher post de agora": {
+      "main": [[{ "node": "Drive: achar arquivo", "type": "main", "index": 0 }]]
+    },
+    "Drive: achar arquivo": {
+      "main": [[{ "node": "Nome exato", "type": "main", "index": 0 }]]
+    },
+    "Nome exato": {
+      "main": [[{ "node": "Drive: baixar", "type": "main", "index": 0 }]]
+    },
+    "Drive: baixar": {
+      "main": [[{ "node": "Salvar em /midia/pub", "type": "main", "index": 0 }]]
+    },
+    "Salvar em /midia/pub": {
+      "main": [[{ "node": "Montar chamada do IG", "type": "main", "index": 0 }]]
+    },
+    "Montar chamada do IG": {
+      "main": [[{ "node": "IG: criar container", "type": "main", "index": 0 }]]
+    },
+    "IG: criar container": {
+      "main": [[{ "node": "Montar publicação", "type": "main", "index": 0 }]]
+    },
+    "Montar publicação": {
+      "main": [[{ "node": "É carrossel?", "type": "main", "index": 0 }]]
+    },
+    "É carrossel?": {
+      "main": [
+        [{ "node": "IG: container do carrossel", "type": "main", "index": 0 }],
+        [{ "node": "Container pronto", "type": "main", "index": 0 }]
+      ]
+    },
+    "IG: container do carrossel": {
+      "main": [[{ "node": "ID do carrossel", "type": "main", "index": 0 }]]
+    },
+    "ID do carrossel": {
+      "main": [[{ "node": "Container pronto", "type": "main", "index": 0 }]]
+    },
+    "Container pronto": {
+      "main": [[{ "node": "Esperar 20s", "type": "main", "index": 0 }]]
+    },
+    "Esperar 20s": {
+      "main": [[{ "node": "IG: status do upload", "type": "main", "index": 0 }]]
+    },
+    "IG: status do upload": {
+      "main": [[{ "node": "Processou?", "type": "main", "index": 0 }]]
+    },
+    "Processou?": {
+      "main": [
+        [{ "node": "IG: publicar", "type": "main", "index": 0 }],
+        [{ "node": "Já tentei 15x?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Já tentei 15x?": {
+      "main": [
+        [{ "node": "Resultado: erro", "type": "main", "index": 0 }],
+        [{ "node": "Esperar 20s", "type": "main", "index": 0 }]
+      ]
+    },
+    "IG: publicar": {
+      "main": [[{ "node": "Resultado: ok", "type": "main", "index": 0 }]]
+    },
+    "Resultado: ok": {
+      "main": [[{ "node": "Planilha: anotar resultado", "type": "main", "index": 0 }]]
+    },
+    "Resultado: erro": {
+      "main": [[{ "node": "Planilha: anotar resultado", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [{ "name": "Vitrine Certa" }]
+}

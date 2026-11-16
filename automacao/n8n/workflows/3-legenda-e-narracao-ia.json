@@ -1,0 +1,268 @@
+{
+  "name": "VC 3 · Legenda + narração IA (novo arquivo no Drive)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Esteira de conteúdo\n\nVocê joga um vídeo ou foto na pasta **1-ENTRADA** do Drive. Em até 1 minuto o n8n:\n\n1. Consulta o catálogo real da vitrine pelo nome do arquivo.\n2. A IA escreve gancho, legenda e hashtags no tom da Vitrine Certa, já com o link de afiliado certo.\n3. Grava a linha na aba **Calendario** com status `A PROGRAMAR` — você só escolhe a data e a hora.\n4. Se houver chave da ElevenLabs, gera a narração em MP3 e salva na pasta **NARRACAO** do Drive.\n\n### Nome do arquivo manda\nColoque no nome uma palavra do produto: `projetor-hy300.mp4`, `kit-potes.mp4`. É por aí que a IA acha o produto e o link.",
+        "height": 420,
+        "width": 420
+      },
+      "id": "nota-3",
+      "name": "LEIA-ME",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1200, -240]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [{ "mode": "everyMinute" }]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "COLE_O_ID_DA_PASTA_1_ENTRADA",
+          "mode": "id"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "id": "drive-trig",
+      "name": "Novo arquivo na pasta",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [-700, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const f = $input.first().json;\nconst nome = f.name || '';\nconst base = nome.replace(/\\.[a-z0-9]+$/i, '');\nconst busca = base.replace(/[-_0-9]+/g, ' ').replace(/\\s+/g, ' ').trim();\n\nreturn [{ json: {\n  file_id: f.id,\n  arquivo: nome,\n  mimeType: f.mimeType || '',\n  video: /\\.(mp4|mov)$/i.test(nome),\n  busca\n} }];"
+      },
+      "id": "dados",
+      "name": "Dados do arquivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-480, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.VITRINE_URL }}/api/catalogo",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ q: $json.busca, limit: 3 }) }}",
+        "options": {}
+      },
+      "id": "catalogo",
+      "name": "Vitrine: achar o produto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-260, 0]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Arquivo novo: {{ $('Dados do arquivo').item.json.arquivo }}\nFormato: {{ $('Dados do arquivo').item.json.video ? 'vídeo (Reels ou Story)' : 'foto' }}\n\nProdutos que combinam, vindos da vitrine (use o PRIMEIRO, a não ser que outro case muito melhor com o nome do arquivo):\n{{ JSON.stringify($json.produtos || $json) }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Você escreve as legendas da Vitrine Certa (@vitrinecertaooficial), uma vitrine de achadinhos da Shopee.\n\nTom: português do Brasil, direto, de quem mostra um achado pra um amigo. Sem jargão de marketing, sem \"imperdível\", sem CAIXA ALTA, sem promessa de preço ou frete.\n\nRegras:\n- gancho: uma linha de até 40 caracteres que faça a pessoa parar o dedo, com 1 emoji no fim.\n- legenda: 2 a 3 frases curtas dizendo o que o produto resolve no dia a dia. Se os dados trouxerem quantidade vendida ou nota, cite uma vez, como prova social. Nunca invente número.\n- Termine a legenda com: 🔗 Link na bio → categoria <categoria do produto>\n- hashtags: 6 a 9 hashtags em uma linha, começando por #achadinhosshopee #achadinhos #shopee, depois as da categoria, e sempre terminando com #publi.\n- produto: o nome curto do produto escolhido (no máximo 60 caracteres).\n- link: o link de afiliado do produto escolhido, copiado exatamente como veio.\n- narracao: o mesmo conteúdo em 2 frases faladas, naturais, para uma voz de IA ler em cima do vídeo. Sem emoji e sem hashtag."
+            }
+          ]
+        }
+      },
+      "id": "chain",
+      "name": "IA: escrever legenda",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-5-5",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-5-5"
+        },
+        "options": {
+          "maxTokensToSample": 700,
+          "temperature": 0.7
+        }
+      },
+      "id": "modelo",
+      "name": "Claude",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [-120, 240]
+    },
+    {
+      "parameters": {
+        "schemaType": "fromJson",
+        "jsonSchemaExample": "{\n  \"gancho\": \"Despensa bagunçada tem solução 👀\",\n  \"legenda\": \"Kit com 20 potes herméticos em 3 tamanhos. Empilham, fecham de verdade e o mantimento dura muito mais.\\n⭐ +20 mil vendidos · nota 4,9\\n\\n🔗 Link na bio → categoria Cozinha\",\n  \"hashtags\": \"#achadinhosshopee #achadinhos #shopee #cozinha #organizacao #utilidadesdomesticas #publi\",\n  \"produto\": \"Kit 20 Potes Herméticos\",\n  \"link\": \"https://s.shopee.com.br/6L624BbKUB\",\n  \"categoria\": \"Cozinha\",\n  \"narracao\": \"Esse kit tem vinte potes herméticos em três tamanhos. Eles empilham, fecham de verdade e o mantimento dura muito mais.\"\n}"
+      },
+      "id": "parser",
+      "name": "Formato da resposta",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [120, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ia = $input.first().json.output || $input.first().json;\nconst arq = $('Dados do arquivo').first().json;\n\nconst legendaCompleta = [ia.gancho, '', ia.legenda].join('\\n');\n\nreturn [{ json: {\n  id: 'auto-' + Date.now(),\n  data: '',\n  hora: '',\n  tipo: arq.video ? 'feed' : 'story',\n  formato: arq.video ? 'Reels' : 'Story',\n  produto: ia.produto || '',\n  categoria: ia.categoria || '',\n  arquivo: arq.arquivo,\n  link: ia.link || '',\n  legenda: legendaCompleta,\n  hashtags: ia.hashtags || '',\n  status: 'A PROGRAMAR',\n  post_id: '',\n  postado_em: '',\n  narracao: ia.narracao || ''\n} }];"
+      },
+      "id": "linha",
+      "name": "Montar linha do calendário",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [180, 0]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "COLE_O_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Calendario",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "sheet-add",
+      "name": "Planilha: gravar linha",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c-el",
+              "leftValue": "={{ $env.ELEVEN_API_KEY || '' }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "if-el",
+      "name": "Tem ElevenLabs?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [620, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.elevenlabs.io/v1/text-to-speech/{{ $env.ELEVEN_VOICE_ID }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "xi-api-key", "value": "={{ $env.ELEVEN_API_KEY }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $('Montar linha do calendário').item.json.narracao, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.45, similarity_boost: 0.8, style: 0.2 } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "eleven",
+      "name": "ElevenLabs: narrar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [840, -120]
+    },
+    {
+      "parameters": {
+        "name": "=narracao-{{ $('Montar linha do calendário').item.json.arquivo.replace(/\\.[a-z0-9]+$/i, '') }}.mp3",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "COLE_O_ID_DA_PASTA_NARRACAO",
+          "mode": "id"
+        },
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "drive-up",
+      "name": "Drive: salvar narração",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1060, -120]
+    }
+  ],
+  "connections": {
+    "Novo arquivo na pasta": {
+      "main": [[{ "node": "Dados do arquivo", "type": "main", "index": 0 }]]
+    },
+    "Dados do arquivo": {
+      "main": [[{ "node": "Vitrine: achar o produto", "type": "main", "index": 0 }]]
+    },
+    "Vitrine: achar o produto": {
+      "main": [[{ "node": "IA: escrever legenda", "type": "main", "index": 0 }]]
+    },
+    "Claude": {
+      "ai_languageModel": [[{ "node": "IA: escrever legenda", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "Formato da resposta": {
+      "ai_outputParser": [[{ "node": "IA: escrever legenda", "type": "ai_outputParser", "index": 0 }]]
+    },
+    "IA: escrever legenda": {
+      "main": [[{ "node": "Montar linha do calendário", "type": "main", "index": 0 }]]
+    },
+    "Montar linha do calendário": {
+      "main": [[{ "node": "Planilha: gravar linha", "type": "main", "index": 0 }]]
+    },
+    "Planilha: gravar linha": {
+      "main": [[{ "node": "Tem ElevenLabs?", "type": "main", "index": 0 }]]
+    },
+    "Tem ElevenLabs?": {
+      "main": [
+        [{ "node": "ElevenLabs: narrar", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "ElevenLabs: narrar": {
+      "main": [[{ "node": "Drive: salvar narração", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveExecutionProgress": true
+  },
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": [{ "name": "Vitrine Certa" }]
+}
