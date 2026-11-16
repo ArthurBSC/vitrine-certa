@@ -1,50 +1,52 @@
-# Instalar o n8n no VPS que já tem Easypanel
+# n8n no VPS com Easypanel — como ficou
 
-Este é o caminho **para o servidor 72.60.115.84**, que já roda:
+Registro do que está instalado no servidor **72.60.115.84**, para quando precisar mexer ou refazer.
 
-- Easypanel (painel na porta 3000) e **Traefik** mandando nas portas 80/443
+## Por que não o install.sh
+
+Esse VPS não está vazio. Ele roda:
+
+- **Easypanel** (painel na porta 3000) e **Traefik 3.6.7** mandando nas portas 80/443
 - projeto `prjleads`: Evolution API + Postgres 17 + Redis
 - CRM Leads (backend, worker, Postgres, Redis) na porta 3333
-- NURA na porta 4001
+- NURA na porta 4001, servindo `nurasys.com.br`, `api.nurasys.com.br`, `exibicao.nurasys.com.br`, `unialfa.nurasys.com.br` e `ngbagent.com.br`
 
-Por isso **não** se usa o `install.sh` aqui: ele subiria um Caddy próprio nas portas 80/443 e derrubaria o Traefik, levando CRM e Evolution API com ele. O `install.sh` agora detecta isso e para antes de mexer em nada — ele serve para um servidor limpo.
+O `install.sh` sobe um Caddy próprio nas portas 80/443 e derrubaria o Traefik, levando junto o NURA, o CRM e a Evolution API. Ele agora detecta portas ocupadas e para antes de mexer em nada — serve para servidor limpo.
 
-No Easypanel o n8n entra como app: o Traefik cuida de domínio e HTTPS, o Postgres fica gerenciado e nada encosta no que já está no ar.
+Aqui o n8n entra como **app do Easypanel**, em projeto separado: o Traefik dá domínio e HTTPS, e nada encosta no que já roda.
 
 ---
 
-## 1. Projeto
+## O que está no ar
 
-No painel, **Create Project** → nome `vitrine`.
+| | |
+|---|---|
+| Projeto | `vitrine` |
+| n8n | https://vitrine-n8n.6lpnbe.easypanel.host |
+| Mídia pública | https://vitrine-midia.6lpnbe.easypanel.host |
+| Imagem do n8n | `docker.n8n.io/n8nio/n8n:1.123.97` (fixa, não se atualiza sozinha) |
+| Banco | SQLite, dentro do volume `n8n-data` |
 
-## 2. Banco
+Os domínios `*.easypanel.host` vêm do próprio painel, com certificado automático. Não precisou de `sslip.io` nem de domínio comprado.
 
-Dentro do projeto: **+ Service → Postgres**.
+### Banco: por que SQLite
 
-- Nome: `n8n-db`
-- Senha: gere uma forte e guarde
+Para 4 posts por dia mais o atendimento, SQLite dá e sobra, e o backup é um arquivo só dentro do volume. Se um dia o volume de execuções crescer muito, dá para migrar para Postgres sem refazer os fluxos.
 
-## 3. App do n8n
+---
 
-**+ Service → App**, nome `n8n`.
+## App `n8n`
 
-**Source** → Docker Image: `n8nio/n8n:latest`
+**Source** → Docker Image: `docker.n8n.io/n8nio/n8n:1.123.97`
 
-**Environment** (cole tudo de uma vez e troque o que está em MAIÚSCULA):
+**Environment:**
 
 ```
-DB_TYPE=postgresdb
-DB_POSTGRESDB_HOST=vitrine_n8n-db
-DB_POSTGRESDB_PORT=5432
-DB_POSTGRESDB_DATABASE=n8n-db
-DB_POSTGRESDB_USER=postgres
-DB_POSTGRESDB_PASSWORD=A_SENHA_DO_PASSO_2
-N8N_ENCRYPTION_KEY=GERE_UMA_CHAVE_LONGA_E_GUARDE
-N8N_HOST=n8n.72-60-115-84.sslip.io
+N8N_HOST=vitrine-n8n.6lpnbe.easypanel.host
 N8N_PROTOCOL=https
 N8N_PORT=5678
-WEBHOOK_URL=https://n8n.72-60-115-84.sslip.io/
-N8N_EDITOR_BASE_URL=https://n8n.72-60-115-84.sslip.io/
+WEBHOOK_URL=https://vitrine-n8n.6lpnbe.easypanel.host/
+N8N_EDITOR_BASE_URL=https://vitrine-n8n.6lpnbe.easypanel.host/
 GENERIC_TIMEZONE=America/Sao_Paulo
 TZ=America/Sao_Paulo
 N8N_BLOCK_ENV_ACCESS_IN_NODE=false
@@ -52,66 +54,72 @@ N8N_DIAGNOSTICS_ENABLED=false
 N8N_RUNNERS_ENABLED=true
 N8N_PROXY_HOPS=1
 N8N_DEFAULT_BINARY_DATA_MODE=filesystem
-MIDIA_BASE_URL=https://midia.72-60-115-84.sslip.io
+MIDIA_BASE_URL=https://vitrine-midia.6lpnbe.easypanel.host
 VITRINE_URL=https://vitrine-certa-production.up.railway.app
+META_VERIFY_TOKEN=(gerado na instalação)
 IG_USER_ID=
 IG_TOKEN=
-META_VERIFY_TOKEN=GERE_UM_TEXTO_ALEATORIO
 ELEVEN_API_KEY=
 ELEVEN_VOICE_ID=
 ```
 
 > `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` não é opcional: os três fluxos leem `IG_TOKEN`, `MIDIA_BASE_URL` e companhia por `$env`. Sem isso, nada funciona.
->
-> `N8N_ENCRYPTION_KEY` é o que decifra as credenciais salvas. Se você trocar essa chave depois, perde todas as credenciais do n8n e tem que refazer os logins do Google.
 
-**Domains** → Add Domain:
-- Host: `n8n.72-60-115-84.sslip.io`
-- Port: `5678`
-- HTTPS: ligado
+**Domains:** `vitrine-n8n.6lpnbe.easypanel.host` → porta **5678**, HTTPS ligado.
 
-**Mounts** → Bind Mount:
-| Host | Container |
-|---|---|
-| `/opt/vitrine-midia` | `/midia` |
-| `/opt/vitrine-fluxos` | `/fluxos` |
+**Mounts:**
 
-**Deploy**.
+| Tipo | Origem | Dentro do container |
+|---|---|---|
+| Volume `n8n-data` | — | `/home/node/.n8n` |
+| Bind | `/opt/vitrine-midia` | `/midia` |
+| Bind | `/opt/vitrine-repo/automacao/n8n/workflows` | `/fluxos` |
 
-## 4. App da mídia pública
+## App `midia`
 
-A API do Instagram só aceita vídeo por URL pública HTTPS — link do Google Drive não serve. Então um app minúsculo serve a mesma pasta que o n8n escreve.
-
-**+ Service → App**, nome `midia`.
+A API do Instagram só aceita vídeo por URL pública HTTPS — link do Google Drive não serve. Este app serve a mesma pasta que o n8n escreve.
 
 - Docker Image: `halverneus/static-file-server:latest`
-- Environment: `FOLDER=/web` e `SHOW_LISTING=true`
-- Domains: host `midia.72-60-115-84.sslip.io`, port `8080`, HTTPS ligado
-- Mounts → Bind Mount: host `/opt/vitrine-midia` → container `/web`
+- Environment: `FOLDER=/web`, `SHOW_LISTING=true`, `PORT=8080`
+- Domains: `vitrine-midia.6lpnbe.easypanel.host` → porta **8080**, HTTPS ligado
+- Mounts → Bind: `/opt/vitrine-midia` → `/web`
 
-**Deploy**. Teste abrindo `https://midia.72-60-115-84.sslip.io/`.
+---
 
-## 5. Os fluxos
-
-No servidor, uma vez:
+## Pastas no servidor
 
 ```bash
-git clone --depth 1 https://github.com/ArthurBSC/vitrine-certa.git /opt/vitrine-repo && ln -sfn /opt/vitrine-repo/automacao/n8n/workflows /opt/vitrine-fluxos && mkdir -p /opt/vitrine-midia/pub && chown -R 1000:1000 /opt/vitrine-midia
+ls /opt/vitrine-repo /opt/vitrine-midia/pub
 ```
 
-Depois abra `https://n8n.72-60-115-84.sslip.io`, crie a conta de dono e importe os três de uma vez:
+- `/opt/vitrine-repo` — este repositório, clonado. É de onde vêm os fluxos.
+- `/opt/vitrine-midia/pub` — onde o fluxo 1 grava o arquivo antes de publicar. Dono `uid 1000`, que é o usuário `node` do container.
+
+## Importar os fluxos
+
+Depois de criar a conta de dono no n8n:
 
 ```bash
 docker exec -u node $(docker ps -qf name=vitrine_n8n) n8n import:workflow --separate --input=/fluxos
 ```
 
-Para atualizar os fluxos quando eu mexer neles aqui:
+## Atualizar os fluxos quando mudarem aqui
 
 ```bash
 git -C /opt/vitrine-repo pull --ff-only
 ```
 
-## 6. Daqui pra frente
+Depois rode o comando de importar de novo: ele sobrescreve pelo id, sem duplicar.
+
+## Olhar o log
+
+```bash
+docker service logs vitrine_n8n --tail 50 -f
+```
+
+---
+
+## Daqui pra frente
 
 O resto é igual ao [README](README.md): planilha, pastas do Drive, token do Instagram, credenciais e os testes. Só ignore a seção 1 dele, que é a instalação em servidor limpo.
 
