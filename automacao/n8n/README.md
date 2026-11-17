@@ -58,12 +58,13 @@ Atualizar o n8n e os fluxos (puxa o que mudou aqui no repositório):
 
 ## 2. A planilha
 
-1. Crie uma planilha no Google chamada **Vitrine Certa — Calendário**.
-2. Renomeie a primeira aba para **Calendario** e crie uma segunda aba chamada **Atendimento**.
-3. Na aba `Calendario`, **antes de colar nada**, selecione a coluna B (data) e marque *Formatar → Número → Texto simples*. Isso evita que o Google transforme `2026-11-18` em outro formato e o fluxo pare de achar o dia.
-4. Importe o arquivo `automacao/n8n/calendario.csv` (*Arquivo → Importar → Substituir planilha atual*, separador vírgula). São **112 linhas**: 28 posts de feed e 84 stories, de 17/11 a 14/12, com legenda e link prontos.
-5. Na aba `Atendimento`, cabeçalho na linha 1: `quando`, `tipo`, `autor`, `mensagem`, `resposta`.
-6. O id da planilha é o trecho do meio da URL: `docs.google.com/spreadsheets/d/`**`ESSE_PEDAÇO`**`/edit`.
+**Já está criada.** O fluxo **VC 0 · Setup** fez isso: criou a planilha *Vitrine Certa — Calendário* com as abas `Calendario` e `Atendimento`, e gravou as 112 linhas (28 posts de feed e 84 stories, de 17/11 a 14/12, com legenda e link prontos).
+
+- Planilha: `1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc`
+
+As datas foram gravadas como texto, não como data, que é o que o fluxo 1 espera ao comparar o dia.
+
+Se um dia precisar refazer do zero: apague a planilha e rode o **VC 0** de novo. Rodar com a planilha existente cria outra, duplicada.
 
 ### Colunas que importam
 
@@ -77,15 +78,16 @@ Atualizar o n8n e os fluxos (puxa o que mudou aqui no repositório):
 
 ## 3. O Drive
 
-Crie no seu Drive a pasta **Vitrine Certa** com três subpastas:
+**As pastas já estão criadas** pelo mesmo fluxo de setup:
 
-- `MIDIA` — jogue aqui tudo que está em `midia/drive/` do projeto (130 arquivos, ~110 MB, já renomeados no padrão `2026-11-18-feed-19h.mp4`).
-- `1-ENTRADA` — onde você joga vídeo novo para a IA escrever a legenda (fluxo 3).
-- `NARRACAO` — onde as narrações em MP3 vão cair.
+| Pasta | Id | Para que serve |
+|---|---|---|
+| `Vitrine Certa` | `1S5HQYOXhNpmGCWuPQZKVcJQmr8j3QiAt` | a pasta mãe |
+| `MIDIA` | `1YHdIAxEX0-cGQFw-wQvUcAFdOb3ASK8c` | de onde o fluxo 1 pega o que publicar |
+| `1-ENTRADA` | `15260cOs8_64Sa7Fei8zdrBVmc9LWKea_` | vídeo novo para a IA escrever a legenda |
+| `NARRACAO` | `1uaG8xhDTwlP28zMcBSzYnkcE6V9sB_da` | onde as narrações em MP3 caem |
 
-O id de uma pasta é o final da URL dela: `drive.google.com/drive/folders/`**`ESSE_PEDAÇO`**.
-
----
+**Falta você subir a mídia:** arraste os 130 arquivos de `midia/drive/` (~110 MB, já renomeados no padrão `2026-11-18-feed-19h.mp4`) para dentro da pasta **MIDIA**. É o único passo do Drive que eu não consigo fazer: os arquivos estão no seu computador.
 
 ## 4. Token do Instagram
 
