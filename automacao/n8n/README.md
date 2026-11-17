@@ -91,22 +91,17 @@ Se um dia precisar refazer do zero: apague a planilha e rode o **VC 0** de novo.
 
 ## 4. Token do Instagram
 
-Usamos a **Instagram API with Instagram Login**, em `graph.instagram.com`. Ela dispensa página do Facebook e Business Manager: o próprio perfil do Instagram autoriza o app.
+Usamos a **API do Instagram com login unificado** (*Unified login*), em `graph.facebook.com`. Ela **não exige página do Facebook** — exige um portfólio de negócio, que já existe.
 
-> **Por que não o caminho da página.** O caminho clássico (`graph.facebook.com` + token de página) exige que o perfil esteja ligado a uma página do Facebook e que o app seja criado por uma conta pessoal com acesso ao portfólio. Nesta conta o portfólio foi criado por um login do Instagram, que fica bloqueado nas Configurações (`blocked_ig_user_in_mbs`) — ninguém consegue aprovar o acesso, nem o próprio dono. Por isso o caminho do Instagram Login.
+> **Os três caminhos da Meta, e por que este.** O *login do Facebook* é o antigo: exige o perfil ligado a uma página, e a própria Meta marca como obsoleto. O *login do Instagram* (`graph.instagram.com`) dispensa página e portfólio, mas a Meta só o oferece a integrações antigas — num app criado hoje a opção não aparece. Sobra o *login unificado*, que é o recomendado e o único que recebe recursos novos.
 
-1. Em `developers.facebook.com`, com sua **conta pessoal do Facebook**, crie um app do tipo **Business**. A conta pessoal serve só para ser dona do app; ela não precisa de acesso nenhum ao perfil do Instagram.
-2. No app: *Adicionar produto* → **Instagram** → **API setup with Instagram login**.
-3. Em *Business login settings*, cadastre a **OAuth Redirect URI**. Qualquer URL HTTPS sua serve; o token é copiado na mão uma vez só.
-4. Ainda em *API setup with Instagram login*, use o botão para gerar o token do perfil `@vitrinecertaooficial`, com os escopos:
-   `instagram_business_basic`, `instagram_business_content_publish`, `instagram_business_manage_comments`, `instagram_business_manage_messages`.
-5. Troque o token curto por um de 60 dias:
-   `GET https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret={app-secret}&access_token={token-curto}`
-   Ele se renova sozinho enquanto for usado; um token parado mais de 60 dias morre.
-6. Confirme o id do perfil:
-   `GET https://graph.instagram.com/v26.0/me?fields=user_id,username`
-   O `user_id` é o **IG_USER_ID**. O nosso é `17841461149108035` — confira se bate.
-7. No **Easypanel** (`http://72.60.115.84:3000`), projeto `vitrine` → app `n8n` → aba **Environment**: preencha `IG_USER_ID` e `IG_TOKEN`, salve e clique em **Deploy**.
+1. Em `developers.facebook.com`, com sua **conta pessoal do Facebook**, crie um app. Em *Casos de uso*, escolha **Gerenciar mensagens e conteúdo no Instagram**.
+2. No app: *Personalizar* o caso de uso → **API setup with Unified login**. Não use a *Configuração da API com login do Facebook*, que é a obsoleta.
+3. Permissões do token:
+   `instagram_basic`, `instagram_content_publish`, `instagram_manage_comments`, `instagram_manage_messages`.
+4. Gere o token pelo fluxo de login do próprio app. Quem autoriza é a conta do Instagram, escolhendo o portfólio **Vitrine Certa Oficial**. O resultado é um *Business Integration System User Access Token*, que não expira junto com a sessão de ninguém.
+5. O **IG_USER_ID** é `17841461149108035` (confirmado em *Business settings → Instagram profiles*).
+6. No **Easypanel** (`http://72.60.115.84:3000`), projeto `vitrine` → app `n8n` → aba **Environment**: preencha `IG_USER_ID` e `IG_TOKEN`, salve e clique em **Deploy**.
 
 > Neste servidor não existe `/opt/vitrine/.env`: o n8n roda como app do Easypanel e os segredos ficam na aba *Environment*. Veja [easypanel.md](easypanel.md).
 
