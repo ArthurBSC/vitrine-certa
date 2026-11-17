@@ -417,15 +417,15 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const ev = $('Normalizar evento').item.json;\nconst linhas = ($('Planilha: achar o post').item.json || {}).values || [];\nconst cab = linhas[0] || [];\nconst iPost = cab.indexOf('post_id');\nconst iProd = cab.indexOf('produto');\nconst iLink = cab.indexOf('link');\n\nlet produto = '', link = '';\nif (ev.media_id && iPost >= 0) {\n  const l = linhas.find((r, k) => k > 0 && String(r[iPost] || '') === String(ev.media_id));\n  if (l) { produto = l[iProd] || ''; link = l[iLink] || ''; }\n}\n\n// Post publicado a mao nao esta na planilha: usa a legenda do proprio post.\nlet legenda = '';\nif (!produto) {\n  const r = $json || {};\n  if (!r.error && r.caption) legenda = String(r.caption).slice(0, 400);\n}\n\nreturn { json: Object.assign({}, ev, { post_produto: produto, post_link: link, post_legenda: legenda }) };"
+        "jsCode": "const ev = $('Normalizar evento').item.json;\nconst linhas = ($('Planilha: achar o post').item.json || {}).values || [];\nconst cab = linhas[0] || [];\nconst iPost = cab.indexOf('post_id');\nconst iProd = cab.indexOf('produto');\nconst iLink = cab.indexOf('link');\n\nlet produto = '', link = '', origem = '';\n\n// 1) O comentario veio de um post que a automacao publicou: a planilha sabe qual e.\nif (ev.media_id && iPost >= 0) {\n  const l = linhas.find((r, k) => k > 0 && String(r[iPost] || '') === String(ev.media_id));\n  if (l) { produto = l[iProd] || ''; link = l[iLink] || ''; origem = 'planilha'; }\n}\n\n// 2) A pessoa escreveu a palavra-chave que esta queimada no video\n//    (\"RESPONDE ESSA STORY COM MANTIMENTOS\"). Resposta de story chega\n//    como direct, sem referencia ao post, entao e por aqui que ela resolve.\nif (!produto) {\n  const txt = String(ev.texto || '').trim();\n  if (/^[A-Za-zÀ-ÿ]{3,20}$/.test(txt)) {\n    const chave = txt.toUpperCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n    const mapa = $('Palavras do calendário').item.json || {};\n    if (mapa[chave] && mapa[chave].link) {\n      produto = mapa[chave].produto || '';\n      link = mapa[chave].link;\n      origem = 'palavra';\n    }\n  }\n}\n\n// 3) Post publicado a mao: nao esta na planilha, entao le a legenda do proprio post.\nlet legenda = '';\nif (!produto) {\n  const r = $('Instagram: legenda do post').item.json || {};\n  if (!r.error && r.caption) legenda = String(r.caption).slice(0, 400);\n}\n\nreturn { json: Object.assign({}, ev, {\n  post_produto: produto, post_link: link, post_legenda: legenda, post_origem: origem\n}) };"
       },
       "id": "juntar-post",
       "name": "Juntar post e evento",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        320,
-        120
+        670,
+        260
       ]
     },
     {
@@ -448,6 +448,26 @@
       "typeVersion": 4.2,
       "position": [
         230,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/palavras.json",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "palavras",
+      "name": "Palavras do calendário",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        450,
         260
       ]
     }
@@ -640,6 +660,17 @@
       ]
     },
     "Instagram: legenda do post": {
+      "main": [
+        [
+          {
+            "node": "Palavras do calendário",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Palavras do calendário": {
       "main": [
         [
           {
