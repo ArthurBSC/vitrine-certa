@@ -124,11 +124,11 @@ Depois, em cada um, preencha o que está marcado:
 |---|---|
 | Google Sheets OAuth2 | ler e escrever a planilha |
 | Google Drive OAuth2 | baixar e salvar arquivos |
-| Anthropic | a IA que escreve e atende |
+| OpenRouter | a IA que escreve e atende (modelo `google/gemini-3.7-flash`) |
 
 Nas duas do Google, o n8n mostra a *OAuth Redirect URL*. Cole essa URL no seu projeto do Google Cloud (*APIs e serviços → Credenciais → ID do cliente OAuth → URIs de redirecionamento*) e ative as APIs **Google Sheets** e **Google Drive**. Como o n8n está num domínio HTTPS de verdade, o login do Google funciona normalmente.
 
-Para usar OpenAI em vez da Anthropic: troque o nó **Claude** por *OpenAI Chat Model* e religue o fio no agente. Nada mais muda.
+Para trocar de modelo, abra o nó **OpenRouter** e mude o campo *Model*. Nada mais muda. Opções mais baratas, se quiser cortar custo: `deepseek/deepseek-v4-flash` ou `z-ai/glm-5.3-flash`.
 
 ---
 

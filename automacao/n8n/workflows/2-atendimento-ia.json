@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está em `/opt/vitrine/.env`.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial da Anthropic (ou troque o nó do modelo por OpenAI).\n- `IG_USER_ID` e `IG_TOKEN` no `.env` do VPS.\n- O endpoint `/api/catalogo` da vitrine no ar.",
+        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está em `/opt/vitrine/.env`.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial do OpenRouter (modelo google/gemini-3.7-flash). Para trocar de modelo, só mexer no campo Model do nó OpenRouter.\n- `IG_USER_ID` e `IG_TOKEN` no `.env` do VPS.\n- O endpoint `/api/catalogo` da vitrine no ar.",
         "height": 440,
         "width": 420
       },
@@ -135,21 +135,18 @@
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "claude-sonnet-5-5",
-          "mode": "list",
-          "cachedResultName": "claude-sonnet-5-5"
-        },
+        "model": "google/gemini-3.7-flash",
         "options": {
-          "maxTokensToSample": 400,
-          "temperature": 0.4
+          "temperature": 0.4,
+          "maxTokens": 400,
+          "timeout": 120000,
+          "maxRetries": 2
         }
       },
       "id": "modelo",
-      "name": "Claude",
-      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
-      "typeVersion": 1.3,
+      "name": "OpenRouter",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
       "position": [
         120,
         360
@@ -422,17 +419,6 @@
         ]
       ]
     },
-    "Claude": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Atendente IA",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Memória da conversa": {
       "ai_memory": [
         [
@@ -523,6 +509,17 @@
           {
             "node": "Planilha: log do atendimento",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Atendente IA",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
