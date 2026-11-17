@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está em `/opt/vitrine/.env`.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial do OpenRouter (modelo google/gemini-3.7-flash). Para trocar de modelo, só mexer no campo Model do nó OpenRouter.\n- `IG_USER_ID` e `IG_TOKEN` no `.env` do VPS.\n- O endpoint `/api/catalogo` da vitrine no ar.",
+        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está na aba *Environment* do app **n8n** no Easypanel.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial do OpenRouter (modelo google/gemini-3.7-flash). Para trocar de modelo, só mexer no campo Model do nó OpenRouter.\n- `IG_USER_ID` e `IG_TOKEN` no `.env` do VPS.\n- O endpoint `/api/catalogo` da vitrine no ar.",
         "height": 440,
         "width": 420
       },
@@ -150,7 +150,13 @@
       "position": [
         120,
         360
-      ]
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "PZdzZpcGWiVV5V4G",
+          "name": "OpenRouter account"
+        }
+      }
     },
     {
       "parameters": {

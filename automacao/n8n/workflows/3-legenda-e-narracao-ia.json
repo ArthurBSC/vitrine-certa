@@ -113,7 +113,13 @@
       "position": [
         -120,
         240
-      ]
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "PZdzZpcGWiVV5V4G",
+          "name": "OpenRouter account"
+        }
+      }
     },
     {
       "parameters": {

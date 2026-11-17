@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Acha o arquivo no Drive pelo nome da coluna `arquivo`, baixa e republica em `https://midia.SEU-IP.sslip.io/pub/...` (o Instagram exige URL pública).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\n- Os dois nós de planilha: id da planilha.\n- O nó **Drive: achar arquivo**: id da pasta do Drive.\n- No VPS, em `/opt/vitrine/.env`: `IG_USER_ID` e `IG_TOKEN`.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
+        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Acha o arquivo no Drive pelo nome da coluna `arquivo`, baixa e republica em `https://midia.SEU-IP.sslip.io/pub/...` (o Instagram exige URL pública).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\n- Os dois nós de planilha: id da planilha.\n- O nó **Drive: achar arquivo**: id da pasta do Drive.\n- No Easypanel, app **n8n** → aba *Environment*: `IG_USER_ID` e `IG_TOKEN`. Depois clique em **Deploy**.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
         "height": 480,
         "width": 420
       },
