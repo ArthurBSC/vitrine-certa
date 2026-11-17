@@ -1,0 +1,143 @@
+{
+  "id": "vitrinecertatok01",
+  "name": "VC 4 · Pegar o token do Instagram (rode uma vez)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Para que serve\n\nO login unificado da Meta não mostra o token na tela: ele manda um `code` para a URL de redirecionamento, e esse código vale menos de um minuto. Este fluxo recebe o código e faz a troca pelo token na hora.\n\n### Antes de usar\n\n1. No Easypanel, app **n8n** → aba *Environment*, preencha:\n   - `META_APP_ID`\n   - `META_APP_SECRET`\n   Depois clique em **Deploy**.\n2. **Ative** este workflow (chave no topo).\n3. No app da Meta, registre como URL de redirecionamento:\n   `https://vitrine-n8n.6lpnbe.easypanel.host/webhook/ig-oauth`\n4. Abra a *URL de login* que a Meta gerar e autorize com a conta do Instagram.\n\nA página que abrir mostra o token. Copie e cole em `IG_TOKEN` no *Environment*.\n\n### Depois\n\nDesative este workflow. Ele só serve para pegar o token; deixar ligado é uma porta aberta sem motivo.",
+        "height": 480,
+        "width": 420
+      },
+      "id": "nota-4",
+      "name": "LEIA-ME",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-920, -140]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "ig-oauth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "entrada",
+      "name": "Volta da Meta",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-440, 100],
+      "webhookId": "vc-ig-oauth"
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $input.first().json.query || {};\n\nif (q.error || !q.code) {\n  return [{ json: {\n    ok: false,\n    titulo: 'A Meta não devolveu o código',\n    detalhe: q.error_description || q.error || 'A URL de retorno veio sem o parâmetro code.'\n  } }];\n}\n\nif (!$env.META_APP_ID || !$env.META_APP_SECRET) {\n  return [{ json: {\n    ok: false,\n    titulo: 'Faltam META_APP_ID e META_APP_SECRET',\n    detalhe: 'Preencha os dois na aba Environment do app n8n no Easypanel e clique em Deploy.'\n  } }];\n}\n\nreturn [{ json: { ok: true, code: q.code } }];"
+      },
+      "id": "conferir",
+      "name": "Conferir o retorno",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-220, 100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c-ok",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "true",
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "deu-certo",
+      "name": "Veio o código?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [0, 100]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v26.0/oauth/access_token",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ client_id: $env.META_APP_ID, client_secret: $env.META_APP_SECRET, redirect_uri: 'https://vitrine-n8n.6lpnbe.easypanel.host/webhook/ig-oauth', code: $json.code }) }}",
+        "options": { "response": { "response": { "neverError": true } } }
+      },
+      "id": "trocar",
+      "name": "Trocar o código pelo token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $input.first().json || {};\n\nif (!r.access_token) {\n  const e = (r.error && (r.error.message || r.error.error_user_msg)) || JSON.stringify(r).slice(0, 400);\n  return [{ json: {\n    html: `<!doctype html><meta charset=\"utf-8\"><title>Deu erro</title><body style=\"font-family:system-ui;max-width:680px;margin:60px auto;padding:0 20px;line-height:1.6\"><h2>A troca falhou</h2><p>${e}</p><p>O código da Meta vale menos de um minuto. Se demorou, abra a URL de login de novo.</p></body>`\n  } }];\n}\n\nconst tipo = r.token_type || 'bearer';\nconst expira = r.expires_in ? Math.round(r.expires_in / 86400) + ' dias' : 'não expira';\n\nreturn [{ json: {\n  html: `<!doctype html><meta charset=\"utf-8\"><title>Token do Instagram</title><body style=\"font-family:system-ui;max-width:760px;margin:60px auto;padding:0 20px;line-height:1.6\">` +\n    `<h2>Token gerado</h2>` +\n    `<p>Validade: <strong>${expira}</strong> · tipo ${tipo}</p>` +\n    `<p>Copie o valor abaixo e cole em <code>IG_TOKEN</code>, na aba <em>Environment</em> do app <strong>n8n</strong> no Easypanel. Depois clique em Deploy.</p>` +\n    `<textarea readonly style=\"width:100%;height:160px;font-family:ui-monospace,monospace;font-size:13px;padding:12px\">${r.access_token}</textarea>` +\n    `<p style=\"color:#b00\">Depois de copiar, <strong>desative este workflow</strong> no n8n.</p>` +\n    `</body>`\n} }];"
+      },
+      "id": "mostrar",
+      "name": "Montar a página",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nreturn [{ json: {\n  html: `<!doctype html><meta charset=\"utf-8\"><title>${d.titulo}</title><body style=\"font-family:system-ui;max-width:680px;margin:60px auto;padding:0 20px;line-height:1.6\"><h2>${d.titulo}</h2><p>${d.detalhe}</p></body>`\n} }];"
+      },
+      "id": "erro",
+      "name": "Montar o aviso",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "content-type", "value": "text/html; charset=utf-8" }
+            ]
+          }
+        }
+      },
+      "id": "responder",
+      "name": "Mostrar na tela",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [700, 100]
+    }
+  ],
+  "connections": {
+    "Volta da Meta": { "main": [[{ "node": "Conferir o retorno", "type": "main", "index": 0 }]] },
+    "Conferir o retorno": { "main": [[{ "node": "Veio o código?", "type": "main", "index": 0 }]] },
+    "Veio o código?": {
+      "main": [
+        [{ "node": "Trocar o código pelo token", "type": "main", "index": 0 }],
+        [{ "node": "Montar o aviso", "type": "main", "index": 0 }]
+      ]
+    },
+    "Trocar o código pelo token": { "main": [[{ "node": "Montar a página", "type": "main", "index": 0 }]] },
+    "Montar a página": { "main": [[{ "node": "Mostrar na tela", "type": "main", "index": 0 }]] },
+    "Montar o aviso": { "main": [[{ "node": "Mostrar na tela", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}
