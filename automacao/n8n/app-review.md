@@ -46,3 +46,38 @@ Grave com a conta de teste já cadastrada em *Funções do app → Testadores*, 
 ## O que não pedir
 
 Não peça `ads_management`, `ads_read`, `instagram_manage_insights` nem `instagram_manage_events`. Nada no projeto usa, e cada permissão a mais é um motivo a mais de reprovação.
+
+---
+
+# Tratamento de dados (o questionário do envio)
+
+São declarações legais suas. Responda pelo que o sistema realmente faz — declaração falsa aqui derruba o app depois, mesmo que a análise passe.
+
+## Você tem operadores de dados com acesso aos Dados da Plataforma?
+
+**Sim.** O atendimento manda o texto da mensagem para um provedor de IA e guarda o registro numa planilha do Google. Isso são operadores.
+
+## Liste todos os operadores
+
+| Operador | País | O que recebe |
+|---|---|---|
+| OpenRouter, Inc. | EUA | o texto do comentário ou da mensagem, para gerar a resposta |
+| Google LLC | EUA | o mesmo texto, como provedor do modelo `google/gemini-3.7-flash` via OpenRouter; e o registro do atendimento no Google Sheets |
+| Hostinger International Limited | Lituânia | hospeda o VPS onde o n8n roda e processa os eventos |
+| Railway Corp. | EUA | hospeda a vitrine, cuja API recebe a palavra-chave buscada |
+
+## Quem é o responsável pelos Dados da Plataforma
+
+O **controlador**: a pessoa jurídica, se houver CNPJ; senão, seu nome completo como pessoa física. Tem que ser quem decide por que e como os dados são tratados — ou seja, você.
+
+**País:** Brasil.
+
+## Forneceu dados a autoridades públicas por segurança nacional nos últimos 12 meses?
+
+**Não.**
+
+## Processos para solicitações de autoridades públicas
+
+Marque **só o que você de fato faz hoje**. Numa operação de uma pessoa que nunca recebeu solicitação nenhuma, a resposta honesta costuma ser **"Nenhuma das opções acima"**.
+
+Marcar análise de legitimidade, contestação, minimização e registro significa afirmar que esses processos existem. Se quiser marcá-los, escreva antes um procedimento curto dizendo o que você faria ao receber uma ordem judicial — aí passa a ser verdade. Não marque porque parece melhor.
