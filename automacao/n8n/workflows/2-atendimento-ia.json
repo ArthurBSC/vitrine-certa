@@ -57,6 +57,15 @@
                 "type": "string",
                 "operation": "equals"
               }
+            },
+            {
+              "id": "c-token",
+              "leftValue": "={{ $json.query && $json.query['hub.verify_token'] ? $json.query['hub.verify_token'] : '' }}",
+              "rightValue": "={{ $env.META_VERIFY_TOKEN }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"

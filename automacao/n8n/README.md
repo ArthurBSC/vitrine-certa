@@ -101,11 +101,16 @@ O perfil tem que ser **profissional** e estar ligado a uma **página do Facebook
    - `GET /me/accounts` → copie o `id` da página.
    - `GET /{id-da-pagina}?fields=instagram_business_account` → o `id` que vier é o seu **IG_USER_ID**.
 5. Troque o token curto por um de 60 dias em *Ferramentas → Depurador de token de acesso → Estender*. Para um token que não expira, crie um **usuário do sistema** no Business Manager e gere o token por lá — é o que eu recomendo.
-6. No VPS, edite `/opt/vitrine/.env`, preencha `IG_USER_ID` e `IG_TOKEN`, e reinicie:
+6. No **Easypanel** (`http://72.60.115.84:3000`), projeto `vitrine` → app `n8n` → aba **Environment**: preencha `IG_USER_ID` e `IG_TOKEN`, salve e clique em **Deploy**. O n8n reinicia sozinho com as variáveis novas.
 
-```bash
-cd /opt/vitrine && nano .env && docker compose up -d --force-recreate n8n
-```
+> Neste servidor não existe `/opt/vitrine/.env`: o n8n roda como app do Easypanel e os segredos ficam na aba *Environment*. Veja [easypanel.md](easypanel.md).
+
+### Webhook do atendimento
+
+- URL para cadastrar na Meta: `https://vitrine-n8n.6lpnbe.easypanel.host/webhook/instagram`
+- *Verify token*: o valor de `META_VERIFY_TOKEN` que já está no *Environment*.
+
+O fluxo 2 só devolve o `hub.challenge` se o `hub.verify_token` bater com essa variável — é o que impede qualquer um de registrar um webhook no lugar da Meta. O fluxo precisa estar **ativo** antes de cadastrar, senão a URL de produção não responde.
 
 ---
 
@@ -137,7 +142,7 @@ Para trocar de modelo, abra o nó **OpenRouter** e mude o campo *Model*. Nada ma
 ## 6. Testar antes de soltar
 
 1. **Fluxo 1**: na planilha, mude a `data` e a `hora` de uma linha para daqui a uns minutos, deixe `status` vazio e clique em *Execute workflow*. Acompanhe: tem que aparecer o arquivo em `https://midia.72-60-115-84.sslip.io/pub/` e o post no perfil. Só depois ative o workflow (chave no topo) para ele rodar sozinho.
-2. **Fluxo 2**: ative, copie a *Production URL* do nó `Entrada da Meta` e cadastre como webhook na Meta, com o `META_VERIFY_TOKEN` do `.env`. Assine `comments`, `messages` e `mentions`. Comente no seu próprio post para ver a resposta.
+2. **Fluxo 2**: ative, copie a *Production URL* do nó `Entrada da Meta` e cadastre como webhook na Meta, com o `META_VERIFY_TOKEN` da aba *Environment*. Assine `comments`, `messages` e `mentions`. Comente no seu próprio post para ver a resposta.
 3. **Fluxo 3**: ative e jogue um vídeo em `1-ENTRADA`. Em até 1 minuto aparece uma linha nova com status `A PROGRAMAR`.
 
 > Enquanto estiver testando, mantenha o fluxo 1 **desativado**. Ativo, ele publica de verdade no horário marcado.
@@ -146,6 +151,6 @@ Para trocar de modelo, abra o nó **OpenRouter** e mude o campo *Model*. Nada ma
 
 ## 7. Segurança
 
-- `/opt/vitrine/.env` tem tokens com poder de publicar na sua conta. Não suba esse arquivo para o GitHub (ele vive só no VPS).
+- A aba *Environment* do app `n8n` tem tokens com poder de publicar na sua conta. Esses valores vivem só no Easypanel; nunca os coloque neste repositório.
 - O n8n fica exposto na internet. Use senha forte e, se possível, ative a verificação em duas etapas nas *Settings* do n8n.
 - A API do Instagram limita **25 publicações por 24 horas** por conta. Nosso calendário usa 4 por dia, está folgado.
