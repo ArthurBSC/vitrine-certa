@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Acha o arquivo no Drive pelo nome da coluna `arquivo`, baixa e republica em `https://vitrine-midia.6lpnbe.easypanel.host/pub/...` (o Instagram exige URL pública).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\nOs ids da planilha e das pastas do Drive já estão nos nós.\n\nNo Easypanel, app **n8n** → aba *Environment*: `IG_USER_ID` e `IG_TOKEN`. Depois **Deploy**.\n\n> Usa a **API do Instagram com login unificado** (`graph.facebook.com`). Não exige página do Facebook, mas exige portfólio de negócio. O token sai do próprio app, em *API setup with Unified login*.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
+        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Confere se o arquivo da coluna `arquivo` responde em `https://vitrine-midia.6lpnbe.easypanel.host/pub/...` (o Instagram exige URL pública e baixa de lá).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\nOs ids da planilha já estão nos nós. A mídia fica no disco do VPS, em `/opt/vitrine-midia/pub`, servida por aquele domínio — o Drive não entra no caminho da publicação.\n\nNo Easypanel, app **n8n** → aba *Environment*: `IG_USER_ID` e `IG_TOKEN`. Depois **Deploy**.\n\n> Usa a **API do Instagram com login unificado** (`graph.facebook.com`). Não exige página do Facebook, mas exige portfólio de negócio. O token sai do próprio app, em *API setup with Unified login*.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
         "height": 480,
         "width": 420
       },
@@ -76,119 +76,6 @@
       "typeVersion": 2,
       "position": [
         -420,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "queryString": "={{ $json.arquivo }}",
-        "limit": 10,
-        "filter": {
-          "folderId": {
-            "__rl": true,
-            "value": "1YHdIAxEX0-cGQFw-wQvUcAFdOb3ASK8c",
-            "mode": "id"
-          },
-          "whatToSearch": "files"
-        },
-        "options": {
-          "fields": [
-            "id",
-            "name",
-            "mimeType"
-          ]
-        }
-      },
-      "id": "drive-find",
-      "name": "Drive: achar arquivo",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -200,
-        0
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "xFJCYtZgTdKgFVLR",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": false,
-            "leftValue": "",
-            "typeValidation": "loose",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "c1",
-              "leftValue": "={{ $json.name }}",
-              "rightValue": "={{ $('Escolher post de agora').item.json.arquivo }}",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "looseTypeValidation": true,
-        "options": {}
-      },
-      "id": "filtro-nome",
-      "name": "Nome exato",
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.2,
-      "position": [
-        20,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.id }}",
-          "mode": "id"
-        },
-        "options": {
-          "binaryPropertyName": "data"
-        }
-      },
-      "id": "drive-down",
-      "name": "Drive: baixar",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        240,
-        0
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "xFJCYtZgTdKgFVLR",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "=/midia/pub/{{ $('Escolher post de agora').item.json.arquivo }}",
-        "dataPropertyName": "data",
-        "options": {}
-      },
-      "id": "salvar",
-      "name": "Salvar em /midia/pub",
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        460,
         0
       ]
     },
@@ -500,6 +387,27 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "method": "HEAD",
+        "url": "={{ $env.MIDIA_BASE_URL + '/pub/' + encodeURIComponent(String($json.arquivo || '').split('|')[0].trim()) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "conferir-midia",
+      "name": "Conferir a mídia pública",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        100
+      ]
     }
   ],
   "connections": {
@@ -529,51 +437,7 @@
       "main": [
         [
           {
-            "node": "Drive: achar arquivo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Drive: achar arquivo": {
-      "main": [
-        [
-          {
-            "node": "Nome exato",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Nome exato": {
-      "main": [
-        [
-          {
-            "node": "Drive: baixar",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Drive: baixar": {
-      "main": [
-        [
-          {
-            "node": "Salvar em /midia/pub",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Salvar em /midia/pub": {
-      "main": [
-        [
-          {
-            "node": "Montar chamada do IG",
+            "node": "Conferir a mídia pública",
             "type": "main",
             "index": 0
           }
@@ -749,6 +613,17 @@
         [
           {
             "node": "Planilha: anotar resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conferir a mídia pública": {
+      "main": [
+        [
+          {
+            "node": "Montar chamada do IG",
             "type": "main",
             "index": 0
           }

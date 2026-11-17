@@ -1,0 +1,116 @@
+{
+  "id": "vitrinecertacal01",
+  "name": "VC 5 · Atualizar o calendário na planilha",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Quando usar\n\nSempre que o `calendario.csv` do repositório mudar — legenda nova, chamada nova, produto trocado.\n\nEle **apaga a aba Calendario e grava tudo de novo** a partir do CSV. É assim de propósito: editar linha a linha dá divergência silenciosa entre o repositório e a planilha.\n\n### Atenção ao status\n\nO que estiver como `POSTADO` **no CSV** continua. O que você tiver marcado só na planilha, à mão, **se perde**. Se já publicou algo fora do calendário, marque no CSV antes de rodar.\n\nRode com **Execute workflow**. Não precisa ficar ativo.",
+        "height": 340,
+        "width": 400
+      },
+      "id": "nota-5",
+      "name": "LEIA-ME",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-880, -200]
+    },
+    {
+      "parameters": {},
+      "id": "trig5",
+      "name": "Começar",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-680, 100]
+    },
+    {
+      "parameters": {
+        "url": "https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/calendario.csv",
+        "options": {
+          "response": {
+            "response": { "responseFormat": "text", "outputPropertyName": "csv" }
+          }
+        }
+      },
+      "id": "baixar5",
+      "name": "Baixar o calendário",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-460, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "let texto = $input.first().json.csv || '';\nif (texto.charCodeAt(0) === 0xfeff) texto = texto.slice(1);\n\nfunction lerCsv(s) {\n  const linhas = [];\n  let campo = '';\n  let linha = [];\n  let dentro = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (dentro) {\n      if (c === '\"') {\n        if (s[i + 1] === '\"') { campo += '\"'; i++; }\n        else dentro = false;\n      } else campo += c;\n    } else {\n      if (c === '\"') dentro = true;\n      else if (c === ',') { linha.push(campo); campo = ''; }\n      else if (c === '\\r') { /* ignora */ }\n      else if (c === '\\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; }\n      else campo += c;\n    }\n  }\n  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }\n  return linhas;\n}\n\nconst values = lerCsv(texto).filter(l => l.length > 1);\nif (values.length < 100) throw new Error('CSV veio incompleto: ' + values.length + ' linhas');\n\nconst cab = values[0];\nconst iTipo = cab.indexOf('tipo');\nconst feed = values.slice(1).filter(l => l[iTipo] === 'feed').length;\n\nreturn [{ json: { values, total: values.length - 1, feed, colunas: cab.length } }];"
+      },
+      "id": "conv5",
+      "name": "Converter CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-240, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario:clear",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {}
+      },
+      "id": "limpar5",
+      "name": "Limpar a aba",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-20, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "v8ZDI5IbrP0WTKhJ", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario:append",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ values: $('Converter CSV').first().json.values }) }}",
+        "options": {}
+      },
+      "id": "gravar5",
+      "name": "Gravar tudo de novo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "v8ZDI5IbrP0WTKhJ", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const c = $('Converter CSV').first().json;\nconst r = $input.first().json || {};\nconst u = r.updates || {};\nreturn [{ json: {\n  linhas_no_csv: c.total,\n  posts_de_feed: c.feed,\n  colunas: c.colunas,\n  linhas_gravadas: u.updatedRows || null,\n  confere: (u.updatedRows || 0) === c.total + 1 ? 'ok' : 'CONFERIR'\n} }];"
+      },
+      "id": "res5",
+      "name": "Resumo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 100]
+    }
+  ],
+  "connections": {
+    "Começar": { "main": [[{ "node": "Baixar o calendário", "type": "main", "index": 0 }]] },
+    "Baixar o calendário": { "main": [[{ "node": "Converter CSV", "type": "main", "index": 0 }]] },
+    "Converter CSV": { "main": [[{ "node": "Limpar a aba", "type": "main", "index": 0 }]] },
+    "Limpar a aba": { "main": [[{ "node": "Gravar tudo de novo", "type": "main", "index": 0 }]] },
+    "Gravar tudo de novo": { "main": [[{ "node": "Resumo", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}
