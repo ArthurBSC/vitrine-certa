@@ -278,7 +278,7 @@
         "url": "=https://graph.facebook.com/v26.0/{{ $('Normalizar evento').item.json.comment_id }}/replies",
         "sendQuery": true,
         "specifyQuery": "json",
-        "jsonQuery": "={{ JSON.stringify({ message: (/https?:[/][/]/.test($json.output) ? 'Te mandei o link no seu direct 📩' : $json.output), access_token: $env.IG_TOKEN }) }}",
+        "jsonQuery": "={{ JSON.stringify({ message: $json.resposta_publica, access_token: $env.IG_TOKEN }) }}",
         "options": {}
       },
       "id": "ig-reply",
@@ -471,6 +471,19 @@
         450,
         260
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Toda resposta publica saia com a MESMA frase. Dezenas delas em\n// sequencia, saindo da propria conta, lembram spam - e o alcance do\n// post de 16/11 caiu para 9 contas com 17 comentarios.\n// A frase passa a variar, sorteada pelo id do comentario: estavel para\n// o mesmo comentario (nao muda se repetir), diferente entre comentarios.\nconst frases = [\n  'Te mandei no direct 📩',\n  'Mandei no seu direct, da uma olhada 👀',\n  'Ja esta no seu direct 😉',\n  'Te chamei no direct com o link 📩',\n  'Olha no direct que eu te mandei ✨',\n  'Acabei de mandar no seu privado 📩',\n  'Respondi no seu direct, confere la 👀',\n  'Link no seu direct 😉',\n  'Mandei tudo no direct pra voce ✨',\n  'Chegou no seu direct 📩'\n];\n\nconst j = $json;\nconst ev = $('Normalizar evento').item.json;\nconst semente = String(ev.comment_id || ev.autor_id || '');\nlet h = 7;\nfor (const c of semente) h = (h * 31 + c.charCodeAt(0)) | 0;\n\nconst texto = String(j.output || '');\nconst temLink = /https?:\\/\\//.test(texto);\n\nreturn { json: Object.assign({}, j, {\n  resposta_publica: temLink ? frases[Math.abs(h) % frases.length] : texto\n}) };"
+      },
+      "id": "variar",
+      "name": "Variar a resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        0
+      ]
     }
   ],
   "connections": {
@@ -569,7 +582,7 @@
       "main": [
         [
           {
-            "node": "IG: responder o comentário",
+            "node": "Variar a resposta",
             "type": "main",
             "index": 0
           }
@@ -676,6 +689,17 @@
         [
           {
             "node": "Juntar post e evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variar a resposta": {
+      "main": [
+        [
+          {
+            "node": "IG: responder o comentário",
             "type": "main",
             "index": 0
           }
