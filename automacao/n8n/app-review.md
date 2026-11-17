@@ -66,13 +66,33 @@ O que falta, em ordem:
 3. Gravar o vídeo (roteiro acima) e enviar, pedindo **só**
    `instagram_manage_comments` e `instagram_manage_messages`.
 
-### Por que isso é a prioridade
+### Isto NÃO está bloqueando o atendimento
 
-Enquanto o app está em desenvolvimento, o webhook só dispara para contas
-com função no app. Na prática: a palavra-chave queimada nos 118 arquivos
-de mídia **não funciona para nenhum dos 774 seguidores** — só para as
-contas de teste. O funil inteiro está montado e testado, e é esta
-aprovação que abre a última porta.
+Eu afirmei aqui que, por estar em desenvolvimento, o webhook só
+dispararia para contas com função no app, e que a palavra-chave não
+funcionaria para os seguidores. **Está errado.** Conferido em 17/11/2026
+nas execuções reais do n8n:
+
+| Conta | Quando | O que aconteceu |
+|---|---|---|
+| `arthur_brunosx` | 13h07 | comentário respondido + direct entregue |
+| `romulo.dev` | 13h20 | comentário respondido + direct entregue |
+| `aliceelopesg` | 13h51 | comentário respondido + direct entregue |
+
+E `GET /{app-id}/roles` devolve **um único administrador**, nenhum
+testador. Ou seja: as duas últimas são pessoas de fora, sem função no
+app, e foram atendidas normalmente. O app está publicado e o funil
+funciona para qualquer pessoa.
+
+O que sobra desta lista é higiene, não bloqueio: a URL dos termos e a
+verificação do negócio valem a pena, mas nenhuma delas impede uma venda
+hoje.
+
+### O que de fato se perdeu naquele dia
+
+As duas pessoas de fora comentaram às 13h20 e 13h51, **antes** da
+correção do prompt. Receberam um direct dizendo "te mandei o link"
+*sem link nenhum*. Havia procura; o funil é que estava quebrado.
 
 ## O que não pedir
 
