@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Acha o arquivo no Drive pelo nome da coluna `arquivo`, baixa e republica em `https://midia.SEU-IP.sslip.io/pub/...` (o Instagram exige URL pública).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\n- Os dois nós de planilha: id da planilha.\n- O nó **Drive: achar arquivo**: id da pasta do Drive.\n- No Easypanel, app **n8n** → aba *Environment*: `IG_USER_ID` e `IG_TOKEN`. Depois clique em **Deploy**.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
+        "content": "## Como funciona\n\n1. Roda às 9h, 13h, 19h e 20h (fuso de São Paulo).\n2. Lê a aba **Calendario** da sua planilha e procura a linha com a data e a hora de agora, com status diferente de POSTADO.\n3. Acha o arquivo no Drive pelo nome da coluna `arquivo`, baixa e republica em `https://vitrine-midia.6lpnbe.easypanel.host/pub/...` (o Instagram exige URL pública).\n4. Cria o container, espera o processamento, publica e volta na planilha marcando **POSTADO** com o id do post.\n\n### Preencher antes de ativar\nOs ids da planilha e das pastas do Drive já estão nos nós.\n\nNo Easypanel, app **n8n** → aba *Environment*: `IG_USER_ID` e `IG_TOKEN`. Depois **Deploy**.\n\n> Usa a **Instagram API with Instagram Login** (`graph.instagram.com`), que dispensa página do Facebook. O token sai do *Business Login for Instagram*, não do Graph API Explorer.\n\n### Coluna `arquivo`\nUm nome só = post simples. Vários separados por `|` = carrossel.",
         "height": 480,
         "width": 420
       },
@@ -209,7 +209,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/media",
+        "url": "=https://graph.instagram.com/v26.0/{{ $env.IG_USER_ID }}/media",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify($json.ig_query) }}",
@@ -281,7 +281,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/media",
+        "url": "=https://graph.instagram.com/v26.0/{{ $env.IG_USER_ID }}/media",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ media_type: 'CAROUSEL', children: $json.children, caption: $json.legenda, access_token: $env.IG_TOKEN }) }}",
@@ -336,7 +336,7 @@
     },
     {
       "parameters": {
-        "url": "=https://graph.facebook.com/v26.0/{{ $('Container pronto').first().json.creation_id }}",
+        "url": "=https://graph.instagram.com/v26.0/{{ $('Container pronto').first().json.creation_id }}",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ fields: 'status_code,status', access_token: $env.IG_TOKEN }) }}",
@@ -422,7 +422,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/media_publish",
+        "url": "=https://graph.instagram.com/v26.0/{{ $env.IG_USER_ID }}/media_publish",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ creation_id: $('Container pronto').first().json.creation_id, access_token: $env.IG_TOKEN }) }}",

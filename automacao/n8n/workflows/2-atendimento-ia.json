@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está na aba *Environment* do app **n8n** no Easypanel.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial do OpenRouter (modelo google/gemini-3.7-flash). Para trocar de modelo, só mexer no campo Model do nó OpenRouter.\n- `IG_USER_ID` e `IG_TOKEN` no `.env` do VPS.\n- O endpoint `/api/catalogo` da vitrine no ar.",
+        "content": "## Atendimento automático\n\nResponde **comentário** e **direct** do @vitrinecertaooficial com IA, consultando o catálogo real da vitrine antes de responder — então nunca inventa preço nem link.\n\n### Ligar o webhook na Meta\n1. Ative este workflow e copie a URL de produção do nó **Entrada da Meta**.\n2. No app da Meta → Webhooks → Instagram, cole a URL como *Callback URL*.\n3. Em *Verify Token*, cole o valor de `META_VERIFY_TOKEN` que está na aba *Environment* do app **n8n** no Easypanel.\n4. Assine os campos `comments`, `messages` e `mentions`.\n\n### Precisa de\n- Credencial do OpenRouter (modelo google/gemini-3.7-flash). Para trocar de modelo, só mexer no campo Model do nó OpenRouter.\n- `IG_USER_ID` e `IG_TOKEN` na aba *Environment* do app **n8n** no Easypanel.\n- O endpoint `/api/catalogo` da vitrine no ar.\n\n> Usa `graph.instagram.com` (Instagram API with Instagram Login). Escopos do token: `instagram_business_basic`, `instagram_business_manage_comments`, `instagram_business_manage_messages`.",
         "height": 440,
         "width": 420
       },
@@ -276,7 +276,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $('Normalizar evento').item.json.comment_id }}/replies",
+        "url": "=https://graph.instagram.com/v26.0/{{ $('Normalizar evento').item.json.comment_id }}/replies",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ message: $json.output, access_token: $env.IG_TOKEN }) }}",
@@ -294,7 +294,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/messages",
+        "url": "=https://graph.instagram.com/v26.0/{{ $env.IG_USER_ID }}/messages",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ access_token: $env.IG_TOKEN }) }}",
@@ -321,7 +321,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/messages",
+        "url": "=https://graph.instagram.com/v26.0/{{ $env.IG_USER_ID }}/messages",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ access_token: $env.IG_TOKEN }) }}",

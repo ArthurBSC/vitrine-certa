@@ -91,17 +91,22 @@ Se um dia precisar refazer do zero: apague a planilha e rode o **VC 0** de novo.
 
 ## 4. Token do Instagram
 
-O perfil tem que ser **profissional** e estar ligado a uma **página do Facebook** (já está).
+Usamos a **Instagram API with Instagram Login**, em `graph.instagram.com`. Ela dispensa página do Facebook e Business Manager: o próprio perfil do Instagram autoriza o app.
 
-1. Em `developers.facebook.com` → *Meus apps* → criar app do tipo **Business**.
-2. Adicione o produto **Instagram** → *API com login do Instagram* (ou Graph API).
-3. No **Graph API Explorer**, escolha o app e gere um token com estas permissões:
-   `instagram_basic`, `instagram_content_publish`, `instagram_manage_comments`, `instagram_manage_messages`, `pages_show_list`, `pages_read_engagement`, `business_management`.
-4. Pegue o id da conta do Instagram:
-   - `GET /me/accounts` → copie o `id` da página.
-   - `GET /{id-da-pagina}?fields=instagram_business_account` → o `id` que vier é o seu **IG_USER_ID**.
-5. Troque o token curto por um de 60 dias em *Ferramentas → Depurador de token de acesso → Estender*. Para um token que não expira, crie um **usuário do sistema** no Business Manager e gere o token por lá — é o que eu recomendo.
-6. No **Easypanel** (`http://72.60.115.84:3000`), projeto `vitrine` → app `n8n` → aba **Environment**: preencha `IG_USER_ID` e `IG_TOKEN`, salve e clique em **Deploy**. O n8n reinicia sozinho com as variáveis novas.
+> **Por que não o caminho da página.** O caminho clássico (`graph.facebook.com` + token de página) exige que o perfil esteja ligado a uma página do Facebook e que o app seja criado por uma conta pessoal com acesso ao portfólio. Nesta conta o portfólio foi criado por um login do Instagram, que fica bloqueado nas Configurações (`blocked_ig_user_in_mbs`) — ninguém consegue aprovar o acesso, nem o próprio dono. Por isso o caminho do Instagram Login.
+
+1. Em `developers.facebook.com`, com sua **conta pessoal do Facebook**, crie um app do tipo **Business**. A conta pessoal serve só para ser dona do app; ela não precisa de acesso nenhum ao perfil do Instagram.
+2. No app: *Adicionar produto* → **Instagram** → **API setup with Instagram login**.
+3. Em *Business login settings*, cadastre a **OAuth Redirect URI**. Qualquer URL HTTPS sua serve; o token é copiado na mão uma vez só.
+4. Ainda em *API setup with Instagram login*, use o botão para gerar o token do perfil `@vitrinecertaooficial`, com os escopos:
+   `instagram_business_basic`, `instagram_business_content_publish`, `instagram_business_manage_comments`, `instagram_business_manage_messages`.
+5. Troque o token curto por um de 60 dias:
+   `GET https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret={app-secret}&access_token={token-curto}`
+   Ele se renova sozinho enquanto for usado; um token parado mais de 60 dias morre.
+6. Confirme o id do perfil:
+   `GET https://graph.instagram.com/v26.0/me?fields=user_id,username`
+   O `user_id` é o **IG_USER_ID**. O nosso é `17841461149108035` — confira se bate.
+7. No **Easypanel** (`http://72.60.115.84:3000`), projeto `vitrine` → app `n8n` → aba **Environment**: preencha `IG_USER_ID` e `IG_TOKEN`, salve e clique em **Deploy**.
 
 > Neste servidor não existe `/opt/vitrine/.env`: o n8n roda como app do Easypanel e os segredos ficam na aba *Environment*. Veja [easypanel.md](easypanel.md).
 
