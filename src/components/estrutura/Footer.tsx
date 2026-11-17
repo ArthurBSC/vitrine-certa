@@ -1,4 +1,5 @@
 import { ShieldCheck } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
@@ -27,7 +28,13 @@ export default function Footer() {
 
         <div className="pt-4 border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p>© {new Date().getFullYear()} Vitrine Certa</p>
-          <p>Politica de Privacidade • Termos e Condicoes</p>
+          <p>
+            <Link href="/privacidade" className="underline hover:text-slate-700">
+              Politica de Privacidade
+            </Link>
+            {' • '}
+            Termos e Condicoes
+          </p>
         </div>
       </div>
     </footer>
