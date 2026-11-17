@@ -127,9 +127,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ ($json.post_produto ? ('[Post: ' + $json.post_produto + ' | link: ' + $json.post_link + ']\n') : '') + ($json.tipo === 'comentario' ? ('Comentário de @' + $json.autor + ': ' + $json.texto) : ('Direct: ' + $json.texto)) }}",
+        "text": "={{ ($json.post_produto ? ('[Post: ' + $json.post_produto + ' | link: ' + $json.post_link + ']\n') : ($json.post_legenda ? ('[Legenda do post onde a pessoa comentou: ' + $json.post_legenda + ']\n') : '')) + ($json.tipo === 'comentario' ? ('Comentário de @' + $json.autor + ': ' + $json.texto) : ('Direct: ' + $json.texto)) }}",
         "options": {
-          "systemMessage": "Você é o atendimento da Vitrine Certa (@vitrinecertaooficial), uma vitrine de achadinhos da Shopee.\n\nComo responder:\n- Português do Brasil, simpático, direto, no máximo 2 frases curtas. Pode usar 1 emoji.\n- SEMPRE use a ferramenta catalogo_vitrine antes de falar de qualquer produto. Nunca invente nome, preço ou link.\n- Quando achar o produto, responda com o nome curto e o link de afiliado exatamente como vem da ferramenta.\n- As legendas dos posts trazem uma chamada do tipo \"Comenta PARAFUSADEIRA que eu te mando o link no direct\". Quando o comentario ou o direct for so uma palavra em maiusculas (ou quase so isso), trate essa palavra como o nome do produto: busque no catalogo_vitrine por ela e responda com o produto e o link. Nao peca para a pessoa repetir nem pergunte o que ela quer.\n- Escreva SEMPRE a resposta completa, com o nome do produto e o link. NUNCA diga que mandou o link sem escrever o link: quem separa os canais e o sistema, que tira o link da resposta publica do comentario e manda o texto completo no direct. Se voce nao escrever o link, a pessoa nao recebe link nenhum.\n- Quando a mensagem comecar com [Post: ...], e esse o produto de que a pessoa fala, mesmo que ela nao diga o nome (\"qual o valor?\", \"tem link?\", \"quanto custa?\"). Use o link indicado ali e nao busque outro no catalogo.\n- Se não achar nada parecido, diga que vai verificar e convide a pessoa a ver a vitrine completa: {{ $env.VITRINE_URL }}\n- Pergunta sobre entrega, pagamento, troca ou rastreio: explique que a compra e o suporte são feitos dentro da Shopee, pelo app.\n- Nunca prometa prazo, desconto, frete grátis ou devolução.\n- Nunca peça CPF, endereço, telefone, e-mail, foto de documento ou dado de cartão. Se a pessoa mandar, não repita o dado.\n- Se for elogio, agradeça em uma frase. Se for ofensa ou spam, responda apenas com um agradecimento neutro.\n- Se perguntarem se você é um robô, assuma que é um atendimento automático da Vitrine Certa.\n- Somos afiliados: ganhamos comissão da Shopee quando alguém compra pelo nosso link. Se perguntarem, diga isso sem rodeio.\n\nResponda apenas com o texto da resposta, sem aspas e sem assinatura."
+          "systemMessage": "Você é o atendimento da Vitrine Certa (@vitrinecertaooficial), uma vitrine de achadinhos da Shopee.\n\nComo responder:\n- Português do Brasil, simpático, direto, no máximo 2 frases curtas. Pode usar 1 emoji.\n- SEMPRE use a ferramenta catalogo_vitrine antes de falar de qualquer produto. Nunca invente nome, preço ou link.\n- Quando achar o produto, responda com o nome curto e o link de afiliado exatamente como vem da ferramenta.\n- As legendas dos posts trazem uma chamada do tipo \"Comenta PARAFUSADEIRA que eu te mando o link no direct\". Quando o comentario ou o direct for so uma palavra em maiusculas (ou quase so isso), trate essa palavra como o nome do produto: busque no catalogo_vitrine por ela e responda com o produto e o link. Nao peca para a pessoa repetir nem pergunte o que ela quer.\n- Escreva SEMPRE a resposta completa, com o nome do produto e o link. NUNCA diga que mandou o link sem escrever o link: quem separa os canais e o sistema, que tira o link da resposta publica do comentario e manda o texto completo no direct. Se voce nao escrever o link, a pessoa nao recebe link nenhum.\n- Quando vier [Legenda do post onde a pessoa comentou: ...], o produto esta descrito ali. Identifique qual e e busque ele no catalogo_vitrine para pegar o link. So pergunte qual produto a pessoa quer se nem o post nem a mensagem derem pista.\n- Quando a mensagem comecar com [Post: ...], e esse o produto de que a pessoa fala, mesmo que ela nao diga o nome (\"qual o valor?\", \"tem link?\", \"quanto custa?\"). Use o link indicado ali e nao busque outro no catalogo.\n- Se não achar nada parecido, diga que vai verificar e convide a pessoa a ver a vitrine completa: {{ $env.VITRINE_URL }}\n- Pergunta sobre entrega, pagamento, troca ou rastreio: explique que a compra e o suporte são feitos dentro da Shopee, pelo app.\n- Nunca prometa prazo, desconto, frete grátis ou devolução.\n- Nunca peça CPF, endereço, telefone, e-mail, foto de documento ou dado de cartão. Se a pessoa mandar, não repita o dado.\n- Se for elogio, agradeça em uma frase. Se for ofensa ou spam, responda apenas com um agradecimento neutro.\n- Se perguntarem se você é um robô, assuma que é um atendimento automático da Vitrine Certa.\n- Somos afiliados: ganhamos comissão da Shopee quando alguém compra pelo nosso link. Se perguntarem, diga isso sem rodeio.\n\nResponda apenas com o texto da resposta, sem aspas e sem assinatura."
         }
       },
       "id": "agente",
@@ -417,7 +417,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const ev = $('Normalizar evento').item.json;\nconst linhas = ($json && $json.values) || [];\nconst cab = linhas[0] || [];\nconst iPost = cab.indexOf('post_id');\nconst iProd = cab.indexOf('produto');\nconst iLink = cab.indexOf('link');\nconst iPal  = cab.indexOf('palavra');\n\nlet produto = '', link = '', palavra = '';\nif (ev.media_id && iPost >= 0) {\n  const l = linhas.find((r, k) => k > 0 && String(r[iPost] || '') === String(ev.media_id));\n  if (l) { produto = l[iProd] || ''; link = l[iLink] || ''; palavra = l[iPal] || ''; }\n}\n\nreturn { json: Object.assign({}, ev, { post_produto: produto, post_link: link, post_palavra: palavra }) };"
+        "jsCode": "const ev = $('Normalizar evento').item.json;\nconst linhas = ($('Planilha: achar o post').item.json || {}).values || [];\nconst cab = linhas[0] || [];\nconst iPost = cab.indexOf('post_id');\nconst iProd = cab.indexOf('produto');\nconst iLink = cab.indexOf('link');\n\nlet produto = '', link = '';\nif (ev.media_id && iPost >= 0) {\n  const l = linhas.find((r, k) => k > 0 && String(r[iPost] || '') === String(ev.media_id));\n  if (l) { produto = l[iProd] || ''; link = l[iLink] || ''; }\n}\n\n// Post publicado a mao nao esta na planilha: usa a legenda do proprio post.\nlet legenda = '';\nif (!produto) {\n  const r = $json || {};\n  if (!r.error && r.caption) legenda = String(r.caption).slice(0, 400);\n}\n\nreturn { json: Object.assign({}, ev, { post_produto: produto, post_link: link, post_legenda: legenda }) };"
       },
       "id": "juntar-post",
       "name": "Juntar post e evento",
@@ -426,6 +426,29 @@
       "position": [
         320,
         120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v26.0/{{ $('Normalizar evento').item.json.media_id || $env.IG_USER_ID }}",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ fields: 'caption,permalink', access_token: $env.IG_TOKEN }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "legenda-post",
+      "name": "Instagram: legenda do post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        230,
+        260
       ]
     }
   ],
@@ -598,7 +621,7 @@
       "main": [
         [
           {
-            "node": "Juntar post e evento",
+            "node": "Instagram: legenda do post",
             "type": "main",
             "index": 0
           }
@@ -610,6 +633,17 @@
         [
           {
             "node": "Atendente IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram: legenda do post": {
+      "main": [
+        [
+          {
+            "node": "Juntar post e evento",
             "type": "main",
             "index": 0
           }
