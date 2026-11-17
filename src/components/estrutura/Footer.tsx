@@ -33,7 +33,9 @@ export default function Footer() {
               Politica de Privacidade
             </Link>
             {' • '}
-            Termos e Condicoes
+            <Link href="/termos" className="underline hover:text-slate-700">
+              Termos e Condicoes
+            </Link>
           </p>
         </div>
       </div>

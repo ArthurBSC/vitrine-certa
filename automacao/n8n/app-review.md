@@ -39,9 +39,40 @@ Grave com a conta de teste já cadastrada em *Funções do app → Testadores*, 
 
 ## Antes de enviar
 
-- **Verificação do negócio** concluída (*Configurações do negócio → Segurança*). Sem isso a análise nem começa.
-- **Política de privacidade** publicada e com a URL preenchida nas configurações básicas do app.
-- Ícone e categoria do app preenchidos.
+Conferido direto na Graph API em 17/11/2026, com o token do app
+(`GET /1465477545525044?fields=category,privacy_policy_url,icon_url,...`):
+
+| Item | Estado |
+|---|---|
+| Categoria do app | ✅ `Lifestyle` |
+| Política de privacidade | ✅ `/privacidade`, no ar |
+| Ícone | ✅ enviado |
+| URL do site | ✅ preenchida |
+| E-mail de contato | ✅ preenchido |
+| **Termos de serviço** | ✅ `/termos`, no ar — falta **colar a URL** nas configurações básicas |
+| **Verificação do negócio** | ❓ não dá para checar pela API, confira no painel |
+| **Vídeo de demonstração** | ❌ falta gravar |
+
+Ou seja: os três itens que apareciam como *"Não qualificado para envio"*
+(ícone, política de privacidade, categoria) **já estão resolvidos**.
+
+O que falta, em ordem:
+
+1. Colar `https://vitrine-certa-production.up.railway.app/termos` em
+   *Configurações → Básico → URL dos Termos de Serviço*.
+2. Concluir a **verificação do negócio** em
+   `https://business.facebook.com/settings/security_center?business_id=1170838721943796`.
+   Sem isso a análise nem começa.
+3. Gravar o vídeo (roteiro acima) e enviar, pedindo **só**
+   `instagram_manage_comments` e `instagram_manage_messages`.
+
+### Por que isso é a prioridade
+
+Enquanto o app está em desenvolvimento, o webhook só dispara para contas
+com função no app. Na prática: a palavra-chave queimada nos 118 arquivos
+de mídia **não funciona para nenhum dos 774 seguidores** — só para as
+contas de teste. O funil inteiro está montado e testado, e é esta
+aprovação que abre a última porta.
 
 ## O que não pedir
 
