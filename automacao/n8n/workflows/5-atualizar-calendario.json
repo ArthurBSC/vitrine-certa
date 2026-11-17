@@ -12,7 +12,10 @@
       "name": "LEIA-ME",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-880, -200]
+      "position": [
+        -880,
+        -200
+      ]
     },
     {
       "parameters": {},
@@ -20,14 +23,20 @@
       "name": "Começar",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [-680, 100]
+      "position": [
+        -680,
+        100
+      ]
     },
     {
       "parameters": {
         "url": "https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/calendario.csv",
         "options": {
           "response": {
-            "response": { "responseFormat": "text", "outputPropertyName": "csv" }
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "csv"
+            }
           }
         }
       },
@@ -35,17 +44,23 @@
       "name": "Baixar o calendário",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [-460, 100]
+      "position": [
+        -460,
+        100
+      ]
     },
     {
       "parameters": {
-        "jsCode": "let texto = $input.first().json.csv || '';\nif (texto.charCodeAt(0) === 0xfeff) texto = texto.slice(1);\n\nfunction lerCsv(s) {\n  const linhas = [];\n  let campo = '';\n  let linha = [];\n  let dentro = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (dentro) {\n      if (c === '\"') {\n        if (s[i + 1] === '\"') { campo += '\"'; i++; }\n        else dentro = false;\n      } else campo += c;\n    } else {\n      if (c === '\"') dentro = true;\n      else if (c === ',') { linha.push(campo); campo = ''; }\n      else if (c === '\\r') { /* ignora */ }\n      else if (c === '\\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; }\n      else campo += c;\n    }\n  }\n  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }\n  return linhas;\n}\n\nconst values = lerCsv(texto).filter(l => l.length > 1);\nif (values.length < 100) throw new Error('CSV veio incompleto: ' + values.length + ' linhas');\n\nconst cab = values[0];\nconst iTipo = cab.indexOf('tipo');\nconst feed = values.slice(1).filter(l => l[iTipo] === 'feed').length;\n\nreturn [{ json: { values, total: values.length - 1, feed, colunas: cab.length } }];"
+        "jsCode": "let texto = $input.first().json.csv || '';\nif (texto.charCodeAt(0) === 0xfeff) texto = texto.slice(1);\n\nfunction lerCsv(s) {\n  const linhas = [];\n  let campo = '';\n  let linha = [];\n  let dentro = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (dentro) {\n      if (c === '\"') {\n        if (s[i + 1] === '\"') { campo += '\"'; i++; }\n        else dentro = false;\n      } else campo += c;\n    } else {\n      if (c === '\"') dentro = true;\n      else if (c === ',') { linha.push(campo); campo = ''; }\n      else if (c === '\\r') { /* ignora */ }\n      else if (c === '\\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; }\n      else campo += c;\n    }\n  }\n  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }\n  return linhas;\n}\n\nconst values = lerCsv(texto).filter(l => l.length > 1);\nif (values.length < 100) throw new Error('CSV veio incompleto: ' + values.length + ' linhas');\n\n// A planilha e quem sabe o que ja foi ao ar: o publicador escreve\n// status, post_id e postado_em nela, nao no CSV. Reescrever a aba a\n// partir do repositorio apagaria isso, entao traz de volta por id.\nconst atual = ($('Planilha: o que ja foi postado').first().json || {}).values || [];\nif (atual.length > 1) {\n  const ca = atual[0];\n  const iId = ca.indexOf('id');\n  const guardar = ['status', 'post_id', 'postado_em'];\n  const antes = new Map();\n  for (let k = 1; k < atual.length; k++) {\n    const l = atual[k];\n    if (iId >= 0 && l[iId]) antes.set(String(l[iId]), l);\n  }\n  const cn = values[0];\n  const jId = cn.indexOf('id');\n  let trazidos = 0;\n  for (let k = 1; k < values.length; k++) {\n    const l = values[k];\n    const v = jId >= 0 ? antes.get(String(l[jId])) : null;\n    if (!v) continue;\n    for (const col of guardar) {\n      const a = ca.indexOf(col);\n      const b = cn.indexOf(col);\n      if (a >= 0 && b >= 0 && v[a]) { l[b] = v[a]; trazidos++; }\n    }\n  }\n  console.log('valores preservados da planilha:', trazidos);\n}\n\nconst cab = values[0];\nconst iTipo = cab.indexOf('tipo');\nconst feed = values.slice(1).filter(l => l[iTipo] === 'feed').length;\n\nreturn [{ json: { values, total: values.length - 1, feed, colunas: cab.length } }];"
       },
       "id": "conv5",
       "name": "Converter CSV",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-240, 100]
+      "position": [
+        -240,
+        100
+      ]
     },
     {
       "parameters": {
@@ -59,9 +74,15 @@
       "name": "Limpar a aba",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [-20, 100],
+      "position": [
+        -20,
+        100
+      ],
       "credentials": {
-        "googleSheetsOAuth2Api": { "id": "v8ZDI5IbrP0WTKhJ", "name": "Google Sheets account" }
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
       }
     },
     {
@@ -82,9 +103,15 @@
       "name": "Gravar tudo de novo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [200, 100],
+      "position": [
+        200,
+        100
+      ],
       "credentials": {
-        "googleSheetsOAuth2Api": { "id": "v8ZDI5IbrP0WTKhJ", "name": "Google Sheets account" }
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
       }
     },
     {
@@ -95,15 +122,107 @@
       "name": "Resumo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [420, 100]
+      "position": [
+        420,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "atual5",
+      "name": "Planilha: o que ja foi postado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -460,
+        280
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "connections": {
-    "Começar": { "main": [[{ "node": "Baixar o calendário", "type": "main", "index": 0 }]] },
-    "Baixar o calendário": { "main": [[{ "node": "Converter CSV", "type": "main", "index": 0 }]] },
-    "Converter CSV": { "main": [[{ "node": "Limpar a aba", "type": "main", "index": 0 }]] },
-    "Limpar a aba": { "main": [[{ "node": "Gravar tudo de novo", "type": "main", "index": 0 }]] },
-    "Gravar tudo de novo": { "main": [[{ "node": "Resumo", "type": "main", "index": 0 }]] }
+    "Começar": {
+      "main": [
+        [
+          {
+            "node": "Planilha: o que ja foi postado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baixar o calendário": {
+      "main": [
+        [
+          {
+            "node": "Converter CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter CSV": {
+      "main": [
+        [
+          {
+            "node": "Limpar a aba",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpar a aba": {
+      "main": [
+        [
+          {
+            "node": "Gravar tudo de novo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gravar tudo de novo": {
+      "main": [
+        [
+          {
+            "node": "Resumo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planilha: o que ja foi postado": {
+      "main": [
+        [
+          {
+            "node": "Baixar o calendário",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
   "settings": {
     "executionOrder": "v1",
@@ -112,5 +231,7 @@
     "saveManualExecutions": true
   },
   "pinData": {},
-  "meta": { "templateCredsSetupCompleted": false }
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
 }
