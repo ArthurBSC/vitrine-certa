@@ -276,7 +276,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v21.0/{{ $('Normalizar evento').item.json.comment_id }}/replies",
+        "url": "=https://graph.facebook.com/v26.0/{{ $('Normalizar evento').item.json.comment_id }}/replies",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ message: $json.output, access_token: $env.IG_TOKEN }) }}",
@@ -294,7 +294,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/messages",
+        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/messages",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ access_token: $env.IG_TOKEN }) }}",
@@ -321,7 +321,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v21.0/{{ $env.IG_USER_ID }}/messages",
+        "url": "=https://graph.facebook.com/v26.0/{{ $env.IG_USER_ID }}/messages",
         "sendQuery": true,
         "specifyQuery": "json",
         "jsonQuery": "={{ JSON.stringify({ access_token: $env.IG_TOKEN }) }}",
