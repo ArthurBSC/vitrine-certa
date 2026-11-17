@@ -348,7 +348,7 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "COLE_O_ID_DA_PLANILHA",
+          "value": "1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc",
           "mode": "id"
         },
         "sheetName": {
@@ -370,7 +370,13 @@
       "position": [
         1480,
         120
-      ]
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "connections": {

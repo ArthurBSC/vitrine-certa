@@ -29,7 +29,7 @@
         "triggerOn": "specificFolder",
         "folderToWatch": {
           "__rl": true,
-          "value": "COLE_O_ID_DA_PASTA_1_ENTRADA",
+          "value": "15260cOs8_64Sa7Fei8zdrBVmc9LWKea_",
           "mode": "id"
         },
         "event": "fileCreated",
@@ -42,7 +42,13 @@
       "position": [
         -700,
         0
-      ]
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xFJCYtZgTdKgFVLR",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
@@ -153,7 +159,7 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "COLE_O_ID_DA_PLANILHA",
+          "value": "1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc",
           "mode": "id"
         },
         "sheetName": {
@@ -175,7 +181,13 @@
       "position": [
         400,
         0
-      ]
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
@@ -257,7 +269,7 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "COLE_O_ID_DA_PASTA_NARRACAO",
+          "value": "1uaG8xhDTwlP28zMcBSzYnkcE6V9sB_da",
           "mode": "id"
         },
         "inputDataFieldName": "data",
@@ -270,7 +282,13 @@
       "position": [
         1060,
         -120
-      ]
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xFJCYtZgTdKgFVLR",
+          "name": "Google Drive account"
+        }
+      }
     }
   ],
   "connections": {

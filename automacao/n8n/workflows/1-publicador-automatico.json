@@ -41,7 +41,7 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "COLE_O_ID_DA_PLANILHA",
+          "value": "1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc",
           "mode": "id"
         },
         "sheetName": {
@@ -58,7 +58,13 @@
       "position": [
         -640,
         0
-      ]
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
@@ -81,7 +87,7 @@
         "filter": {
           "folderId": {
             "__rl": true,
-            "value": "COLE_O_ID_DA_PASTA_DO_DRIVE",
+            "value": "1YHdIAxEX0-cGQFw-wQvUcAFdOb3ASK8c",
             "mode": "id"
           },
           "whatToSearch": "files"
@@ -101,7 +107,13 @@
       "position": [
         -200,
         0
-      ]
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xFJCYtZgTdKgFVLR",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
@@ -156,7 +168,13 @@
       "position": [
         240,
         0
-      ]
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xFJCYtZgTdKgFVLR",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
@@ -450,7 +468,7 @@
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "COLE_O_ID_DA_PLANILHA",
+          "value": "1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc",
           "mode": "id"
         },
         "sheetName": {
@@ -475,7 +493,13 @@
       "position": [
         3320,
         120
-      ]
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "connections": {
