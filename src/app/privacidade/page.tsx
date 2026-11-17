@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 // Troque pelo e-mail que voce quer publicar como contato.
 // Ele fica visivel para qualquer pessoa que abrir esta pagina.
-const EMAIL_CONTATO = 'SEU-EMAIL-AQUI'
+const EMAIL_CONTATO = 'vitrinecertaooficial@gmail.com'
 
 const ATUALIZADO_EM = '17 de novembro de 2026'
 
