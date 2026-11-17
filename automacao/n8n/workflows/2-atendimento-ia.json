@@ -19,12 +19,11 @@
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "multipleMethods": true,
-        "httpMethods": [
+        "httpMethod": [
           "GET",
           "POST"
         ],
+        "multipleMethods": true,
         "path": "instagram",
         "responseMode": "responseNode",
         "options": {}
