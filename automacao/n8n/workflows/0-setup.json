@@ -1,0 +1,214 @@
+{
+  "id": "vitrinecertaset01",
+  "name": "VC 0 · Setup (planilha + pastas do Drive)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Rode uma vez só\n\nClique em **Execute workflow**. Ele:\n\n1. Baixa o `calendario.csv` do repositório.\n2. Cria a planilha **Vitrine Certa — Calendário** com as abas `Calendario` e `Atendimento`.\n3. Grava as 112 linhas (28 posts de feed e 84 stories).\n4. Cria no Drive a pasta **Vitrine Certa** com `MIDIA`, `1-ENTRADA` e `NARRACAO`.\n5. O último nó imprime todos os ids que os outros fluxos precisam.\n\nRodar duas vezes cria tudo de novo, duplicado. Se precisar refazer, apague antes o que ficou.",
+        "height": 340,
+        "width": 420
+      },
+      "id": "nota-0",
+      "name": "LEIA-ME",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-900, -260]
+    },
+    {
+      "parameters": {},
+      "id": "trig",
+      "name": "Começar",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-700, 100]
+    },
+    {
+      "parameters": {
+        "url": "https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/calendario.csv",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "csv"
+            }
+          }
+        }
+      },
+      "id": "baixar",
+      "name": "Baixar o calendário",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-480, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "let texto = $input.first().json.csv || '';\nif (texto.charCodeAt(0) === 0xfeff) texto = texto.slice(1);\n\nfunction lerCsv(s) {\n  const linhas = [];\n  let campo = '';\n  let linha = [];\n  let dentro = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (dentro) {\n      if (c === '\"') {\n        if (s[i + 1] === '\"') { campo += '\"'; i++; }\n        else dentro = false;\n      } else campo += c;\n    } else {\n      if (c === '\"') dentro = true;\n      else if (c === ',') { linha.push(campo); campo = ''; }\n      else if (c === '\\r') { /* ignora */ }\n      else if (c === '\\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; }\n      else campo += c;\n    }\n  }\n  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }\n  return linhas;\n}\n\nconst values = lerCsv(texto).filter(l => l.length > 1);\nif (values.length < 100) throw new Error('CSV veio incompleto: ' + values.length + ' linhas');\n\nreturn [{ json: { values, total: values.length - 1 } }];"
+      },
+      "id": "converter",
+      "name": "Converter CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-260, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ properties: { title: 'Vitrine Certa — Calendário', locale: 'pt_BR', timeZone: 'America/Sao_Paulo' }, sheets: [ { properties: { title: 'Calendario' } }, { properties: { title: 'Atendimento' } } ] }) }}",
+        "options": {}
+      },
+      "id": "criar-planilha",
+      "name": "Criar a planilha",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-40, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{ $json.spreadsheetId }}/values/Calendario:append",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ values: $('Converter CSV').first().json.values }) }}",
+        "options": {}
+      },
+      "id": "gravar-cal",
+      "name": "Gravar o calendário",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [180, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{ $('Criar a planilha').first().json.spreadsheetId }}/values/Atendimento:append",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ values: [['quando','tipo','autor','mensagem','resposta']] }) }}",
+        "options": {}
+      },
+      "id": "gravar-atd",
+      "name": "Cabeçalho do atendimento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v8ZDI5IbrP0WTKhJ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ name: 'Vitrine Certa', mimeType: 'application/vnd.google-apps.folder' }) }}",
+        "options": {}
+      },
+      "id": "pasta-mae",
+      "name": "Criar a pasta Vitrine Certa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [620, 100],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xFJCYtZgTdKgFVLR",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const pai = $input.first().json.id;\nreturn ['MIDIA', '1-ENTRADA', 'NARRACAO'].map(nome => ({ json: { nome, pai } }));"
+      },
+      "id": "lista-sub",
+      "name": "Listar subpastas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [840, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ name: $json.nome, mimeType: 'application/vnd.google-apps.folder', parents: [$json.pai] }) }}",
+        "options": {}
+      },
+      "id": "criar-sub",
+      "name": "Criar as subpastas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1060, 100],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xFJCYtZgTdKgFVLR",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const planilha = $('Criar a planilha').first().json;\nconst pastaMae = $('Criar a pasta Vitrine Certa').first().json;\nconst subs = {};\nfor (const item of $input.all()) subs[item.json.name] = item.json.id;\n\nreturn [{\n  json: {\n    PLANILHA_ID: planilha.spreadsheetId,\n    PLANILHA_URL: planilha.spreadsheetUrl,\n    linhas_gravadas: $('Converter CSV').first().json.total,\n    PASTA_VITRINE: pastaMae.id,\n    PASTA_MIDIA: subs['MIDIA'],\n    PASTA_ENTRADA: subs['1-ENTRADA'],\n    PASTA_NARRACAO: subs['NARRACAO'],\n    proximo_passo: 'Suba os 130 arquivos de midia/drive na pasta MIDIA e preencha estes ids nos fluxos 1 e 3.'\n  }\n}];"
+      },
+      "id": "resumo",
+      "name": "Resumo com os ids",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1280, 100]
+    }
+  ],
+  "connections": {
+    "Começar": { "main": [[{ "node": "Baixar o calendário", "type": "main", "index": 0 }]] },
+    "Baixar o calendário": { "main": [[{ "node": "Converter CSV", "type": "main", "index": 0 }]] },
+    "Converter CSV": { "main": [[{ "node": "Criar a planilha", "type": "main", "index": 0 }]] },
+    "Criar a planilha": { "main": [[{ "node": "Gravar o calendário", "type": "main", "index": 0 }]] },
+    "Gravar o calendário": { "main": [[{ "node": "Cabeçalho do atendimento", "type": "main", "index": 0 }]] },
+    "Cabeçalho do atendimento": { "main": [[{ "node": "Criar a pasta Vitrine Certa", "type": "main", "index": 0 }]] },
+    "Criar a pasta Vitrine Certa": { "main": [[{ "node": "Listar subpastas", "type": "main", "index": 0 }]] },
+    "Listar subpastas": { "main": [[{ "node": "Criar as subpastas", "type": "main", "index": 0 }]] },
+    "Criar as subpastas": { "main": [[{ "node": "Resumo com os ids", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}
