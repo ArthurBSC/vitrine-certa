@@ -65,7 +65,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario:clear",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario!A:Q:clear",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleSheetsOAuth2Api",
         "options": {}
@@ -88,7 +88,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario:append",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Calendario!A:Q:append",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleSheetsOAuth2Api",
         "sendQuery": true,
