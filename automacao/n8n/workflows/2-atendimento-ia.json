@@ -453,7 +453,7 @@
     },
     {
       "parameters": {
-        "url": "=https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/palavras.json?sem_cache={{ Date.now() }}",
+        "url": "={{ $env.MIDIA_BASE_URL }}/dados/palavras.json",
         "options": {
           "response": {
             "response": {
