@@ -30,7 +30,7 @@
     },
     {
       "parameters": {
-        "url": "https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/calendario.csv",
+        "url": "=https://raw.githubusercontent.com/ArthurBSC/vitrine-certa/main/automacao/n8n/calendario.csv?sem_cache={{ Date.now() }}",
         "options": {
           "response": {
             "response": {
