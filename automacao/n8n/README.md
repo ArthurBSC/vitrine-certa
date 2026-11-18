@@ -153,4 +153,43 @@ Para trocar de modelo, abra o nó **OpenRouter** e mude o campo *Model*. Nada ma
 
 - A aba *Environment* do app `n8n` tem tokens com poder de publicar na sua conta. Esses valores vivem só no Easypanel; nunca os coloque neste repositório.
 - O n8n fica exposto na internet. Use senha forte e, se possível, ative a verificação em duas etapas nas *Settings* do n8n.
-- A API do Instagram limita **25 publicações por 24 horas** por conta. Nosso calendário usa 4 por dia, está folgado.
+- A API do Instagram limita **25 publicações por 24 horas** por conta. Nosso calendário usa 6 por dia, está folgado.
+
+## 8. Trilha sonora
+
+Os vídeos saem mudos de propósito, e a razão não é técnica.
+
+**A biblioteca de música do Instagram não serve aqui.** Ela é licenciada
+pela Meta para uso *dentro do aplicativo*. Um post publicado pela API
+sobe como arquivo pronto, e não existe passo em que dê para escolher
+uma faixa do acervo. O único caminho é embutir o áudio no `.mp4` — e aí
+a licença daquela faixa é responsabilidade de quem publica, não da Meta.
+
+Por isso **música comercial está fora**. Uma faixa de artista conhecido
+embutida num arquivo nosso não tem licença nenhuma, e o Rights Manager
+do Instagram reconhece a gravação. O que acontece na prática é o áudio
+ser silenciado ou o post removido; reincidência restringe a conta. Numa
+operação que publica 6 vezes por dia de forma automática, a detecção
+vira rotina depressa — e tudo depende dessa única conta.
+
+**O que serve:** faixa livre para uso comercial. Procure por *royalty
+free* com licença que permita uso comercial, ou Creative Commons CC0 /
+CC-BY (nesta, credite o autor na legenda). Bibliotecas gratuitas com
+esse tipo de licença existem; confira a licença da faixa específica,
+não só a do site.
+
+### Aplicar
+
+Com a faixa em mãos, uma linha resolve todos os vídeos:
+
+```sh
+sh aplicar-trilha.sh /caminho/da/faixa.mp3 30
+```
+
+O segundo número é em que ponto da faixa começar (30 pula a introdução).
+O script corta no tamanho de cada vídeo, normaliza o volume para -16
+LUFS, aplica fade de meio segundo na entrada e na saída e **não
+reencoda a imagem**, então não perde qualidade.
+
+Testado de ponta a ponta com um tom gerado: entra vídeo de 15s mudo,
+sai vídeo de 15s com áudio AAC a -15,5 dB.
