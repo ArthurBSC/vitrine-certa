@@ -42,18 +42,12 @@ Grave com a conta de teste já cadastrada em *Funções do app → Testadores*, 
 Conferido na Graph API em 19/11/2026. Faça de cima para baixo: cada
 passo depende do anterior estar pronto.
 
-### 1. Colar a URL dos termos  ·  1 minuto
+### 1. ~~Colar a URL dos termos~~  ·  FEITO em 19/11/2026
 
-`https://developers.facebook.com/apps/1465477545525044/settings/basic/`
-
-No campo **URL dos Termos de Serviço**, cole:
-
-```
-https://vitrine-certa-production.up.railway.app/termos
-```
-
-É o único campo do cadastro que ainda está vazio. Os outros já estão:
-categoria `Lifestyle`, política de privacidade, ícone, site e e-mail.
+Conferido na Graph API: `terms_of_service_url` aponta para
+`/termos`. Com isso o **cadastro do app está completo** — categoria,
+política de privacidade, termos, ícone, site e e-mail de contato, os
+seis preenchidos.
 
 ### 2. Verificação do negócio  ·  horas a dias
 
