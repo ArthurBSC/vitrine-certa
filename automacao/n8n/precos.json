@@ -1,70 +1,171 @@
 {
- "conferido_em": "2026-11-19",
- "observacao": "Preco da Shopee muda sem aviso. Guardar sempre com a data.",
- "produtos": [
-  {
-   "palavra": "POTES",
+ "conferido_em": "19/11/2026",
+ "aviso": "Preco da Shopee muda sem aviso. Reconferir antes de reusar.",
+ "precos": {
+  "POTES": {
    "pix": "R$ 166,16",
-   "cheio": "R$ 174,90",
-   "vendidos": "20mil+",
-   "nota": "4.9",
-   "estado": "ok"
+   "antes": "R$ 174,90",
+   "situacao": "ok"
   },
-  {
-   "palavra": "MAQUINA",
+  "MAQUINA": {
    "pix": "R$ 19,98",
-   "cheio": "R$ 50,00",
-   "desconto": "-60%",
-   "vendidos": "70mil+",
-   "nota": "4.8",
-   "estado": "ok"
+   "antes": "R$ 50,00",
+   "situacao": "ok"
   },
-  {
-   "palavra": "MADRUGADA",
-   "estado": "PRODUTO FORA DO AR",
-   "nota_interna": "JBL Tune 760BT saiu da Shopee"
-  },
-  {
-   "palavra": "OMELETE",
+  "OMELETE": {
    "pix": "R$ 100,61",
-   "cheio": "R$ 105,90",
-   "vendidos": "1mil+",
-   "nota": "4.9",
-   "estado": "ok"
+   "antes": "R$ 105,90",
+   "situacao": "ok"
   },
-  {
-   "palavra": "PINCEIS",
-   "faixa": "R$ 23,92 a R$ 33,28",
-   "cheio": "R$ 49,50 a R$ 64,35",
-   "desconto": "-52%",
-   "vendidos": "300mil+",
-   "nota": "4.8",
-   "estado": "ESGOTADO"
-  },
-  {
-   "palavra": "JEANS",
+  "JEANS": {
    "pix": "R$ 118,75",
-   "cheio": "R$ 124,99",
-   "vendidos": "6mil+",
-   "nota": "4.9",
-   "estado": "ok"
+   "antes": "R$ 124,99",
+   "situacao": "ok"
   },
-  {
-   "palavra": "CINEMA",
+  "CINEMA": {
    "pix": "R$ 209,00",
-   "cheio": "R$ 220,00",
-   "vendidos": "100mil+",
-   "nota": "4.8",
-   "estado": "ok"
+   "antes": "R$ 220,00",
+   "situacao": "ok"
   },
-  {
-   "palavra": "ACRILICO/MANTIMENTOS",
-   "faixa": "R$ 49,90 a R$ 189,90",
-   "cheio": "R$ 78,90 a R$ 274,90",
-   "desconto": "-37%",
-   "vendidos": "30mil+",
-   "nota": "4.9",
-   "estado": "ok"
+  "MAQUIAGEM": {
+   "pix": "R$ 59,07",
+   "antes": "R$ 78,00",
+   "situacao": "ok"
+  },
+  "ESPELHOLED": {
+   "pix": "R$ 59,99 a R$ 129,99",
+   "antes": "R$ 64,90 a R$ 139,00",
+   "situacao": "ok"
+  },
+  "LENCOL": {
+   "pix": "R$ 14,99",
+   "antes": "R$ 50,00",
+   "situacao": "ok"
+  },
+  "ARVORE": {
+   "pix": "R$ 80,66",
+   "antes": "R$ 84,90",
+   "situacao": "ok"
+  },
+  "MICROPERCAL": {
+   "pix": "R$ 15,90 a R$ 42,90",
+   "antes": "R$ 30,00 a R$ 47,00",
+   "situacao": "ok"
+  },
+  "ACNE": {
+   "pix": "R$ 130,33",
+   "antes": "R$ 137,18",
+   "situacao": "ok"
+  },
+  "MEIACALCA": {
+   "pix": "R$ 19,28 a R$ 79,98",
+   "antes": "R$ 150,00 a R$ 450,00",
+   "situacao": "ok"
+  },
+  "GARRAFA": {
+   "pix": "R$ 31,99",
+   "antes": "R$ 50,00",
+   "situacao": "ok"
+  },
+  "PROCESSADOR": {
+   "pix": "R$ 22,99",
+   "antes": "R$ 59,80",
+   "situacao": "ok"
+  },
+  "POWERBANK": {
+   "pix": "R$ 113,91",
+   "antes": "R$ 119,90",
+   "situacao": "ok"
+  },
+  "COLCHAO": {
+   "pix": "R$ 13,90",
+   "antes": "R$ 36,90",
+   "situacao": "ok"
+  },
+  "VONIXX": {
+   "pix": "R$ 114,91",
+   "antes": "R$ 120,95",
+   "situacao": "ok"
+  },
+  "MEIAS": {
+   "pix": "R$ 19,00 a R$ 41,90",
+   "antes": "R$ 29,90 a R$ 59,99",
+   "situacao": "ok"
+  },
+  "PANTALONA": {
+   "pix": "R$ 28,99 a R$ 39,99",
+   "antes": "",
+   "situacao": "ok"
+  },
+  "FITALED": {
+   "pix": "R$ 15,89 a R$ 20,99",
+   "antes": "R$ 35,80",
+   "situacao": "ok"
+  },
+  "CHALEIRA": {
+   "pix": "R$ 38,89",
+   "antes": "R$ 78,90",
+   "situacao": "ok"
+  },
+  "MALETA": {
+   "pix": "R$ 29,90 a R$ 116,90",
+   "antes": "R$ 49,90 a R$ 119,90",
+   "situacao": "ok"
+  },
+  "FLAME": {
+   "pix": "R$ 49,00 a R$ 119,00",
+   "antes": "R$ 259,00 a R$ 315,00",
+   "situacao": "ok"
+  },
+  "SILICONE": {
+   "pix": "R$ 18,90 a R$ 39,98",
+   "antes": "R$ 89,90 a R$ 139,50",
+   "situacao": "ok"
+  },
+  "ACRILICO": {
+   "pix": "R$ 49,90 a R$ 189,90",
+   "antes": "R$ 78,90 a R$ 274,90",
+   "situacao": "ok"
+  },
+  "MANTIMENTOS": {
+   "pix": "R$ 49,90 a R$ 189,90",
+   "antes": "R$ 78,90 a R$ 274,90",
+   "situacao": "ok"
+  },
+  "ESTETICA": {
+   "pix": "R$ 123,43",
+   "antes": "R$ 129,92",
+   "situacao": "ok"
+  },
+  "TEMPEROS": {
+   "pix": "R$ 27,99 a R$ 51,99",
+   "antes": "R$ 79,99 a R$ 109,99",
+   "situacao": "ok"
+  },
+  "MINIPOWER": {
+   "pix": "R$ 31,99",
+   "antes": "R$ 58,00",
+   "situacao": "ok"
+  },
+  "ORGANICO": {
+   "pix": "R$ 79,99 a R$ 199,99",
+   "antes": "R$ 99,99 a R$ 299,99",
+   "situacao": "ok"
+  },
+  "CATRACA": {
+   "pix": "R$ 28,99 a R$ 32,99",
+   "antes": "R$ 51,98 a R$ 99,80",
+   "situacao": "ok"
+  },
+  "PINCEIS": {
+   "pix": "R$ 23,92 a R$ 33,28",
+   "antes": "R$ 49,50 a R$ 64,35",
+   "situacao": "esgotado"
+  },
+  "MADRUGADA": {
+   "pix": "",
+   "antes": "",
+   "situacao": "fora do ar"
   }
- ]
+ }
 }
