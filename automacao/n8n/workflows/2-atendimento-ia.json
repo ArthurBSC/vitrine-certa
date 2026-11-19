@@ -353,28 +353,22 @@
     },
     {
       "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Atendimento",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "schema": []
-        },
+        "method": "POST",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Atendimento:append",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ values: [[ $json.quando, $json.tipo, $json.autor, $json.mensagem, $json.resposta ]] }) }}",
         "options": {}
       },
       "id": "log-sheet",
       "name": "Planilha: log do atendimento",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         1480,
         120
@@ -384,7 +378,8 @@
           "id": "v8ZDI5IbrP0WTKhJ",
           "name": "Google Sheets account"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
