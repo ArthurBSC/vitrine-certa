@@ -166,6 +166,511 @@
    "pix": "",
    "antes": "",
    "situacao": "fora do ar"
+  },
+  "ABSORVENTE": {
+   "pix": "R$ 15,59 a R$ 25,00",
+   "antes": "R$ 40,00 a R$ 80,00",
+   "situacao": "ok"
+  },
+  "ACADEMIA": {
+   "pix": "R$ 31,99",
+   "antes": "R$ 57,00",
+   "situacao": "ok"
+  },
+  "ADNET": {
+   "pix": "R$ 22,90 a R$ 72,00",
+   "antes": "R$ 50,00 a R$ 139,90",
+   "situacao": "ok"
+  },
+  "ALIMENTOS": {
+   "pix": "R$ 19,90",
+   "antes": "R$ 39,90",
+   "situacao": "ok"
+  },
+  "AQUECIMENTO": {
+   "pix": "R$ 38,89",
+   "antes": "R$ 78,90",
+   "situacao": "ok"
+  },
+  "ASSADEIRA": {
+   "pix": "R$ 10,00",
+   "antes": "R$ 19,99",
+   "situacao": "ok"
+  },
+  "AUTOMOTIVA": {
+   "pix": "R$ 123,43",
+   "antes": "R$ 129,92",
+   "situacao": "ok"
+  },
+  "BALANCA": {
+   "pix": "R$ 18,90",
+   "antes": "R$ 29,90",
+   "situacao": "ok"
+  },
+  "BARBA": {
+   "pix": "R$ 15,50 a R$ 19,50",
+   "antes": "R$ 30,00 a R$ 50,00",
+   "situacao": "ok"
+  },
+  "BARBEADOR": {
+   "pix": "R$ 14,98",
+   "antes": "R$ 17,99",
+   "situacao": "ok"
+  },
+  "BATERIAS": {
+   "pix": "R$ 482,28",
+   "antes": "R$ 524,21",
+   "situacao": "ok"
+  },
+  "BLACKOUT": {
+   "pix": "R$ 36,90 a R$ 69,89",
+   "antes": "R$ 46,12 a R$ 83,62",
+   "situacao": "ok"
+  },
+  "BLUSA": {
+   "pix": "R$ 24,90 a R$ 26,89",
+   "antes": "R$ 49,90",
+   "situacao": "ok"
+  },
+  "CABECEIRA": {
+   "pix": "R$ 32,89",
+   "antes": "R$ 49,90",
+   "situacao": "ok"
+  },
+  "CABIDE": {
+   "pix": "R$ 19,98",
+   "antes": "R$ 69,99",
+   "situacao": "ok"
+  },
+  "CAIXA": {
+   "pix": "R$ 28,99 a R$ 32,99",
+   "antes": "R$ 51,98 a R$ 99,80",
+   "situacao": "ok"
+  },
+  "CALCA": {
+   "pix": "R$ 39,99 a R$ 129,98",
+   "antes": "R$ 129,98 a R$ 139,99",
+   "situacao": "ok"
+  },
+  "CALCINHAS": {
+   "pix": "R$ 22,60 a R$ 57,40",
+   "antes": "R$ 25,99 a R$ 65,99",
+   "situacao": "ok"
+  },
+  "CAMA": {
+   "pix": "R$ 32,80",
+   "antes": "R$ 69,90",
+   "situacao": "ok"
+  },
+  "CAMACASAL": {
+   "pix": "R$ 27,90",
+   "antes": "R$ 62,50",
+   "situacao": "ok"
+  },
+  "CAMISETA": {
+   "pix": "R$ 19,79",
+   "antes": "R$ 45,99",
+   "situacao": "ok"
+  },
+  "CANECA": {
+   "pix": "R$ 24,97",
+   "antes": "R$ 60,00",
+   "situacao": "ok"
+  },
+  "CANECAS": {
+   "pix": "R$ 24,97",
+   "antes": "R$ 60,00",
+   "situacao": "ok"
+  },
+  "CANOLONGO": {
+   "pix": "R$ 15,99 a R$ 38,99",
+   "antes": "R$ 23,99 a R$ 55,99",
+   "situacao": "ok"
+  },
+  "CARREGADOR": {
+   "pix": "R$ 31,99",
+   "antes": "R$ 58,00",
+   "situacao": "ok"
+  },
+  "PORTATIL": {
+   "pix": "R$ 31,99",
+   "antes": "R$ 58,00",
+   "situacao": "ok"
+  },
+  "CASAL": {
+   "pix": "R$ 24,90",
+   "antes": "R$ 33,00",
+   "situacao": "ok"
+  },
+  "CHINELO": {
+   "pix": "R$ 19,90 a R$ 34,90",
+   "antes": "R$ 24,90 a R$ 36,90",
+   "situacao": "ok"
+  },
+  "COPO": {
+   "pix": "R$ 52,99",
+   "antes": "R$ 80,00",
+   "situacao": "ok"
+  },
+  "CORREDOR": {
+   "pix": "R$ 29,90 a R$ 49,90",
+   "antes": "R$ 44,90 a R$ 54,90",
+   "situacao": "ok"
+  },
+  "CORTINA": {
+   "pix": "R$ 109,25",
+   "antes": "R$ 114,99",
+   "situacao": "ok"
+  },
+  "CREATINA": {
+   "pix": "R$ 32,90 a R$ 78,99",
+   "antes": "R$ 34,90 a R$ 149,90",
+   "situacao": "ok"
+  },
+  "CROPPED": {
+   "pix": "R$ 29,90",
+   "antes": "",
+   "situacao": "ok"
+  },
+  "CROWN": {
+   "pix": "R$ 34,98 a R$ 49,98",
+   "antes": "R$ 60,00 a R$ 100,00",
+   "situacao": "ok"
+  },
+  "CUECAS": {
+   "pix": "R$ 76,00",
+   "antes": "R$ 159,90",
+   "situacao": "ok"
+  },
+  "DIVISORIAS": {
+   "pix": "R$ 49,45",
+   "antes": "R$ 89,90",
+   "situacao": "ok"
+  },
+  "DRAGAO": {
+   "pix": "R$ 19,98",
+   "antes": "R$ 50,00",
+   "situacao": "ok"
+  },
+  "DRYFIT": {
+   "pix": "R$ 68,00",
+   "antes": "R$ 100,00",
+   "situacao": "ok"
+  },
+  "EARCUFFS": {
+   "pix": "R$ 21,88 a R$ 24,88",
+   "antes": "R$ 150,00",
+   "situacao": "ok"
+  },
+  "ESCOVA": {
+   "pix": "R$ 40,99 a R$ 47,99",
+   "antes": "R$ 100,00",
+   "situacao": "ok"
+  },
+  "FENDA": {
+   "pix": "R$ 44,90 a R$ 59,90",
+   "antes": "R$ 79,90 a R$ 89,90",
+   "situacao": "ok"
+  },
+  "FILTRO": {
+   "pix": "R$ 24,70",
+   "antes": "R$ 36,90",
+   "situacao": "ok"
+  },
+  "FIOS": {
+   "pix": "R$ 32,80",
+   "antes": "R$ 49,90",
+   "situacao": "ok"
+  },
+  "FONE": {
+   "pix": "",
+   "antes": "",
+   "situacao": "fora do ar"
+  },
+  "WIRELESS": {
+   "pix": "",
+   "antes": "",
+   "situacao": "fora do ar"
+  },
+  "FRIGIDEIRA": {
+   "pix": "R$ 94,91",
+   "antes": "R$ 99,90",
+   "situacao": "ok"
+  },
+  "FURADEIRA": {
+   "pix": "",
+   "antes": "",
+   "situacao": "esgotado"
+  },
+  "PARAFUSADEIRA": {
+   "pix": "",
+   "antes": "",
+   "situacao": "esgotado"
+  },
+  "GIRATORIO": {
+   "pix": "R$ 27,99 a R$ 51,99",
+   "antes": "R$ 79,99 a R$ 109,99",
+   "situacao": "ok"
+  },
+  "GOLA": {
+   "pix": "R$ 39,00",
+   "antes": "R$ 44,70",
+   "situacao": "ok"
+  },
+  "GUARDA": {
+   "pix": "R$ 23,99 a R$ 26,99",
+   "antes": "R$ 66,00",
+   "situacao": "ok"
+  },
+  "HERMETICOS": {
+   "pix": "R$ 187,26",
+   "antes": "R$ 197,11",
+   "situacao": "ok"
+  },
+  "IMPACTO": {
+   "pix": "R$ 299,16",
+   "antes": "R$ 314,90",
+   "situacao": "ok"
+  },
+  "INFANTIL": {
+   "pix": "R$ 12,05",
+   "antes": "R$ 22,21",
+   "situacao": "ok"
+  },
+  "LAPIDADO": {
+   "pix": "R$ 79,99 a R$ 199,99",
+   "antes": "R$ 99,99 a R$ 299,99",
+   "situacao": "ok"
+  },
+  "LAVABO": {
+   "pix": "R$ 31,90 a R$ 78,90",
+   "antes": "R$ 39,90 a R$ 129,90",
+   "situacao": "ok"
+  },
+  "LAVADORA": {
+   "pix": "R$ 334,40",
+   "antes": "R$ 351,99",
+   "situacao": "ok"
+  },
+  "MACAQUINHO": {
+   "pix": "R$ 44,99",
+   "antes": "R$ 229,99",
+   "situacao": "ok"
+  },
+  "MACIO": {
+   "pix": "R$ 30,40 a R$ 40,80",
+   "antes": "R$ 38,00 a R$ 51,00",
+   "situacao": "ok"
+  },
+  "MAGSAFE": {
+   "pix": "R$ 17,89 a R$ 25,89",
+   "antes": "R$ 22,99 a R$ 40,00",
+   "situacao": "ok"
+  },
+  "MANGUEIRA": {
+   "pix": "R$ 20,94",
+   "antes": "R$ 49,90",
+   "situacao": "ok"
+  },
+  "MANTA": {
+   "pix": "R$ 29,98",
+   "antes": "R$ 29,99",
+   "situacao": "ok"
+  },
+  "MARKER": {
+   "pix": "R$ 12,99 a R$ 32,98",
+   "antes": "R$ 100,00 a R$ 300,00",
+   "situacao": "ok"
+  },
+  "MARMITA": {
+   "pix": "R$ 49,89",
+   "antes": "R$ 63,20",
+   "situacao": "ok"
+  },
+  "MASSAGEADOR": {
+   "pix": "R$ 16,95 a R$ 53,60",
+   "antes": "R$ 20,46 a R$ 53,61",
+   "situacao": "ok"
+  },
+  "MOCHILA": {
+   "pix": "R$ 37,99 a R$ 69,99",
+   "antes": "R$ 99,99 a R$ 119,99",
+   "situacao": "ok"
+  },
+  "MOLDURA": {
+   "pix": "R$ 49,00 a R$ 119,00",
+   "antes": "R$ 259,00 a R$ 315,00",
+   "situacao": "ok"
+  },
+  "MOLETOM": {
+   "pix": "R$ 109,16",
+   "antes": "R$ 114,90",
+   "situacao": "ok"
+  },
+  "PANELAS": {
+   "pix": "R$ 322,91",
+   "antes": "R$ 339,90",
+   "situacao": "ok"
+  },
+  "PANO": {
+   "pix": "R$ 37,89",
+   "antes": "R$ 39,90",
+   "situacao": "ok"
+  },
+  "PAPEL": {
+   "pix": "R$ 61,60 a R$ 80,00",
+   "antes": "R$ 80,00",
+   "situacao": "ok"
+  },
+  "PARES": {
+   "pix": "R$ 19,36",
+   "antes": "R$ 37,98",
+   "situacao": "ok"
+  },
+  "PELICULAS": {
+   "pix": "R$ 9,92 a R$ 19,89",
+   "antes": "R$ 20,00 a R$ 35,00",
+   "situacao": "ok"
+  },
+  "PELUDO": {
+   "pix": "R$ 104,41",
+   "antes": "R$ 109,90",
+   "situacao": "ok"
+  },
+  "PERCAL": {
+   "pix": "R$ 79,90",
+   "antes": "R$ 110,90",
+   "situacao": "ok"
+  },
+  "PLASTICO": {
+   "pix": "R$ 26,98",
+   "antes": "R$ 45,00",
+   "situacao": "ok"
+  },
+  "PLUMA": {
+   "pix": "R$ 30,90 a R$ 52,90",
+   "antes": "R$ 89,90 a R$ 149,90",
+   "situacao": "ok"
+  },
+  "POLEGADAS": {
+   "pix": "R$ 209,00",
+   "antes": "R$ 220,00",
+   "situacao": "ok"
+  },
+  "POTESTRAVAS": {
+   "pix": "R$ 17,90 a R$ 29,90",
+   "antes": "R$ 39,90 a R$ 59,90",
+   "situacao": "ok"
+  },
+  "PRATELEIRAS": {
+   "pix": "R$ 10,44 a R$ 33,99",
+   "antes": "R$ 25,99 a R$ 65,00",
+   "situacao": "ok"
+  },
+  "PREMIUM": {
+   "pix": "R$ 16,90",
+   "antes": "R$ 29,00",
+   "situacao": "ok"
+  },
+  "PRIVACIDADE": {
+   "pix": "R$ 5,60",
+   "antes": "R$ 15,99",
+   "situacao": "ok"
+  },
+  "PROJETOR": {
+   "pix": "R$ 176,70",
+   "antes": "R$ 185,99",
+   "situacao": "ok"
+  },
+  "RALADOR": {
+   "pix": "R$ 50,99",
+   "antes": "R$ 100,00",
+   "situacao": "ok"
+  },
+  "ROMANTIC": {
+   "pix": "R$ 94,99",
+   "antes": "R$ 99,98",
+   "situacao": "ok"
+  },
+  "SECADORA": {
+   "pix": "R$ 39,99 a R$ 43,99",
+   "antes": "R$ 99,00",
+   "situacao": "ok"
+  },
+  "SECAGEM": {
+   "pix": "R$ 11,49 a R$ 89,99",
+   "antes": "R$ 89,00 a R$ 89,99",
+   "situacao": "ok"
+  },
+  "SOMBRINHA": {
+   "pix": "R$ 24,92 a R$ 65,99",
+   "antes": "R$ 36,00 a R$ 108,00",
+   "situacao": "ok"
+  },
+  "SOQUETES": {
+   "pix": "R$ 29,90 a R$ 116,90",
+   "antes": "R$ 49,90 a R$ 119,90",
+   "situacao": "ok"
+  },
+  "SUTIAS": {
+   "pix": "R$ 27,99 a R$ 31,90",
+   "antes": "",
+   "situacao": "ok"
+  },
+  "TAPETE": {
+   "pix": "R$ 59,89",
+   "antes": "R$ 119,90",
+   "situacao": "ok"
+  },
+  "TENIS": {
+   "pix": "R$ 28,90",
+   "antes": "R$ 59,90",
+   "situacao": "ok"
+  },
+  "TERMICA": {
+   "pix": "R$ 36,99",
+   "antes": "R$ 90,00",
+   "situacao": "ok"
+  },
+  "TOALHAS": {
+   "pix": "R$ 34,65",
+   "antes": "R$ 44,99",
+   "situacao": "ok"
+  },
+  "TORNEIRA": {
+   "pix": "R$ 22,99 a R$ 32,99",
+   "antes": "R$ 100,00 a R$ 200,00",
+   "situacao": "ok"
+  },
+  "TRAVESSEIROS": {
+   "pix": "R$ 37,90",
+   "antes": "R$ 49,99",
+   "situacao": "ok"
+  },
+  "UMEDECIDAS": {
+   "pix": "R$ 69,70",
+   "antes": "R$ 84,99",
+   "situacao": "ok"
+  },
+  "UTENSILIOS": {
+   "pix": "R$ 32,99 a R$ 35,99",
+   "antes": "R$ 139,99",
+   "situacao": "ok"
+  },
+  "VARAL": {
+   "pix": "R$ 79,90",
+   "antes": "R$ 168,99",
+   "situacao": "ok"
+  },
+  "VOIL": {
+   "pix": "R$ 189,91",
+   "antes": "R$ 199,90",
+   "situacao": "ok"
+  },
+  "FONEANC": {
+   "pix": "R$ 21,88 a R$ 24,88",
+   "antes": "R$ 150,00",
+   "situacao": "ok"
   }
  }
 }
