@@ -66,69 +66,38 @@ O que falta, em ordem:
 3. Gravar o vídeo (roteiro acima) e enviar, pedindo **só**
    `instagram_manage_comments` e `instagram_manage_messages`.
 
-### Isto NÃO está bloqueando o atendimento
+### Isto É o que bloqueia o atendimento
 
-Eu afirmei aqui que, por estar em desenvolvimento, o webhook só
-dispararia para contas com função no app, e que a palavra-chave não
-funcionaria para os seguidores. **Está errado.** Conferido em 17/11/2026
-nas execuções reais do n8n:
+Eu disse aqui que o app já atendia qualquer pessoa, porque `romulo.dev`
+e `aliceelopesg` foram respondidas sem ter função no app. Errado de
+novo: as duas são amigas do Arthur, e tudo indica que foram
+adicionadas como testadoras do Instagram - lista que o `/roles` da API
+não mostra.
 
-| Conta | Quando | O que aconteceu |
+O painel do app, em 19/11/2026, mostra **todas** as permissões como
+*"Pronto para teste"*:
+
+| Permissão | Chamadas | Estado |
 |---|---|---|
-| `arthur_brunosx` | 13h07 | comentário respondido + direct entregue |
-| `romulo.dev` | 13h20 | comentário respondido + direct entregue |
-| `aliceelopesg` | 13h51 | comentário respondido + direct entregue |
+| `instagram_basic` | 268 | Pronto para teste |
+| `instagram_manage_messages` | 178 | Pronto para teste |
+| `instagram_content_publish` | 81 | Pronto para teste |
+| `instagram_manage_comments` | 54 | Pronto para teste |
 
-E `GET /{app-id}/roles` devolve **um único administrador**, nenhum
-testador. Ou seja: as duas últimas são pessoas de fora, sem função no
-app, e foram atendidas normalmente. O app está publicado e o funil
-funciona para qualquer pessoa.
+Nenhuma com acesso avançado. Acesso padrão significa que a API e os
+webhooks só funcionam para quem tem função no app: administrador,
+desenvolvedor ou testador.
 
-O que sobra desta lista é higiene, não bloqueio: a URL dos termos e a
-verificação do negócio valem a pena, mas nenhuma delas impede uma venda
-hoje.
+Na prática: a palavra-chave queimada em 118 arquivos funciona para as
+contas de teste e **para mais ninguém**. O `ofelipesilva.dev` respondeu
+um story e o evento nunca chegou - nem aparece em `/conversations`,
+porque a conta dele não tem função no app.
 
-### O que de fato se perdeu naquele dia
+Enquanto isso não for aprovado, os 780 seguidores veem a chamada e não
+recebem nada.
 
-As duas pessoas de fora comentaram às 13h20 e 13h51, **antes** da
-correção do prompt. Receberam um direct dizendo "te mandei o link"
-*sem link nenhum*. Havia procura; o funil é que estava quebrado.
+### Como testar antes da aprovação
 
-## O que não pedir
-
-Não peça `ads_management`, `ads_read`, `instagram_manage_insights` nem `instagram_manage_events`. Nada no projeto usa, e cada permissão a mais é um motivo a mais de reprovação.
-
----
-
-# Tratamento de dados (o questionário do envio)
-
-São declarações legais suas. Responda pelo que o sistema realmente faz — declaração falsa aqui derruba o app depois, mesmo que a análise passe.
-
-## Você tem operadores de dados com acesso aos Dados da Plataforma?
-
-**Sim.** O atendimento manda o texto da mensagem para um provedor de IA e guarda o registro numa planilha do Google. Isso são operadores.
-
-## Liste todos os operadores
-
-| Operador | País | O que recebe |
-|---|---|---|
-| OpenRouter, Inc. | EUA | o texto do comentário ou da mensagem, para gerar a resposta |
-| Google LLC | EUA | o mesmo texto, como provedor do modelo `google/gemini-3.7-flash` via OpenRouter; e o registro do atendimento no Google Sheets |
-| Hostinger International Limited | Lituânia | hospeda o VPS onde o n8n roda e processa os eventos |
-| Railway Corp. | EUA | hospeda a vitrine, cuja API recebe a palavra-chave buscada |
-
-## Quem é o responsável pelos Dados da Plataforma
-
-O **controlador**: a pessoa jurídica, se houver CNPJ; senão, seu nome completo como pessoa física. Tem que ser quem decide por que e como os dados são tratados — ou seja, você.
-
-**País:** Brasil.
-
-## Forneceu dados a autoridades públicas por segurança nacional nos últimos 12 meses?
-
-**Não.**
-
-## Processos para solicitações de autoridades públicas
-
-Marque **só o que você de fato faz hoje**. Numa operação de uma pessoa que nunca recebeu solicitação nenhuma, a resposta honesta costuma ser **"Nenhuma das opções acima"**.
-
-Marcar análise de legitimidade, contestação, minimização e registro significa afirmar que esses processos existem. Se quiser marcá-los, escreva antes um procedimento curto dizendo o que você faria ao receber uma ordem judicial — aí passa a ser verdade. Não marque porque parece melhor.
+Adicione a pessoa como testadora do Instagram no painel do app, e peça
+que ela aceite o convite nas configurações do Instagram dela. Sem isso,
+nenhum teste com conta de fora vai funcionar.
