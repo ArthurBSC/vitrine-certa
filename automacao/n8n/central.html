@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Central · Vitrine Certa</title>
+<style>
+ :root{color-scheme:dark}
+ *{box-sizing:border-box}
+ body{margin:0;background:#0f172a;color:#e2e8f0;
+      font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ header{position:sticky;top:0;z-index:5;background:#0f172a;padding:16px;
+        border-bottom:1px solid #1e293b}
+ h1{margin:0;font-size:18px;color:#fff}
+ header p{margin:4px 0 0;font-size:13px;color:#64748b}
+ main{padding:0 16px 64px;max-width:900px;margin:0 auto}
+ section{margin:24px 0 0}
+ h2{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;
+    margin:0 0 10px;font-weight:600}
+ .cartao{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px}
+ .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px}
+ .num{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:12px}
+ .num b{display:block;font-size:24px;color:#fff;font-weight:700;line-height:1.2}
+ .num span{font-size:12px;color:#94a3b8}
+ .num.ok b{color:#34d399} .num.alerta b{color:#fbbf24} .num.ruim b{color:#f87171}
+ table{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+ /* No celular o nome do produto espremia a coluna toda e virava uma
+    coluna de uma letra. Melhor cortar o nome do que torcer a tabela. */
+ td.prod{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ col.c1{width:84px} col.c3{width:122px} col.c4{width:104px}
+ @media (max-width:420px){
+   table{font-size:13px}
+   col.c1{width:66px} col.c3{width:96px} col.c4{width:86px}
+ }
+ th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:#64748b;font-weight:600;padding:0 8px 8px 0}
+ td{padding:8px 8px 8px 0;border-top:1px solid #1e293b;vertical-align:top}
+ td.hora{color:#94a3b8;white-space:nowrap;font-variant-numeric:tabular-nums}
+ td.pal{color:#34d399;font-weight:700;letter-spacing:.4px;white-space:nowrap;
+        overflow:hidden;text-overflow:ellipsis;padding-right:12px}
+ td.val{color:#fbbf24;white-space:nowrap;font-variant-numeric:tabular-nums}
+ .tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:999px;
+      background:#334155;color:#cbd5e1}
+ .tag.feed{background:#1e3a5f;color:#93c5fd}
+ .tag.story{background:#3b2d5c;color:#c4b5fd}
+ .vazio{color:#64748b;font-size:14px;padding:4px 0}
+ .espera{border:1px dashed #334155;border-radius:14px;padding:16px;color:#64748b;font-size:14px}
+ .espera b{color:#94a3b8;display:block;margin-bottom:4px}
+ .links{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+ .links a{display:block;background:#1e293b;border:1px solid #334155;border-radius:12px;
+          padding:12px 14px;text-decoration:none;color:#e2e8f0}
+ .links a b{display:block;font-size:14px;color:#fff}
+ .links a span{font-size:12px;color:#64748b;word-break:break-all}
+ .links a:active{background:#334155}
+ footer{color:#475569;font-size:12px;text-align:center;padding:24px 16px 48px}
+</style></head><body>
+<header>
+ <h1>Central</h1>
+ <p id="quando">carregando…</p>
+</header>
+<main>
+
+<section>
+ <h2>A grade</h2>
+ <div class="nums" id="numeros"></div>
+</section>
+
+<section>
+ <h2>Hoje e amanhã</h2>
+ <div class="cartao" id="agenda"><div class="vazio">carregando…</div></div>
+</section>
+
+<section>
+ <h2>O radar</h2>
+ <div id="radar"></div>
+</section>
+
+<section>
+ <h2>As vendas</h2>
+ <div id="vendas"></div>
+</section>
+
+<section>
+ <h2>Onde entrar</h2>
+ <div class="links">
+  <a href="https://vitrine-n8n.6lpnbe.easypanel.host" target="_blank" rel="noopener">
+   <b>n8n</b><span>os fluxos e o histórico de execução</span></a>
+  <a href="https://vitrine-certa-production.up.railway.app/admin" target="_blank" rel="noopener">
+   <b>Admin da vitrine</b><span>entra com o PIN · cadastro de produto</span></a>
+  <a href="https://vitrine-certa-production.up.railway.app" target="_blank" rel="noopener">
+   <b>A vitrine</b><span>o site como o cliente vê</span></a>
+  <a href="consulta.html">
+   <b>Consulta rápida</b><span>palavra → produto → link, para responder na mão</span></a>
+  <a href="https://www.instagram.com/vitrinecertaooficial/" target="_blank" rel="noopener">
+   <b>Instagram</b><span>@vitrinecertaooficial</span></a>
+  <a href="https://affiliate.shopee.com.br/open_api" target="_blank" rel="noopener">
+   <b>Open API da Shopee</b><span>é aqui que saem o AppID e o Secret</span></a>
+ </div>
+</section>
+
+</main>
+<footer>Esta página lê os mesmos arquivos que os fluxos escrevem. Recarregue para ver o estado atual.</footer>
+
+<script>
+// Tudo aqui é leitura dos arquivos que os fluxos já escrevem em /dados/.
+// Nada é guardado nesta página: recarregou, é o estado de agora.
+
+function lerCsv(s){
+  const linhas=[]; let campo='',linha=[],dentro=false;
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    if(dentro){ if(c==='"'){ if(s[i+1]==='"'){campo+='"';i++;} else dentro=false; } else campo+=c; }
+    else if(c==='"') dentro=true;
+    else if(c===','){ linha.push(campo); campo=''; }
+    else if(c==='\r'){ }
+    else if(c==='\n'){ linha.push(campo); linhas.push(linha); linha=[]; campo=''; }
+    else campo+=c;
+  }
+  if(campo!==''||linha.length){ linha.push(campo); linhas.push(linha); }
+  return linhas;
+}
+
+async function pegar(arquivo,tipo){
+  try{
+    const r=await fetch(arquivo+'?v='+Date.now());
+    if(!r.ok) return null;
+    return tipo==='texto'? await r.text() : await r.json();
+  }catch(e){ return null; }
+}
+
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dia = d => d.slice(8,10)+'/'+d.slice(5,7);
+
+function hojeISO(){
+  // Horário de Brasília, que é o que manda na grade.
+  const f=new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo'});
+  return f.format(new Date());
+}
+
+function numero(valor,rotulo,classe){
+  return '<div class="num '+(classe||'')+'"><b>'+esc(valor)+'</b><span>'+esc(rotulo)+'</span></div>';
+}
+
+function esperando(titulo,texto){
+  return '<div class="espera"><b>'+esc(titulo)+'</b>'+esc(texto)+'</div>';
+}
+
+async function montar(){
+  const hoje=hojeISO();
+  document.getElementById('quando').textContent =
+    'Hoje é '+dia(hoje)+'. Os números abaixo são dos arquivos no servidor.';
+
+  // ---------------------------------------------------------- a grade
+  const csv=await pegar('calendario.csv','texto');
+  let linhas=[];
+  if(csv){
+    const b=lerCsv(csv).filter(l=>l.length>1);
+    const cab=b[0];
+    linhas=b.slice(1).map(l=>{const o={};cab.forEach((c,i)=>o[c]=l[i]===undefined?'':l[i]);return o;});
+  }
+  const noAr=linhas.filter(r=>!r.status && r.data>=hoje);
+  const comPreco=noAr.filter(r=>r.preco).length;
+  const postados=linhas.filter(r=>String(r.status||'').toUpperCase()==='POSTADO').length;
+  const cancelados=linhas.filter(r=>String(r.status||'').toUpperCase()==='CANCELADO').length;
+  const ultimo=noAr.length? noAr[noAr.length-1].data : '';
+
+  document.getElementById('numeros').innerHTML =
+    numero(noAr.length,'publicações no ar','ok')
+  + numero(comPreco+'/'+noAr.length,'com preço', comPreco===noAr.length?'ok':'alerta')
+  + numero(postados,'já postadas')
+  + numero(cancelados,'tiradas do ar', cancelados?'alerta':'')
+  + numero(ultimo?dia(ultimo):'—','a grade vai até');
+
+  // ------------------------------------------------------ hoje e amanhã
+  const amanha=new Date(hoje+'T12:00:00Z'); amanha.setUTCDate(amanha.getUTCDate()+1);
+  const amanhaISO=amanha.toISOString().slice(0,10);
+  const proximas=linhas.filter(r=>r.data===hoje||r.data===amanhaISO)
+                       .sort((a,b)=>(a.data+a.hora.padStart(5,'0')).localeCompare(b.data+b.hora.padStart(5,'0')));
+  const alvo=document.getElementById('agenda');
+  if(!proximas.length){
+    alvo.innerHTML='<div class="vazio">'+(csv?'Nada marcado para hoje nem amanhã.':'Não consegui ler o calendário.')+'</div>';
+  }else{
+    alvo.innerHTML='<table><col class="c1"><col><col class="c3"><col class="c4"><thead><tr><th>quando</th><th>o quê</th><th>palavra</th><th>preço</th></tr></thead><tbody>'
+    + proximas.map(r=>{
+        const st=String(r.status||'').toUpperCase();
+        const risco = st==='CANCELADO' ? 'opacity:.45;text-decoration:line-through' : '';
+        return '<tr style="'+risco+'">'
+         +'<td class="hora">'+dia(r.data)+' '+esc(r.hora.slice(0,5))+'</td>'
+         +'<td class="prod"><span class="tag '+esc(r.tipo)+'">'+esc(r.formato||r.tipo)+'</span> '
+            +esc(String(r.produto).slice(0,58))+(st?' <span class="tag">'+esc(st)+'</span>':'')+'</td>'
+         +'<td class="pal">'+esc(r.palavra||'—')+'</td>'
+         +'<td class="val">'+esc(r.preco||'—')+'</td></tr>';
+      }).join('')
+    + '</tbody></table>';
+  }
+
+  // ---------------------------------------------------------- o radar
+  const notas=await pegar('radar-notas.json');
+  const catalogo=await pegar('catalogo.json');
+  const r=document.getElementById('radar');
+  if(!notas && !catalogo){
+    r.innerHTML=esperando('O radar ainda não rodou.',
+      'Ele liga quando o AppID e o Secret da Shopee entrarem no n8n. Aí esta parte se preenche sozinha: o que a varredura achou, a nota de cada oferta e a fila de aprovados.');
+  }else{
+    let h='';
+    if(notas){
+      h+='<div class="nums">'
+        +numero(notas.total||0,'ofertas vistas')
+        +numero(notas.fila||0,'na fila (80+)','ok')
+        +numero(notas.observacao||0,'em observação','alerta')
+        +numero(notas.sem_nota||0,'sem nota','ruim')
+        +'</div>';
+      const top=(notas.notas||[]).filter(x=>x.nota!==null).slice(0,10);
+      if(top.length){
+        h+='<div class="cartao" style="margin-top:10px"><table>'
+          +'<col class="c4"><col><col class="c3"><col class="c4">'
+          +'<thead><tr>'
+          +'<th>nota</th><th>produto</th><th>preço</th><th>comissão</th></tr></thead><tbody>'
+          +top.map(x=>'<tr><td class="val">'+esc(x.nota)+(x.medida?' ✓':'')+'</td>'
+            +'<td class="prod">'+esc(String(x.produto).slice(0,60))+'</td>'
+            +'<td class="hora">R$ '+esc(x.preco)+'</td>'
+            +'<td class="val">R$ '+esc(x.comissao)+'</td></tr>').join('')
+          +'</tbody></table></div>';
+      }
+    }
+    if(catalogo){
+      h+='<div class="nums" style="margin-top:10px">'
+        +numero(catalogo.ativos||0,'no catálogo','ok')
+        +numero(catalogo.novos||0,'entraram hoje')
+        +numero(catalogo.desativados||0,'saíram do ar','alerta')
+        +'</div>';
+    }
+    r.innerHTML=h;
+  }
+
+  // --------------------------------------------------------- as vendas
+  const conv=await pegar('conversoes.json');
+  const v=document.getElementById('vendas');
+  if(!conv || !(conv.conversoes||[]).length){
+    v.innerHTML=esperando('Ainda não há venda medida.',
+      conv? 'O relatório já roda, mas não voltou nenhuma conversão ainda.'
+          : 'Começa a aparecer quando os links saírem com sub-ID e o relatório de conversão rodar. É aqui que se vê de qual story veio cada venda.');
+  }else{
+    const cs=conv.conversoes;
+    const viva=c=>String(c.situacao||'').toUpperCase()!=='CANCELLED';
+    const comissao=cs.filter(viva).reduce((a,c)=>a+(parseFloat(String(c.comissao_item||c.comissao_liquida||'0').replace(',','.'))||0),0);
+    const pedidos=new Set(cs.filter(viva).map(c=>c.pedido)).size;
+    v.innerHTML='<div class="nums">'
+      +numero(pedidos,'pedidos','ok')
+      +numero('R$ '+comissao.toFixed(2),'comissão','ok')
+      +numero(cs.length,'linhas no relatório')
+      +'</div>';
+
+    // De onde veio: é o sub-ID voltando no utmContent.
+    const por={};
+    cs.filter(viva).forEach(c=>{
+      const k=(c.onde||'?')+' · '+(c.palavra||'?');
+      por[k]=(por[k]||0)+1;
+    });
+    const lista=Object.entries(por).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    if(lista.length){
+      v.innerHTML+='<div class="cartao" style="margin-top:10px"><table><col><col class="c4"><thead><tr>'
+        +'<th>de onde veio</th><th>vendas</th></tr></thead><tbody>'
+        +lista.map(([k,n])=>'<tr><td class="pal">'+esc(k)+'</td><td class="val">'+n+'</td></tr>').join('')
+        +'</tbody></table></div>';
+    }
+  }
+}
+
+montar();
+</script>
+</body></html>
