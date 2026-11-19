@@ -103,3 +103,29 @@ Clique no link para ouvir, e me diga o número da que você quer.
    `audio_id 133530646047558`
 50. **Habibi** — Giulio Cercato · 130s · (sem prévia)
    `audio_id 562931326897871`
+
+---
+
+## A regra: música só em vídeo mudo
+
+Vídeo que já tem som — a pessoa falando, o barulho do produto, qualquer
+coisa — **não leva trilha**. A música entra por cima e estraga o vídeo.
+
+Quem decide é a coluna `audio_id` do calendário: preenchida, o
+publicador pede a trilha; vazia, o vídeo vai com o som que já tem. Não
+existe mais trilha padrão por categoria. Existia, e era justamente ela
+que punha música em cima de quem estava falando.
+
+**Como saber se um vídeo tem som.** Faixa muda é silêncio digital e
+marca −91 dB; som de verdade fica muito acima disso, mesmo baixo. O
+`automacao/n8n/ouvir-videos.py` mede todos os vídeos da grade e separa
+os dois grupos. Rode ele sempre que entrarem vídeos novos:
+
+```
+python automacao/n8n/ouvir-videos.py
+```
+
+**Por que a faixa muda existe.** Vídeo sem nenhuma faixa de áudio é
+recusado pelo Instagram quando se pede trilha da biblioteca — erro
+`2207082`. Por isso os vídeos mudos ganham uma faixa AAC silenciosa
+antes de subir. Ela é só o lugar onde a música vai entrar.

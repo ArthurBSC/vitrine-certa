@@ -166,6 +166,13 @@ link com `generateShortLink` **carregando o sub-ID**. É aqui que mora o
 "não pode receber classificação sem link válido" — o fluxo só aprova o
 que ele mesmo conseguiu linkar.
 
+Uma conferência a mais entra aqui, e vale para qualquer mídia que o
+sistema prepare: **vídeo que já tem som não recebe trilha**. A medição
+é objetiva — faixa muda marca −91 dB, som de verdade fica muito acima —
+então dá para o fluxo decidir sozinho, sem ninguém assistir. Música por
+cima de alguém falando é o tipo de erro que não aparece em nenhum
+relatório e só custa a pessoa que fechou o vídeo no primeiro segundo.
+
 **4 · Catálogo.** Escreve na vitrine: insere o novo, atualiza preço do
 que já existe, desativa o que venceu ou sumiu, e não deixa duplicado
 entrar (a chave é `itemId` + `shopId`, não o nome, que a Shopee muda
