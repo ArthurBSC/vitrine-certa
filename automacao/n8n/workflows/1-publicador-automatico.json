@@ -68,7 +68,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const linhas = $input.all().map(i => i.json);\nconst tz = 'America/Sao_Paulo';\nconst agora = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));\nconst p = n => String(n).padStart(2, '0');\nconst hoje = `${agora.getFullYear()}-${p(agora.getMonth() + 1)}-${p(agora.getDate())}`;\nconst hora = agora.getHours();\n\nconst alvo = linhas.find(l =>\n  String(l.data || '').trim().slice(0, 10) === hoje &&\n  parseInt(String(l.hora || '-1'), 10) === hora &&\n  String(l.status || '').toUpperCase() !== 'POSTADO'\n);\n\n// Nada marcado para esta hora: a execução simplesmente termina aqui.\nif (!alvo) return [];\n\nconst arquivos = String(alvo.arquivo || '').split('|').map(s => s.trim()).filter(Boolean);\nif (!arquivos.length) throw new Error('Linha sem arquivo: ' + JSON.stringify(alvo));\n\nconst story = String(alvo.tipo || '').toLowerCase().startsWith('story');\nconst legenda = [alvo.legenda, alvo.link ? '🔗 ' + alvo.link : '', alvo.hashtags]\n  .filter(Boolean).join('\\n\\n');\n\nreturn arquivos.map((arquivo, i) => {\n  const video = /\\.(mp4|mov)$/i.test(arquivo);\n  return {\n    json: {\n      linha_id: alvo.id,\n      arquivo,\n      total: arquivos.length,\n      indice: i,\n      carrossel: arquivos.length > 1,\n      story,\n      video,\n      media_type: story ? 'STORIES' : (video ? 'REELS' : 'IMAGE'),\n      legenda,\n      audio_id: (alvo.audio_id || '').trim(),\n      produto: alvo.produto,\n      link: alvo.link,\n      data: alvo.data,\n      hora: alvo.hora,\n      tipo: alvo.tipo\n    }\n  };\n});"
+        "jsCode": "const linhas = $input.all().map(i => i.json);\nconst tz = 'America/Sao_Paulo';\nconst agora = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));\nconst p = n => String(n).padStart(2, '0');\nconst hoje = `${agora.getFullYear()}-${p(agora.getMonth() + 1)}-${p(agora.getDate())}`;\nconst hora = agora.getHours();\n\nconst alvo = linhas.find(l =>\n  String(l.data || '').trim().slice(0, 10) === hoje &&\n  parseInt(String(l.hora || '-1'), 10) === hora &&\n  // Qualquer status preenchido tira a linha do ar: POSTADO, ERRO\n  // ou CANCELADO quando o produto sai da Shopee.\n  !String(l.status || '').trim()\n);\n\n// Nada marcado para esta hora: a execução simplesmente termina aqui.\nif (!alvo) return [];\n\nconst arquivos = String(alvo.arquivo || '').split('|').map(s => s.trim()).filter(Boolean);\nif (!arquivos.length) throw new Error('Linha sem arquivo: ' + JSON.stringify(alvo));\n\nconst story = String(alvo.tipo || '').toLowerCase().startsWith('story');\nconst legenda = [alvo.legenda, alvo.link ? '🔗 ' + alvo.link : '', alvo.hashtags]\n  .filter(Boolean).join('\\n\\n');\n\nreturn arquivos.map((arquivo, i) => {\n  const video = /\\.(mp4|mov)$/i.test(arquivo);\n  return {\n    json: {\n      linha_id: alvo.id,\n      arquivo,\n      total: arquivos.length,\n      indice: i,\n      carrossel: arquivos.length > 1,\n      story,\n      video,\n      media_type: story ? 'STORIES' : (video ? 'REELS' : 'IMAGE'),\n      legenda,\n      audio_id: (alvo.audio_id || '').trim(),\n      produto: alvo.produto,\n      link: alvo.link,\n      data: alvo.data,\n      hora: alvo.hora,\n      tipo: alvo.tipo\n    }\n  };\n});"
       },
       "id": "escolher",
       "name": "Escolher post de agora",
@@ -352,31 +352,22 @@
     },
     {
       "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "value": "1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Calendario",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "matchingColumns": [
-            "id"
-          ],
-          "value": {},
-          "schema": []
-        },
+        "method": "POST",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1V11T5ZWHpmkCtjc3VHcQ30P1pbC6pZzJept8n6MOsyc/values/Registro:append",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={{ JSON.stringify({ valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' }) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ values: [[ $json.id, $json.status, $json.post_id, $json.postado_em ]] }) }}",
         "options": {}
       },
       "id": "sheet-write",
       "name": "Planilha: anotar resultado",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         3320,
         120
@@ -386,7 +377,8 @@
           "id": "v8ZDI5IbrP0WTKhJ",
           "name": "Google Sheets account"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {

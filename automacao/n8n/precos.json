@@ -1,0 +1,70 @@
+{
+ "conferido_em": "2026-11-19",
+ "observacao": "Preco da Shopee muda sem aviso. Guardar sempre com a data.",
+ "produtos": [
+  {
+   "palavra": "POTES",
+   "pix": "R$ 166,16",
+   "cheio": "R$ 174,90",
+   "vendidos": "20mil+",
+   "nota": "4.9",
+   "estado": "ok"
+  },
+  {
+   "palavra": "MAQUINA",
+   "pix": "R$ 19,98",
+   "cheio": "R$ 50,00",
+   "desconto": "-60%",
+   "vendidos": "70mil+",
+   "nota": "4.8",
+   "estado": "ok"
+  },
+  {
+   "palavra": "MADRUGADA",
+   "estado": "PRODUTO FORA DO AR",
+   "nota_interna": "JBL Tune 760BT saiu da Shopee"
+  },
+  {
+   "palavra": "OMELETE",
+   "pix": "R$ 100,61",
+   "cheio": "R$ 105,90",
+   "vendidos": "1mil+",
+   "nota": "4.9",
+   "estado": "ok"
+  },
+  {
+   "palavra": "PINCEIS",
+   "faixa": "R$ 23,92 a R$ 33,28",
+   "cheio": "R$ 49,50 a R$ 64,35",
+   "desconto": "-52%",
+   "vendidos": "300mil+",
+   "nota": "4.8",
+   "estado": "ESGOTADO"
+  },
+  {
+   "palavra": "JEANS",
+   "pix": "R$ 118,75",
+   "cheio": "R$ 124,99",
+   "vendidos": "6mil+",
+   "nota": "4.9",
+   "estado": "ok"
+  },
+  {
+   "palavra": "CINEMA",
+   "pix": "R$ 209,00",
+   "cheio": "R$ 220,00",
+   "vendidos": "100mil+",
+   "nota": "4.8",
+   "estado": "ok"
+  },
+  {
+   "palavra": "ACRILICO/MANTIMENTOS",
+   "faixa": "R$ 49,90 a R$ 189,90",
+   "cheio": "R$ 78,90 a R$ 274,90",
+   "desconto": "-37%",
+   "vendidos": "30mil+",
+   "nota": "4.9",
+   "estado": "ok"
+  }
+ ]
+}
