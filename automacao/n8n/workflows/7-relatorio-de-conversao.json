@@ -1,0 +1,199 @@
+{
+ "name": "VC 7 · Shopee: relatório de conversão",
+ "nodes": [
+  {
+   "parameters": {
+    "content": "## VC 7 · O que vieram a ser as vendas\n\nPuxa o relatorio de conversao da Shopee das ultimas 48 horas e guarda\nem /midia/dados/conversoes-AAAA-MM-DD.json.\n\nO campo que importa e o **utmContent**: e nele que voltam os sub-IDs\nque o fluxo 6 colocou no link. E assim que se sabe de qual story, de\nqual post ou do direct veio cada venda.\n\nPrecisa de SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.\nSem as chaves, o fluxo para no primeiro no com recado claro.\n\nAs 48 horas sao de proposito: a janela cobre de novo o dia anterior,\nporque pedido muda de status depois de criado. Quem le dedupe por\nconversionId.",
+    "height": 380,
+    "width": 460
+   },
+   "id": "LEIA-ME",
+   "name": "LEIA-ME",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -920,
+    -180
+   ]
+  },
+  {
+   "parameters": {
+    "rule": {
+     "interval": [
+      {
+       "field": "cronExpression",
+       "expression": "0 7 * * *"
+      }
+     ]
+    }
+   },
+   "id": "cnv-cron",
+   "name": "Todo dia às 7h",
+   "type": "n8n-nodes-base.scheduleTrigger",
+   "typeVersion": 1.2,
+   "position": [
+    -400,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "jsCode": "\n// Assina do jeito que a propria pagina da Shopee assina.\n// Conferido no explorador oficial: o corpo entra na conta exatamente\n// como vai no fio, entao ele e montado uma vez e reaproveitado.\nasync function assinar(appId, secret, ts, corpo) {\n  const fator = appId + ts + corpo + secret;\n  if (globalThis.crypto && globalThis.crypto.subtle) {\n    const b = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(fator));\n    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');\n  }\n  try {\n    return require('crypto').createHash('sha256').update(fator).digest('hex');\n  } catch (e) {\n    throw new Error('Este n8n nao expoe SHA256 no no de codigo. Ligue NODE_FUNCTION_ALLOW_BUILTIN=crypto.');\n  }\n}\n\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  const secret = String($env.SHOPEE_APP_SECRET || '').trim();\n  if (!appId || !secret) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId, secret };\n}\n\nconst { appId, secret } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\nconst desde = ts - 60 * 60 * 48;\n\nconst query = `{\n  conversionReport(purchaseTimeStart: ${desde}, purchaseTimeEnd: ${ts}, limit: 50) {\n    nodes {\n      conversionId\n      clickTime\n      purchaseTime\n      utmContent\n      device\n      referrer\n      buyerType\n      totalCommission\n      netCommission\n      orders {\n        orderId\n        orderStatus\n        items {\n          itemId\n          itemName\n          itemPrice\n          qty\n          actualAmount\n          refundAmount\n          itemTotalCommission\n        }\n      }\n    }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nconst assinatura = await assinar(appId, secret, ts, corpo);\nreturn [{ json: { appId, ts, corpo, assinatura } }];\n"
+   },
+   "id": "cnv-pedir",
+   "name": "Pedir o relatório",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    -180,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "method": "POST",
+    "url": "https://open-api.affiliate.shopee.com.br/graphql",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Content-Type",
+       "value": "application/json"
+      },
+      {
+       "name": "Authorization",
+       "value": "=SHA256 Credential={{ $json.appId }}, Timestamp={{ $json.ts }}, Signature={{ $json.assinatura }}"
+      }
+     ]
+    },
+    "sendBody": true,
+    "contentType": "raw",
+    "rawContentType": "application/json",
+    "body": "={{ $json.corpo }}",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "cnv-http",
+   "name": "Shopee: conversões",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    60,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "jsCode": "\nconst r = $input.first().json;\nif (r.errors && r.errors.length) {\n  throw new Error('A Shopee recusou: ' + JSON.stringify(r.errors).slice(0, 300));\n}\nconst nos = ((r.data || {}).conversionReport || {}).nodes || [];\n\nconst linhas = [];\nfor (const n of nos) {\n  // utmContent traz os cinco sub-IDs separados por underline.\n  const sub = String(n.utmContent || '').split('_');\n  const base = {\n    conversion_id: n.conversionId,\n    clique_em: n.clickTime,\n    compra_em: n.purchaseTime,\n    origem: sub[0] || '',\n    onde: sub[1] || '',\n    palavra: sub[2] || '',\n    linha: sub[3] || '',\n    aparelho: n.device,\n    comprador: n.buyerType,\n    comissao_total: n.totalCommission,\n    comissao_liquida: n.netCommission,\n  };\n  for (const o of n.orders || []) {\n    for (const it of o.items || []) {\n      linhas.push({ ...base,\n        pedido: o.orderId, situacao: o.orderStatus,\n        item_id: it.itemId, produto: it.itemName,\n        preco: it.itemPrice, qtd: it.qty,\n        pago: it.actualAmount, devolvido: it.refundAmount,\n        comissao_item: it.itemTotalCommission });\n    }\n  }\n  if (!(n.orders || []).length) linhas.push(base);\n}\n\nconst hoje = new Date().toISOString().slice(0, 10);\nreturn [{ json: { arquivo: `conversoes-${hoje}.json`, quantas: linhas.length,\n                  colhido_em: new Date().toISOString(), conversoes: linhas } }];\n"
+   },
+   "id": "cnv-sep",
+   "name": "Separar as vendas",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    300,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "toJson",
+    "mode": "each",
+    "options": {
+     "fileName": "={{ $json.arquivo }}",
+     "format": true
+    }
+   },
+   "id": "cnv-arq",
+   "name": "Virar arquivo",
+   "type": "n8n-nodes-base.convertToFile",
+   "typeVersion": 1.1,
+   "position": [
+    540,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "write",
+    "fileName": "=/midia/dados/{{ $('Separar as vendas').item.json.arquivo }}",
+    "options": {}
+   },
+   "id": "cnv-salvar",
+   "name": "Guardar no servidor",
+   "type": "n8n-nodes-base.readWriteFile",
+   "typeVersion": 1,
+   "position": [
+    780,
+    0
+   ]
+  }
+ ],
+ "connections": {
+  "Todo dia às 7h": {
+   "main": [
+    [
+     {
+      "node": "Pedir o relatório",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Pedir o relatório": {
+   "main": [
+    [
+     {
+      "node": "Shopee: conversões",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Shopee: conversões": {
+   "main": [
+    [
+     {
+      "node": "Separar as vendas",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Separar as vendas": {
+   "main": [
+    [
+     {
+      "node": "Virar arquivo",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Virar arquivo": {
+   "main": [
+    [
+     {
+      "node": "Guardar no servidor",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "id": "vitrinecertacnv01",
+ "active": false
+}

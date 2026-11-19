@@ -61,7 +61,15 @@ IG_USER_ID=
 IG_TOKEN=
 ELEVEN_API_KEY=
 ELEVEN_VOICE_ID=
+SHOPEE_APP_ID=
+SHOPEE_APP_SECRET=
 ```
+
+> `SHOPEE_APP_ID` e `SHOPEE_APP_SECRET` saem do painel de afiliado,
+> em *Open API*, depois que a Shopee libera o acesso. São o que os
+> fluxos **VC 6** e **VC 7** esperam para ligar. Cuidado para não
+> colar espaço no fim do Secret: quebra a assinatura e o erro que
+> volta é só "Invalid Signature".
 
 > `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` não é opcional: os três fluxos leem `IG_TOKEN`, `MIDIA_BASE_URL` e companhia por `$env`. Sem isso, nada funciona.
 
