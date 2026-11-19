@@ -37,67 +37,67 @@ Pedimos duas permissões. As outras (`instagram_basic`, `instagram_content_publi
 
 Grave com a conta de teste já cadastrada em *Funções do app → Testadores*, porque em modo de desenvolvimento só essas contas disparam webhook. Narre o que está acontecendo ou use legendas.
 
-## Antes de enviar
+## Passo a passo, em ordem
 
-Conferido direto na Graph API em 17/11/2026, com o token do app
-(`GET /1465477545525044?fields=category,privacy_policy_url,icon_url,...`):
+Conferido na Graph API em 19/11/2026. Faça de cima para baixo: cada
+passo depende do anterior estar pronto.
 
-| Item | Estado |
-|---|---|
-| Categoria do app | ✅ `Lifestyle` |
-| Política de privacidade | ✅ `/privacidade`, no ar |
-| Ícone | ✅ enviado |
-| URL do site | ✅ preenchida |
-| E-mail de contato | ✅ preenchido |
-| **Termos de serviço** | ✅ `/termos`, no ar — falta **colar a URL** nas configurações básicas |
-| **Verificação do negócio** | ❓ não dá para checar pela API, confira no painel |
-| **Vídeo de demonstração** | ❌ falta gravar |
+### 1. Colar a URL dos termos  ·  1 minuto
 
-Ou seja: os três itens que apareciam como *"Não qualificado para envio"*
-(ícone, política de privacidade, categoria) **já estão resolvidos**.
+`https://developers.facebook.com/apps/1465477545525044/settings/basic/`
 
-O que falta, em ordem:
+No campo **URL dos Termos de Serviço**, cole:
 
-1. Colar `https://vitrine-certa-production.up.railway.app/termos` em
-   *Configurações → Básico → URL dos Termos de Serviço*.
-2. Concluir a **verificação do negócio** em
-   `https://business.facebook.com/settings/security_center?business_id=1170838721943796`.
-   Sem isso a análise nem começa.
-3. Gravar o vídeo (roteiro acima) e enviar, pedindo **só**
-   `instagram_manage_comments` e `instagram_manage_messages`.
+```
+https://vitrine-certa-production.up.railway.app/termos
+```
 
-### Isto É o que bloqueia o atendimento
+É o único campo do cadastro que ainda está vazio. Os outros já estão:
+categoria `Lifestyle`, política de privacidade, ícone, site e e-mail.
 
-Eu disse aqui que o app já atendia qualquer pessoa, porque `romulo.dev`
-e `aliceelopesg` foram respondidas sem ter função no app. Errado de
-novo: as duas são amigas do Arthur, e tudo indica que foram
-adicionadas como testadoras do Instagram - lista que o `/roles` da API
-não mostra.
+### 2. Verificação do negócio  ·  horas a dias
 
-O painel do app, em 19/11/2026, mostra **todas** as permissões como
-*"Pronto para teste"*:
+`https://business.facebook.com/settings/security_center?business_id=1170838721943796`
 
-| Permissão | Chamadas | Estado |
-|---|---|---|
-| `instagram_basic` | 268 | Pronto para teste |
-| `instagram_manage_messages` | 178 | Pronto para teste |
-| `instagram_content_publish` | 81 | Pronto para teste |
-| `instagram_manage_comments` | 54 | Pronto para teste |
+Sem ela a análise não começa. Pede documento da empresa, ou os seus
+dados como pessoa física se não houver CNPJ. É a etapa mais demorada,
+então comece por ela assim que o passo 1 estiver feito.
 
-Nenhuma com acesso avançado. Acesso padrão significa que a API e os
-webhooks só funcionam para quem tem função no app: administrador,
-desenvolvedor ou testador.
+### 3. Gravar o vídeo  ·  10 minutos
 
-Na prática: a palavra-chave queimada em 118 arquivos funciona para as
-contas de teste e **para mais ninguém**. O `ofelipesilva.dev` respondeu
-um story e o evento nunca chegou - nem aparece em `/conversations`,
-porque a conta dele não tem função no app.
+Roteiro na seção acima. Grave a tela do celular, sem corte, com a conta
+testadora. Mostre, nesta ordem: o login autorizando a conta, o
+comentário sendo feito pela segunda conta, a resposta aparecendo no
+comentário, e o direct chegando na segunda conta.
 
-Enquanto isso não for aprovado, os 780 seguidores veem a chamada e não
-recebem nada.
+### 4. Enviar  ·  5 minutos
 
-### Como testar antes da aprovação
+`https://developers.facebook.com/apps/1465477545525044/app-review/permissions/`
 
-Adicione a pessoa como testadora do Instagram no painel do app, e peça
-que ela aceite o convite nas configurações do Instagram dela. Sem isso,
-nenhum teste com conta de fora vai funcionar.
+Peça **apenas duas**:
+
+- `instagram_manage_comments`
+- `instagram_manage_messages`
+
+Os textos de justificativa estão no topo deste arquivo, prontos para
+colar. Não peça mais nada: `instagram_basic` e
+`instagram_content_publish` já funcionam em acesso padrão, porque agem
+na própria conta do dono do app. Cada permissão a mais é um motivo a
+mais de reprovação.
+
+---
+
+## Enquanto a análise não sai
+
+O funil funciona só para quem tem função no app. Para testar com
+alguém de fora, adicione a pessoa como **testadora do Instagram**:
+
+`https://developers.facebook.com/apps/1465477545525044/roles/roles/`
+
+Ela precisa aceitar o convite nas configurações do Instagram dela.
+Sem isso, nenhum teste com conta de fora dispara webhook.
+
+## O que não pedir
+
+Não peça `ads_management`, `ads_read`, `instagram_manage_insights` nem
+`instagram_manage_events`. Nada no projeto usa.
