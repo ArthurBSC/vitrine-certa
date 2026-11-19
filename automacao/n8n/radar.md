@@ -275,6 +275,55 @@ saber esta semana, antes de escrever um fluxo novo sequer.
 
 ---
 
+## O que já está montado
+
+Os cinco motores existem como fluxo no n8n, todos **desligados**,
+esperando as chaves. Nenhum deles publica nada: escrevem arquivos em
+`/midia/dados/`, que a vitrine e o calendário leem depois.
+
+| Fluxo | O que faz | Escreve |
+|---|---|---|
+| **VC 6** | gera os links com sub-ID | `links.json` |
+| **VC 7** | puxa o relatório de conversão, 7h | `conversoes.json` |
+| **VC 8** | varre a Shopee atrás de oferta, 4h | `radar-ofertas.json` |
+| **VC 9** | dá a nota de 0 a 100, 5h | `radar-notas.json` |
+| **VC 10** | mantém o catálogo da vitrine | `catalogo.json` |
+
+A ordem de cada madrugada é 4h coletar, 5h pontuar, 7h medir. O VC 10
+roda na mão, por um motivo que vale dizer.
+
+**O radar não põe nada no calendário do Instagram.** Ele deixa a fila
+pronta, com os trinta melhores, e a entrada na grade é um passo à
+parte. Já achamos uma cópia pirata no catálogo que montamos na mão; uma
+publicando sozinha seria um problema de verdade, e nenhuma nota de 0 a
+100 enxerga isso.
+
+### O que foi testado sem as chaves
+
+A conta da nota e a do catálogo rodaram fora do n8n, com ofertas
+inventadas. A nota se comporta: um produto com 24 mil vendas, R$ 12,40
+de comissão e 62% de desconto tira 82,3 e entra na fila; com três
+vendas nossas sobe para 94,3. Um com 12 vendas e R$ 0,40 de comissão
+tira 15,2 e é descartado. Sem comissão ou com a oferta vencida, fica
+sem nota, que é diferente de nota baixa.
+
+O catálogo também: na primeira vez que vê um produto a R$ 80 ele não
+escreve "de R$ 80", porque ainda não há com o que comparar. Quando o
+preço cai para R$ 50 na coleta seguinte, aí sim o "de R$ 80" aparece —
+e preço que não mudou não vira linha nova no histórico.
+
+E o caminho de gravação foi testado de ponta a ponta com dado de
+mentira: o VC 10 rodou, escreveu o `catalogo.json` em `/midia/dados/` e
+o arquivo saiu servido na web. Depois apaguei os dois arquivos de
+teste.
+
+O que não dá para testar sem as chaves é a conversa com a Shopee: a
+assinatura, o formato das respostas e os nomes dos campos. Esses eu
+conferi no explorador oficial, um por um, mas conferir não é o mesmo
+que ter rodado.
+
+---
+
 ## O que trava
 
 Tudo depende de uma coisa: **AppId e Secret da Open API de afiliados**,

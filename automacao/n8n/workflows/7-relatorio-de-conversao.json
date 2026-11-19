@@ -3,17 +3,17 @@
  "nodes": [
   {
    "parameters": {
-    "content": "## VC 7 · O que vieram a ser as vendas\n\nPuxa o relatorio de conversao da Shopee das ultimas 48 horas e guarda\nem /midia/dados/conversoes-AAAA-MM-DD.json.\n\nO campo que importa e o **utmContent**: e nele que voltam os sub-IDs\nque o fluxo 6 colocou no link. E assim que se sabe de qual story, de\nqual post ou do direct veio cada venda.\n\nPrecisa de SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.\nSem as chaves, o fluxo para no primeiro no com recado claro.\n\nAs 48 horas sao de proposito: a janela cobre de novo o dia anterior,\nporque pedido muda de status depois de criado. Quem le dedupe por\nconversionId.",
-    "height": 380,
-    "width": 460
+    "content": "## VC 7 · O que as vendas vieram a ser\n\nPuxa o relatorio de conversao das ultimas 48 horas e junta no\n/midia/dados/conversoes.json, que vai acumulando.\n\nO campo que importa e o **utmContent**: e nele que voltam os sub-IDs\nque o VC 6 poe no link. E assim que se sabe de qual story, de qual post\nou do direct veio cada venda.\n\nAs 48 horas sao de proposito: a janela cobre o dia anterior de novo,\nporque pedido muda de status depois de criado. A juncao e por\nconversao + item, e o registro mais novo manda.\n\nPrecisa de SHOPEE_APP_ID e SHOPEE_APP_SECRET.",
+    "height": 400,
+    "width": 470
    },
-   "id": "LEIA-ME",
+   "id": "leiame",
    "name": "LEIA-ME",
    "type": "n8n-nodes-base.stickyNote",
    "typeVersion": 1,
    "position": [
-    -920,
-    -180
+    -980,
+    -200
    ]
   },
   {
@@ -27,25 +27,25 @@
      ]
     }
    },
-   "id": "cnv-cron",
+   "id": "cron",
    "name": "Todo dia às 7h",
    "type": "n8n-nodes-base.scheduleTrigger",
    "typeVersion": 1.2,
    "position": [
-    -400,
+    -420,
     0
    ]
   },
   {
    "parameters": {
-    "jsCode": "\n// Assina do jeito que a propria pagina da Shopee assina.\n// Conferido no explorador oficial: o corpo entra na conta exatamente\n// como vai no fio, entao ele e montado uma vez e reaproveitado.\nasync function assinar(appId, secret, ts, corpo) {\n  const fator = appId + ts + corpo + secret;\n  if (globalThis.crypto && globalThis.crypto.subtle) {\n    const b = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(fator));\n    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');\n  }\n  try {\n    return require('crypto').createHash('sha256').update(fator).digest('hex');\n  } catch (e) {\n    throw new Error('Este n8n nao expoe SHA256 no no de codigo. Ligue NODE_FUNCTION_ALLOW_BUILTIN=crypto.');\n  }\n}\n\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  const secret = String($env.SHOPEE_APP_SECRET || '').trim();\n  if (!appId || !secret) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId, secret };\n}\n\nconst { appId, secret } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\nconst desde = ts - 60 * 60 * 48;\n\nconst query = `{\n  conversionReport(purchaseTimeStart: ${desde}, purchaseTimeEnd: ${ts}, limit: 50) {\n    nodes {\n      conversionId\n      clickTime\n      purchaseTime\n      utmContent\n      device\n      referrer\n      buyerType\n      totalCommission\n      netCommission\n      orders {\n        orderId\n        orderStatus\n        items {\n          itemId\n          itemName\n          itemPrice\n          qty\n          actualAmount\n          refundAmount\n          itemTotalCommission\n        }\n      }\n    }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nconst assinatura = await assinar(appId, secret, ts, corpo);\nreturn [{ json: { appId, ts, corpo, assinatura } }];\n"
+    "jsCode": "\n// Assina do jeito que a propria pagina da Shopee assina. O corpo entra\n// na conta exatamente como vai no fio, entao e montado uma vez so.\nasync function assinar(appId, secret, ts, corpo) {\n  const fator = appId + ts + corpo + secret;\n  if (globalThis.crypto && globalThis.crypto.subtle) {\n    const b = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(fator));\n    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');\n  }\n  try {\n    return require('crypto').createHash('sha256').update(fator).digest('hex');\n  } catch (e) {\n    throw new Error('Este n8n nao expoe SHA256 no no de codigo. Ligue NODE_FUNCTION_ALLOW_BUILTIN=crypto.');\n  }\n}\n\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  const secret = String($env.SHOPEE_APP_SECRET || '').trim();\n  if (!appId || !secret) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId, secret };\n}\n\nconst { appId, secret } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\nconst desde = ts - 60 * 60 * 48;\n\nconst query = `{\n  conversionReport(purchaseTimeStart: ${desde}, purchaseTimeEnd: ${ts}, limit: 50) {\n    nodes {\n      conversionId clickTime purchaseTime utmContent device referrer buyerType\n      totalCommission netCommission\n      orders {\n        orderId orderStatus\n        items { itemId itemName itemPrice qty actualAmount refundAmount itemTotalCommission }\n      }\n    }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nconst assinatura = await assinar(appId, secret, ts, corpo);\nreturn [{ json: { appId, ts, corpo, assinatura } }];\n"
    },
    "id": "cnv-pedir",
    "name": "Pedir o relatório",
    "type": "n8n-nodes-base.code",
    "typeVersion": 2,
    "position": [
-    -180,
+    -200,
     0
    ]
   },
@@ -83,20 +83,41 @@
    "type": "n8n-nodes-base.httpRequest",
    "typeVersion": 4.2,
    "position": [
-    60,
+    40,
     0
    ]
   },
   {
    "parameters": {
-    "jsCode": "\nconst r = $input.first().json;\nif (r.errors && r.errors.length) {\n  throw new Error('A Shopee recusou: ' + JSON.stringify(r.errors).slice(0, 300));\n}\nconst nos = ((r.data || {}).conversionReport || {}).nodes || [];\n\nconst linhas = [];\nfor (const n of nos) {\n  // utmContent traz os cinco sub-IDs separados por underline.\n  const sub = String(n.utmContent || '').split('_');\n  const base = {\n    conversion_id: n.conversionId,\n    clique_em: n.clickTime,\n    compra_em: n.purchaseTime,\n    origem: sub[0] || '',\n    onde: sub[1] || '',\n    palavra: sub[2] || '',\n    linha: sub[3] || '',\n    aparelho: n.device,\n    comprador: n.buyerType,\n    comissao_total: n.totalCommission,\n    comissao_liquida: n.netCommission,\n  };\n  for (const o of n.orders || []) {\n    for (const it of o.items || []) {\n      linhas.push({ ...base,\n        pedido: o.orderId, situacao: o.orderStatus,\n        item_id: it.itemId, produto: it.itemName,\n        preco: it.itemPrice, qtd: it.qty,\n        pago: it.actualAmount, devolvido: it.refundAmount,\n        comissao_item: it.itemTotalCommission });\n    }\n  }\n  if (!(n.orders || []).length) linhas.push(base);\n}\n\nconst hoje = new Date().toISOString().slice(0, 10);\nreturn [{ json: { arquivo: `conversoes-${hoje}.json`, quantas: linhas.length,\n                  colhido_em: new Date().toISOString(), conversoes: linhas } }];\n"
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/conversoes.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
    },
-   "id": "cnv-sep",
-   "name": "Separar as vendas",
+   "id": "cnv-antes",
+   "name": "Baixar o que já temos",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    280,
+    0
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "jsCode": "\nconst r = $('Shopee: conversões').first().json;\nif (r.errors && r.errors.length) {\n  throw new Error('A Shopee recusou: ' + JSON.stringify(r.errors).slice(0, 300));\n}\nconst nos = ((r.data || {}).conversionReport || {}).nodes || [];\n\nconst novas = [];\nfor (const n of nos) {\n  // utmContent traz os cinco sub-IDs separados por underline.\n  const sub = String(n.utmContent || '').split('_');\n  const base = {\n    conversion_id: n.conversionId, clique_em: n.clickTime, compra_em: n.purchaseTime,\n    origem: sub[0] || '', onde: sub[1] || '', palavra: sub[2] || '', linha: sub[3] || '',\n    aparelho: n.device, comprador: n.buyerType,\n    comissao_total: n.totalCommission, comissao_liquida: n.netCommission,\n  };\n  for (const o of n.orders || []) {\n    for (const it of o.items || []) {\n      novas.push({ ...base, pedido: o.orderId, situacao: o.orderStatus,\n        item_id: it.itemId, produto: it.itemName, preco: it.itemPrice, qtd: it.qty,\n        pago: it.actualAmount, devolvido: it.refundAmount,\n        comissao_item: it.itemTotalCommission });\n    }\n  }\n  if (!(n.orders || []).length) novas.push(base);\n}\n\n// O que ja estava guardado. Arquivo que ainda nao existe volta vazio e\n// nao e erro: na primeira rodada nao ha historico nenhum.\nlet antes = [];\ntry {\n  let a = $('Baixar o que já temos').first().json;\n  if (typeof a.data === 'string') a = JSON.parse(a.data);\n  antes = (a && a.conversoes) || [];\n} catch (e) { antes = []; }\n\nconst por = new Map();\nfor (const c of antes) por.set(`${c.conversion_id}|${c.item_id || ''}`, c);\nfor (const c of novas) por.set(`${c.conversion_id}|${c.item_id || ''}`, c);\nconst todas = [...por.values()].sort((a, b) => (b.compra_em || 0) - (a.compra_em || 0));\n\nreturn [{ json: { atualizado_em: new Date().toISOString(),\n                  novas: novas.length, total: todas.length, conversoes: todas }}];\n"
+   },
+   "id": "cnv-juntar",
+   "name": "Juntar as vendas",
    "type": "n8n-nodes-base.code",
    "typeVersion": 2,
    "position": [
-    300,
+    520,
     0
    ]
   },
@@ -105,31 +126,31 @@
     "operation": "toJson",
     "mode": "each",
     "options": {
-     "fileName": "={{ $json.arquivo }}",
+     "fileName": "conversoes.json",
      "format": true
     }
    },
-   "id": "cnv-arq",
+   "id": "arq",
    "name": "Virar arquivo",
    "type": "n8n-nodes-base.convertToFile",
    "typeVersion": 1.1,
    "position": [
-    540,
+    760,
     0
    ]
   },
   {
    "parameters": {
     "operation": "write",
-    "fileName": "=/midia/dados/{{ $('Separar as vendas').item.json.arquivo }}",
+    "fileName": "/midia/dados/conversoes.json",
     "options": {}
    },
-   "id": "cnv-salvar",
+   "id": "salvar",
    "name": "Guardar no servidor",
    "type": "n8n-nodes-base.readWriteFile",
    "typeVersion": 1,
    "position": [
-    780,
+    1000,
     0
    ]
   }
@@ -161,14 +182,25 @@
    "main": [
     [
      {
-      "node": "Separar as vendas",
+      "node": "Baixar o que já temos",
       "type": "main",
       "index": 0
      }
     ]
    ]
   },
-  "Separar as vendas": {
+  "Baixar o que já temos": {
+   "main": [
+    [
+     {
+      "node": "Juntar as vendas",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Juntar as vendas": {
    "main": [
     [
      {

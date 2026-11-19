@@ -83,5 +83,16 @@ Cole você mesmo no painel, e cuidado para não levar espaço no fim do
 Secret — quebra a assinatura e o erro que volta é só "Invalid
 Signature", que não ajuda em nada.
 
-Depois disso é reiniciar o n8n e ligar os fluxos **VC 6** e **VC 7**,
-que já estão importados e esperando.
+Depois disso é reiniciar o n8n e ligar os fluxos **VC 6** a **VC 10**,
+que já estão importados e esperando:
+
+| | | |
+|---|---|---|
+| **VC 6** | links com sub-ID | na mão |
+| **VC 7** | relatório de conversão | 7h |
+| **VC 8** | coletor de ofertas | 4h |
+| **VC 9** | pontuação | 5h |
+| **VC 10** | catálogo da vitrine | na mão |
+
+A ordem na primeira vez é VC 6, depois VC 8, VC 9 e VC 10 — cada um lê
+o que o anterior escreveu.

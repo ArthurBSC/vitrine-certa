@@ -1,0 +1,222 @@
+{
+ "name": "VC 9 · Radar: pontuação das ofertas",
+ "nodes": [
+  {
+   "parameters": {
+    "content": "## VC 9 · Radar: a nota\n\nLe o que o coletor trouxe e da uma nota de 0 a 100 a cada oferta.\n\nA conta e aritmetica e roda aqui, nao em IA: vendas 25, comissao em\nreais 25, nota do produto 15, preco e desconto 15, loja 10, anuncio 10.\n\nRegra dura: sem comissao, sem link ou com a oferta vencida, o produto\nnao recebe nota baixa - ele fica **sem nota** e fora da fila.\n\n80 ou mais entra na fila. 65 a 79 fica em observacao. Abaixo disso,\ndescartado.\n\nQuando houver venda nossa do produto, a nota medida substitui a\nestimada. E dado nosso, vale mais que qualquer palpite.\n\nEscreve /midia/dados/radar-notas.json.",
+    "height": 460,
+    "width": 470
+   },
+   "id": "leiame",
+   "name": "LEIA-ME",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -1120,
+    -260
+   ]
+  },
+  {
+   "parameters": {
+    "rule": {
+     "interval": [
+      {
+       "field": "cronExpression",
+       "expression": "0 5 * * *"
+      }
+     ]
+    }
+   },
+   "id": "cron",
+   "name": "Toda madrugada às 5h",
+   "type": "n8n-nodes-base.scheduleTrigger",
+   "typeVersion": 1.2,
+   "position": [
+    -560,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/radar-ofertas.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "pt-of",
+   "name": "Baixar as ofertas",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -340,
+    -140
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/conversoes.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "pt-cv",
+   "name": "Baixar as conversões",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -340,
+    0
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/palavras.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "pt-pal",
+   "name": "Baixar palavras",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -340,
+    140
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "jsCode": "\nfunction ler(nome, campo) {\n  try {\n    let a = $(nome).first().json;\n    if (typeof a.data === 'string') a = JSON.parse(a.data);\n    return (a && a[campo]) || (campo ? [] : a);\n  } catch (e) { return []; }\n}\n\nconst ofertas = ler('Baixar as ofertas', 'ofertas');\nif (!ofertas.length) throw new Error('Nao achei ofertas. O VC 8 ja rodou hoje?');\nconst conversoes = ler('Baixar as conversões', 'conversoes');\n\nlet pal = {};\ntry {\n  let a = $('Baixar palavras').first().json;\n  if (typeof a.data === 'string') a = JSON.parse(a.data);\n  pal = a || {};\n} catch (e) { pal = {}; }\nconst jaTemos = new Set(Object.values(pal)\n  .filter(v => v && v.item_id).map(v => `${v.shop_id}|${v.item_id}`));\n\nconst n = v => { const x = parseFloat(String(v ?? '').replace(',', '.')); return isFinite(x) ? x : 0; };\nconst entre = (x, a, b) => Math.max(a, Math.min(b, x));\nconst agora = Math.floor(Date.now() / 1000);\n\n// Quanto cada produto ja rendeu de verdade, por item.\nconst medido = new Map();\nfor (const c of conversoes) {\n  if (!c.item_id) continue;\n  const k = String(c.item_id);\n  const m = medido.get(k) || { vendas: 0, comissao: 0 };\n  if (String(c.situacao || '').toUpperCase() !== 'CANCELLED') {\n    m.vendas += Number(c.qtd || 1);\n    m.comissao += n(c.comissao_item || c.comissao_liquida);\n  }\n  medido.set(k, m);\n}\n\nconst notas = [];\nfor (const o of ofertas) {\n  const comissao = n(o.comissao);\n  const preco = n(o.preco) || n(o.preco_min);\n  const vencida = o.oferta_acaba && Number(o.oferta_acaba) > 0 && Number(o.oferta_acaba) < agora;\n\n  // Sem o basico conferido, nao ha nota. Nem baixa: nenhuma.\n  const faltas = [];\n  if (!comissao) faltas.push('sem comissão');\n  if (!preco) faltas.push('sem preço');\n  if (!o.oferta && !o.link) faltas.push('sem link');\n  if (vencida) faltas.push('oferta vencida');\n  if (faltas.length) {\n    notas.push({ ...resumo(o), nota: null, motivo: faltas.join(', '), faixa: 'sem nota' });\n    continue;\n  }\n\n  const vendas = Number(o.vendas || 0);\n  // Vendas em escala log: de 0 a 50 mil, porque a diferenca entre 100 e\n  // 1000 importa muito mais que entre 40 mil e 50 mil.\n  const pVendas = entre(Math.log10(vendas + 1) / Math.log10(50000), 0, 1) * 25;\n\n  // Comissao em reais, nao em porcentagem: 20% de R$ 15 e R$ 3.\n  const pComissao = entre(comissao / 20, 0, 1) * 25;\n\n  // A nota so conta acima de um piso de vendas. Nota 5,0 com tres\n  // avaliacoes e ruido, e a API nao devolve quantas avaliacoes sao.\n  const nota = n(o.nota);\n  const pNota = vendas >= 300 && nota > 0 ? entre((nota - 4) / 1, 0, 1) * 15 : 0;\n  const notaContou = vendas >= 300 && nota > 0;\n\n  const desconto = Number(o.desconto || 0);\n  const pDesconto = entre(desconto / 60, 0, 1) * 10;\n  // Faixa de preco que a nossa gente compra por impulso.\n  const pPreco = preco >= 20 && preco <= 150 ? 5 : preco < 20 ? 3 : 1;\n\n  // tipo_loja volta como numero e a documentacao nao diz o que cada um\n  // significa. Enquanto nao soubermos, todo mundo leva metade e o valor\n  // cru fica guardado - e com venda de verdade que se aprende o mapa.\n  const pLoja = 5;\n\n  const faixaEstreita = n(o.preco_max) > 0 && n(o.preco_min) > 0\n    ? n(o.preco_max) / n(o.preco_min) : 1;\n  const pAnuncio = (o.imagem ? 3 : 0)\n    + (String(o.produto || '').length >= 20 && String(o.produto || '').length <= 120 ? 2 : 0)\n    + (faixaEstreita <= 2 ? 5 : faixaEstreita <= 4 ? 2 : 0);\n\n  const parcelas = { vendas: +pVendas.toFixed(1), comissao: +pComissao.toFixed(1),\n                     nota: +pNota.toFixed(1), desconto: +pDesconto.toFixed(1),\n                     preco: pPreco, loja: pLoja, anuncio: pAnuncio };\n  let total = Object.values(parcelas).reduce((a, b) => a + b, 0);\n\n  // Quando a nota nao contou, os 15 pontos nao sao distribuidos. Sem\n  // reescalar: produto novo nao e punido, so nao e premiado.\n  const teto = notaContou ? 100 : 85;\n\n  const m = medido.get(String(o.item_id));\n  const nosso = m && m.vendas > 0;\n\n  notas.push({\n    ...resumo(o),\n    nota: +entre(total, 0, teto).toFixed(1),\n    teto,\n    parcelas,\n    nota_contou: notaContou,\n    faixa: total >= 80 ? 'fila' : total >= 65 ? 'observação' : 'descartado',\n    ja_no_catalogo: jaTemos.has(`${o.shop_id}|${o.item_id}`),\n    nossas_vendas: nosso ? m.vendas : 0,\n    nossa_comissao: nosso ? +m.comissao.toFixed(2) : 0,\n  });\n}\n\nfunction resumo(o) {\n  return { shop_id: o.shop_id, item_id: o.item_id, produto: o.produto, loja: o.loja,\n           imagem: o.imagem, link: o.oferta || o.link,\n           origem_url: `https://shopee.com.br/product/${o.shop_id}/${o.item_id}`,\n           preco: o.preco, preco_min: o.preco_min, preco_max: o.preco_max,\n           desconto: o.desconto, vendas: o.vendas, nota_produto: o.nota,\n           comissao: o.comissao, comissao_taxa: o.comissao_taxa,\n           tipo_loja: o.tipo_loja, categorias: o.categorias,\n           oferta_acaba: o.oferta_acaba, buscas: o.buscas };\n}\n\n// Medida ganha de estimada. Quem ja vendeu para a nossa gente sobe.\nfor (const x of notas) {\n  if (x.nota === null || !x.nossas_vendas) continue;\n  x.nota_estimada = x.nota;\n  x.nota = +Math.min(100, x.nota + Math.min(20, x.nossas_vendas * 4)).toFixed(1);\n  x.faixa = x.nota >= 80 ? 'fila' : x.nota >= 65 ? 'observação' : 'descartado';\n  x.medida = true;\n}\n\nnotas.sort((a, b) => (b.nota ?? -1) - (a.nota ?? -1));\nconst conta = f => notas.filter(x => x.faixa === f).length;\nreturn [{ json: {\n  calculado_em: new Date().toISOString(),\n  formula: 'v1 · vendas 25, comissão 25, nota 15, preço e desconto 15, loja 10, anúncio 10',\n  total: notas.length, fila: conta('fila'), observacao: conta('observação'),\n  descartado: conta('descartado'), sem_nota: conta('sem nota'),\n  notas } }];\n"
+   },
+   "id": "pt-nota",
+   "name": "Dar a nota",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    -80,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "toJson",
+    "mode": "each",
+    "options": {
+     "fileName": "radar-notas.json",
+     "format": true
+    }
+   },
+   "id": "arq",
+   "name": "Virar arquivo",
+   "type": "n8n-nodes-base.convertToFile",
+   "typeVersion": 1.1,
+   "position": [
+    180,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "write",
+    "fileName": "/midia/dados/radar-notas.json",
+    "options": {}
+   },
+   "id": "salvar",
+   "name": "Guardar no servidor",
+   "type": "n8n-nodes-base.readWriteFile",
+   "typeVersion": 1,
+   "position": [
+    420,
+    0
+   ]
+  }
+ ],
+ "connections": {
+  "Toda madrugada às 5h": {
+   "main": [
+    [
+     {
+      "node": "Baixar as ofertas",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar as ofertas": {
+   "main": [
+    [
+     {
+      "node": "Baixar as conversões",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar as conversões": {
+   "main": [
+    [
+     {
+      "node": "Baixar palavras",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar palavras": {
+   "main": [
+    [
+     {
+      "node": "Dar a nota",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Dar a nota": {
+   "main": [
+    [
+     {
+      "node": "Virar arquivo",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Virar arquivo": {
+   "main": [
+    [
+     {
+      "node": "Guardar no servidor",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "id": "vitrinecertapnt01",
+ "active": false
+}

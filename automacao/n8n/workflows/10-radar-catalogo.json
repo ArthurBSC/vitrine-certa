@@ -1,0 +1,181 @@
+{
+ "name": "VC 10 · Radar: catálogo da vitrine",
+ "nodes": [
+  {
+   "parameters": {
+    "content": "## VC 10 · Radar: o catalogo\n\nPega o que o VC 9 aprovou e mantem /midia/dados/catalogo.json, que e o\nque a vitrine le.\n\nO que ele faz: entra produto novo, atualiza preco do que ja esta,\ndesativa o que venceu ou sumiu da varredura, e nao deixa duplicado -\na chave e loja + produto, nunca o nome, que a Shopee muda toda hora.\n\nCada visto entra no historico de preco do produto. E dai, e so dai, que\nsai o \"de R$ 80 por R$ 50\" da vitrine: so vale o preco que nos mesmos\nvimos em outra coleta. O \"de\" que a Shopee mostra e dela.\n\nEle **nao** poe nada no calendario do Instagram. Produto entrar na\ngrade e decisao de quem olha - ja achamos uma copia pirata no catalogo,\ne aquilo publicado sozinho seria um problema de verdade. O fluxo deixa\na fila pronta em `fila`, e a entrada na grade e um passo a parte.",
+    "height": 480,
+    "width": 480
+   },
+   "id": "leiame",
+   "name": "LEIA-ME",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -1100,
+    -260
+   ]
+  },
+  {
+   "parameters": {},
+   "id": "cat-ini",
+   "name": "Começar",
+   "type": "n8n-nodes-base.manualTrigger",
+   "typeVersion": 1,
+   "position": [
+    -540,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/radar-notas.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "cat-nt",
+   "name": "Baixar as notas",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -320,
+    -90
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/catalogo.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "cat-at",
+   "name": "Baixar o catálogo",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -320,
+    90
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "jsCode": "\nfunction ler(nome, campo) {\n  try {\n    let a = $(nome).first().json;\n    if (typeof a.data === 'string') a = JSON.parse(a.data);\n    return campo ? ((a && a[campo]) || []) : a;\n  } catch (e) { return campo ? [] : {}; }\n}\n\nconst notas = ler('Baixar as notas', 'notas');\nif (!notas.length) throw new Error('Nao achei notas. O VC 9 ja rodou?');\nconst antes = ler('Baixar o catálogo', 'produtos');\n\nconst hoje = new Date().toISOString().slice(0, 10);\nconst agora = new Date().toISOString();\nconst n = v => { const x = parseFloat(String(v ?? '').replace(',', '.')); return isFinite(x) ? x : 0; };\n\nconst cat = new Map();\nfor (const p of antes) cat.set(`${p.shop_id}|${p.item_id}`, p);\n\nconst vistos = new Set();\nlet novos = 0, atualizados = 0;\n\nfor (const x of notas) {\n  if (x.nota === null) continue;            // sem o basico conferido, nem entra\n  const chave = `${x.shop_id}|${x.item_id}`;\n  vistos.add(chave);\n  const antigo = cat.get(chave);\n\n  // So insere o preco no historico quando ele mudou. Guardar o mesmo\n  // numero todo dia enche o arquivo e nao diz nada.\n  const historico = (antigo && antigo.historico) || [];\n  const ultimo = historico[historico.length - 1];\n  if (!ultimo || n(ultimo.preco) !== n(x.preco)) {\n    historico.push({ dia: hoje, preco: x.preco, desconto: x.desconto });\n  }\n  // Um ano de preco por produto ja e mais do que a vitrine precisa.\n  while (historico.length > 365) historico.shift();\n\n  // O \"de\" so vale se fomos nos que vimos. O maior preco que passou\n  // pelo nosso historico e o unico que da para escrever sem mentir.\n  const maior = historico.reduce((m, h) => Math.max(m, n(h.preco)), 0);\n  const antes_comprovado = maior > n(x.preco) ? maior.toFixed(2) : '';\n\n  cat.set(chave, {\n    shop_id: x.shop_id, item_id: x.item_id, produto: x.produto, loja: x.loja,\n    imagem: x.imagem, link: x.link, origem_url: x.origem_url,\n    preco: x.preco, preco_min: x.preco_min, preco_max: x.preco_max,\n    antes_comprovado, desconto: x.desconto,\n    vendas: x.vendas, nota_produto: x.nota_produto,\n    comissao: x.comissao, comissao_taxa: x.comissao_taxa,\n    categorias: x.categorias, nota: x.nota, faixa: x.faixa,\n    medida: !!x.medida, nossas_vendas: x.nossas_vendas || 0,\n    ativo: true, visto_em: agora,\n    entrou_em: (antigo && antigo.entrou_em) || agora,\n    historico,\n  });\n  if (antigo) atualizados++; else novos++;\n}\n\n// Quem nao apareceu na varredura de hoje sai do ar, mas fica guardado:\n// produto some da busca e volta, e o historico de preco nao se refaz.\nlet desativados = 0;\nfor (const [k, p] of cat) {\n  if (vistos.has(k)) continue;\n  if (p.ativo) { p.ativo = false; p.saiu_em = agora; desativados++; }\n}\n\nconst produtos = [...cat.values()];\nconst fila = produtos\n  .filter(p => p.ativo && p.faixa === 'fila')\n  .sort((a, b) => b.nota - a.nota)\n  .slice(0, 30);\n\nreturn [{ json: {\n  atualizado_em: agora,\n  total: produtos.length, ativos: produtos.filter(p => p.ativo).length,\n  novos, atualizados, desativados,\n  fila: fila.map(p => ({ item_id: p.item_id, shop_id: p.shop_id, produto: p.produto,\n                         nota: p.nota, preco: p.preco, comissao: p.comissao,\n                         origem_url: p.origem_url })),\n  produtos } }];\n"
+   },
+   "id": "cat-upd",
+   "name": "Atualizar o catálogo",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    -60,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "toJson",
+    "mode": "each",
+    "options": {
+     "fileName": "catalogo.json",
+     "format": true
+    }
+   },
+   "id": "arq",
+   "name": "Virar arquivo",
+   "type": "n8n-nodes-base.convertToFile",
+   "typeVersion": 1.1,
+   "position": [
+    200,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "write",
+    "fileName": "/midia/dados/catalogo.json",
+    "options": {}
+   },
+   "id": "salvar",
+   "name": "Guardar no servidor",
+   "type": "n8n-nodes-base.readWriteFile",
+   "typeVersion": 1,
+   "position": [
+    440,
+    0
+   ]
+  }
+ ],
+ "connections": {
+  "Começar": {
+   "main": [
+    [
+     {
+      "node": "Baixar as notas",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar as notas": {
+   "main": [
+    [
+     {
+      "node": "Baixar o catálogo",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar o catálogo": {
+   "main": [
+    [
+     {
+      "node": "Atualizar o catálogo",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Atualizar o catálogo": {
+   "main": [
+    [
+     {
+      "node": "Virar arquivo",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Virar arquivo": {
+   "main": [
+    [
+     {
+      "node": "Guardar no servidor",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "id": "vitrinecertacat01",
+ "active": false
+}
