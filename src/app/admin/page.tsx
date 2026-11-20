@@ -286,7 +286,7 @@ export default function AdminPage() {
             </div>
             <h2 className="text-xl font-semibold text-slate-900">Acesso Restrito</h2>
             <p className="text-sm text-slate-500 mt-1">
-              Digite seu PIN de 8 dígitos para gerenciar produtos
+              Digite seu PIN para gerenciar produtos
             </p>
           </div>
 
@@ -297,13 +297,11 @@ export default function AdminPage() {
               </label>
               <input
                 type="password"
-                inputMode="numeric"
-                pattern="[0-9]*"
                 value={pin}
-                onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+                onChange={(e) => setPin(e.target.value)}
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 text-center text-2xl tracking-widest font-mono placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
                 placeholder="••••••••"
-                maxLength={8}
+                maxLength={32}
                 autoComplete="off"
                 autoFocus
               />

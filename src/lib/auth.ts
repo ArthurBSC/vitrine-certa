@@ -96,16 +96,18 @@ export function validatePin(pin: string): boolean {
     return false
   }
 
-  // Remove espaços e caracteres não numéricos
-  const cleanPin = pin.replace(/\D/g, '')
+  // O PIN pode ter letra. Antes isto jogava fora tudo que não fosse
+  // dígito, então um PIN com letra entrava truncado e nunca batia — sem
+  // dizer o porquê, porque a resposta é a mesma de PIN errado.
+  const cleanPin = pin.trim()
 
   // Verifica tamanho
-  if (cleanPin.length < 6 || cleanPin.length > 8) {
+  if (cleanPin.length < 6 || cleanPin.length > 32) {
     return false
   }
 
   // Comparação segura contra timing attacks
-  return timingSafeEqual(cleanPin, adminPin)
+  return timingSafeEqual(cleanPin, adminPin.trim())
 }
 
 /**
