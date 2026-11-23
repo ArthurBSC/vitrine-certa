@@ -144,6 +144,17 @@
     420,
     0
    ]
+  },
+  {
+   "parameters": {},
+   "id": "namao",
+   "name": "Rodar na mão",
+   "type": "n8n-nodes-base.manualTrigger",
+   "typeVersion": 1,
+   "position": [
+    -560,
+    -160
+   ]
   }
  ],
  "connections": {
@@ -207,6 +218,17 @@
     [
      {
       "node": "Guardar no servidor",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Rodar na mão": {
+   "main": [
+    [
+     {
+      "node": "Baixar as ofertas",
       "type": "main",
       "index": 0
      }

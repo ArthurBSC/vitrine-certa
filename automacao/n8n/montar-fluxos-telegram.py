@@ -146,15 +146,22 @@ const pool = faltam.length ? faltam : fila;
 pool.sort((a, b) => b.desconto - a.desconto);
 const escolhido = pool[0];
 
+// HTML, nao Markdown. O Markdown legado do Telegram nao tem tachado:
+// o ~R$ 100,00~ foi para o canal com os tils na tela, literal. E o
+// MarkdownV2, que tem tachado, obriga a escapar ponto, parentese e
+// hifen - e nome de produto da Shopee e feito disso. Em HTML sao tres
+// caracteres para escapar e acabou.
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 const linhas = [];
-linhas.push('🔥 *' + escolhido.produto.replace(/([*_`\[\]])/g, '\\$1') + '*');
+linhas.push('🔥 <b>' + esc(escolhido.produto) + '</b>');
 linhas.push('');
-linhas.push('💰 *' + escolhido.pix + '* no Pix');
+linhas.push('💰 <b>' + esc(escolhido.pix) + '</b> no Pix');
 if (escolhido.desconto > 0) {
-  linhas.push('~' + escolhido.antes + '~  ·  ' + escolhido.desconto + '% de desconto');
+  linhas.push('<s>' + esc(escolhido.antes) + '</s>  ·  ' + escolhido.desconto + '% de desconto');
 }
 linhas.push('');
-linhas.push('_Preço conferido em ' + dia + '. A Shopee muda sem avisar: confirme na página._');
+linhas.push('<i>Preço conferido em ' + esc(dia) + '. A Shopee muda sem avisar: confirme na página.</i>');
 linhas.push('');
 linhas.push('A Vitrine Certa recebe uma comissão se você comprar pelo link. Para você não muda nada.');
 
@@ -163,7 +170,7 @@ return [{ json: {
   payload: {
     chat_id: canal,
     text: linhas.join('\n'),
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
     link_preview_options: { is_disabled: false, prefer_large_media: true, url: escolhido.link },
     reply_markup: { inline_keyboard: [[{ text: '🛒 Ver na Shopee', url: escolhido.link }]] },
   },
@@ -200,6 +207,12 @@ return [{ json: {
 n11 = [
     sticky(leia11, [-1180, -260], 480, 440),
     cron('Quatro vezes por dia', '0 9,12,15,20 * * *', [-620, 0]),
+    # Sem gatilho de mao nao da para rodar uma vez e olhar o resultado:
+    # nem pelo botao do painel, nem pela linha de comando, que responde
+    # "Missing node to start execution".
+    {'parameters': {}, 'id': 'namao', 'name': 'Rodar na mão',
+     'type': 'n8n-nodes-base.manualTrigger', 'typeVersion': 1,
+     'position': [-620, -160]},
     baixar('Baixar palavras', 'tg-pal', '/dados/palavras.json', [-400, -120]),
     baixar('Baixar preços', 'tg-pre', '/dados/precos.json', [-400, 20]),
     baixar('Baixar o que já saiu', 'tg-ja', '/dados/telegram-postados.json', [-400, 160], tolerante=True),
@@ -217,6 +230,7 @@ n11 = [
 ]
 wf11 = montar('VC 11 · Telegram: a oferta do dia', 'vitrinecertatgp01', n11, [
     ('Quatro vezes por dia', 'Baixar palavras'),
+    ('Rodar na mão', 'Baixar palavras'),
     ('Baixar palavras', 'Baixar preços'),
     ('Baixar preços', 'Baixar o que já saiu'),
     ('Baixar o que já saiu', 'Escolher a oferta'),
@@ -275,13 +289,13 @@ if (msg.new_chat_members && msg.new_chat_members.length) {
     '',
     'Aqui a gente posta achado da Shopee com o preço conferido no dia.',
     '',
-    '*Como funciona:*',
+    '<b>Como funciona:</b>',
     '· Viu um produto e quer o link? Escreva a palavra-chave que aparece no post.',
     '· Link de divulgação de fora é apagado. Não é nada pessoal, é para o grupo não virar mural de spam.',
     '· A Vitrine Certa recebe comissão quando você compra pelos nossos links. Para você não muda o preço.',
   ].join('\n');
   return [{ json: { acao: 'boas-vindas',
-    payload: { chat_id: msg.chat.id, text: texto, parse_mode: 'Markdown',
+    payload: { chat_id: msg.chat.id, text: texto, parse_mode: 'HTML',
                reply_to_message_id: msg.message_id } } }];
 }
 
@@ -335,9 +349,11 @@ const v = pal[achado];
 return [{ json: { acao: 'responder', payload: {
   chat_id: msg.chat.id,
   reply_to_message_id: msg.message_id,
-  text: '🛒 *' + v.produto.replace(/([*_`\[\]])/g, '\\$1') + '*\n\n'
+  text: '🛒 <b>' + String(v.produto).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</b>' + '
+
+'
       + 'Aqui está o link. A Vitrine Certa recebe comissão se você comprar por ele — para você o preço é o mesmo.',
-  parse_mode: 'Markdown',
+  parse_mode: 'HTML',
   reply_markup: { inline_keyboard: [[{ text: 'Ver na Shopee', url: v.link }]] },
 } } }];
 '''

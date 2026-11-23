@@ -37,6 +37,17 @@
    ]
   },
   {
+   "parameters": {},
+   "id": "namao",
+   "name": "Rodar na mão",
+   "type": "n8n-nodes-base.manualTrigger",
+   "typeVersion": 1,
+   "position": [
+    -620,
+    -160
+   ]
+  },
+  {
    "parameters": {
     "url": "={{ $env.MIDIA_BASE_URL }}/dados/palavras.json",
     "options": {}
@@ -87,7 +98,7 @@
   },
   {
    "parameters": {
-    "jsCode": "\nfunction ler(nome, campo) {\n  try {\n    let a = $(nome).first().json;\n    if (typeof a.data === 'string') a = JSON.parse(a.data);\n    return campo ? (a && a[campo]) : a;\n  } catch (e) { return campo ? null : {}; }\n}\n\nconst canal = String($env.TELEGRAM_CANAL || '').trim();\nif (!String($env.TELEGRAM_BOT_TOKEN || '').trim() || !canal) {\n  throw new Error('Faltam TELEGRAM_BOT_TOKEN e TELEGRAM_CANAL no ambiente do n8n.');\n}\n\nconst pal = ler('Baixar palavras') || {};\nconst pre = ler('Baixar preços', 'precos') || {};\nconst dia = (ler('Baixar preços', 'conferido_em')) || '';\nconst jaForam = (ler('Baixar o que já saiu', 'postados')) || [];\n\nconst n = v => { const x = parseFloat(String(v ?? '').replace(/[^\\d,.-]/g, '').replace(',', '.')); return isFinite(x) ? x : 0; };\n\n// Candidatos: produto com preco conferido, em pe, e com link.\nlet fila = [];\nfor (const [palavra, v] of Object.entries(pal)) {\n  const p = pre[palavra];\n  if (!p || p.situacao !== 'ok' || !p.pix || !v.link) continue;\n  const agora = n(p.pix), antes = n(p.antes);\n  fila.push({\n    palavra, produto: v.produto, link: v.link, pix: p.pix, antes: p.antes,\n    // Desconto so conta quando o \"antes\" existe e e maior. Sem isso,\n    // zero: nao invento desconto para ordenar.\n    desconto: antes > agora ? Math.round((antes - agora) / antes * 100) : 0,\n  });\n}\nif (!fila.length) throw new Error('Nenhum produto com preço conferido em palavras/precos.');\n\n// Um produto por palavra, e nunca duas palavras do mesmo link seguidas.\nconst porLink = new Map();\nfor (const f of fila) if (!porLink.has(f.link)) porLink.set(f.link, f);\nfila = [...porLink.values()];\n\nconst faltam = fila.filter(f => !jaForam.includes(f.link));\n// Quando todos ja sairam, a volta comeca pelos melhores de novo.\nconst pool = faltam.length ? faltam : fila;\npool.sort((a, b) => b.desconto - a.desconto);\nconst escolhido = pool[0];\n\nconst linhas = [];\nlinhas.push('🔥 *' + escolhido.produto.replace(/([*_`\\[\\]])/g, '\\\\$1') + '*');\nlinhas.push('');\nlinhas.push('💰 *' + escolhido.pix + '* no Pix');\nif (escolhido.desconto > 0) {\n  linhas.push('~' + escolhido.antes + '~  ·  ' + escolhido.desconto + '% de desconto');\n}\nlinhas.push('');\nlinhas.push('_Preço conferido em ' + dia + '. A Shopee muda sem avisar: confirme na página._');\nlinhas.push('');\nlinhas.push('A Vitrine Certa recebe uma comissão se você comprar pelo link. Para você não muda nada.');\n\nreturn [{ json: {\n  escolhido,\n  payload: {\n    chat_id: canal,\n    text: linhas.join('\\n'),\n    parse_mode: 'Markdown',\n    link_preview_options: { is_disabled: false, prefer_large_media: true, url: escolhido.link },\n    reply_markup: { inline_keyboard: [[{ text: '🛒 Ver na Shopee', url: escolhido.link }]] },\n  },\n} }];\n"
+    "jsCode": "\nfunction ler(nome, campo) {\n  try {\n    let a = $(nome).first().json;\n    if (typeof a.data === 'string') a = JSON.parse(a.data);\n    return campo ? (a && a[campo]) : a;\n  } catch (e) { return campo ? null : {}; }\n}\n\nconst canal = String($env.TELEGRAM_CANAL || '').trim();\nif (!String($env.TELEGRAM_BOT_TOKEN || '').trim() || !canal) {\n  throw new Error('Faltam TELEGRAM_BOT_TOKEN e TELEGRAM_CANAL no ambiente do n8n.');\n}\n\nconst pal = ler('Baixar palavras') || {};\nconst pre = ler('Baixar preços', 'precos') || {};\nconst dia = (ler('Baixar preços', 'conferido_em')) || '';\nconst jaForam = (ler('Baixar o que já saiu', 'postados')) || [];\n\nconst n = v => { const x = parseFloat(String(v ?? '').replace(/[^\\d,.-]/g, '').replace(',', '.')); return isFinite(x) ? x : 0; };\n\n// Candidatos: produto com preco conferido, em pe, e com link.\nlet fila = [];\nfor (const [palavra, v] of Object.entries(pal)) {\n  const p = pre[palavra];\n  if (!p || p.situacao !== 'ok' || !p.pix || !v.link) continue;\n  const agora = n(p.pix), antes = n(p.antes);\n  fila.push({\n    palavra, produto: v.produto, link: v.link, pix: p.pix, antes: p.antes,\n    // Desconto so conta quando o \"antes\" existe e e maior. Sem isso,\n    // zero: nao invento desconto para ordenar.\n    desconto: antes > agora ? Math.round((antes - agora) / antes * 100) : 0,\n  });\n}\nif (!fila.length) throw new Error('Nenhum produto com preço conferido em palavras/precos.');\n\n// Um produto por palavra, e nunca duas palavras do mesmo link seguidas.\nconst porLink = new Map();\nfor (const f of fila) if (!porLink.has(f.link)) porLink.set(f.link, f);\nfila = [...porLink.values()];\n\nconst faltam = fila.filter(f => !jaForam.includes(f.link));\n// Quando todos ja sairam, a volta comeca pelos melhores de novo.\nconst pool = faltam.length ? faltam : fila;\npool.sort((a, b) => b.desconto - a.desconto);\nconst escolhido = pool[0];\n\n// HTML, nao Markdown. O Markdown legado do Telegram nao tem tachado:\n// o ~R$ 100,00~ foi para o canal com os tils na tela, literal. E o\n// MarkdownV2, que tem tachado, obriga a escapar ponto, parentese e\n// hifen - e nome de produto da Shopee e feito disso. Em HTML sao tres\n// caracteres para escapar e acabou.\nconst esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n\nconst linhas = [];\nlinhas.push('🔥 <b>' + esc(escolhido.produto) + '</b>');\nlinhas.push('');\nlinhas.push('💰 <b>' + esc(escolhido.pix) + '</b> no Pix');\nif (escolhido.desconto > 0) {\n  linhas.push('<s>' + esc(escolhido.antes) + '</s>  ·  ' + escolhido.desconto + '% de desconto');\n}\nlinhas.push('');\nlinhas.push('<i>Preço conferido em ' + esc(dia) + '. A Shopee muda sem avisar: confirme na página.</i>');\nlinhas.push('');\nlinhas.push('A Vitrine Certa recebe uma comissão se você comprar pelo link. Para você não muda nada.');\n\nreturn [{ json: {\n  escolhido,\n  payload: {\n    chat_id: canal,\n    text: linhas.join('\\n'),\n    parse_mode: 'HTML',\n    link_preview_options: { is_disabled: false, prefer_large_media: true, url: escolhido.link },\n    reply_markup: { inline_keyboard: [[{ text: '🛒 Ver na Shopee', url: escolhido.link }]] },\n  },\n} }];\n"
    },
    "id": "tg-esc",
    "name": "Escolher a oferta",
@@ -182,6 +193,17 @@
  ],
  "connections": {
   "Quatro vezes por dia": {
+   "main": [
+    [
+     {
+      "node": "Baixar palavras",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Rodar na mão": {
    "main": [
     [
      {
