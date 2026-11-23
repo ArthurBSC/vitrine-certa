@@ -38,3 +38,6 @@ next-env.d.ts
 # Fotos e videos para postagem (nao vao para o site)
 /midia/
 /midia.zip
+
+# videos do TikTok: ficam no servidor de midia, o script os refaz
+automacao/n8n/tiktok/
