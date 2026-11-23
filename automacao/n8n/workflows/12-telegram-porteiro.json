@@ -1,0 +1,162 @@
+{
+ "name": "VC 12 · Telegram: porteiro do grupo",
+ "nodes": [
+  {
+   "parameters": {
+    "content": "## VC 12 · O porteiro do grupo\n\nToma conta do grupo de discussao. Tres coisas, nessa ordem:\n\n1. **Quem chega** recebe as regras, uma vez.\n2. **Link de fora** postado por quem nao e administrador e apagado na\n   hora, com um aviso curto. E o que mais suja grupo de ofertas: gente\n   entrando so para pendurar o proprio link de afiliado.\n3. **Quem escreve a palavra-chave** recebe o link do produto ali\n   mesmo - o mesmo funil do Instagram, sem depender da Meta.\n\nO que ele NAO faz: banir, expulsar ou silenciar ninguem. Apagar\nmensagem e reversivel; banir pessoa errada nao e. Expulsao fica com\nvoce, na mao.\n\nNao apaga link do proprio canal: quando o grupo e o de discussao, toda\noferta publicada reaparece aqui sozinha, e sem essa excecao o porteiro\napagaria as nossas proprias ofertas.\n\nPara funcionar, o bot precisa ser **administrador do grupo** com\npermissao de apagar mensagens, e o webhook tem que estar apontando\npara a URL deste fluxo (o passo a passo esta em telegram.md).\n\nPrecisa de TELEGRAM_BOT_TOKEN. TELEGRAM_DONO (o seu id de usuario) e\nopcional e libera voce de postar link.",
+    "height": 480,
+    "width": 480
+   },
+   "id": "leiame",
+   "name": "LEIA-ME",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -1180,
+    -300
+   ]
+  },
+  {
+   "parameters": {
+    "httpMethod": "POST",
+    "path": "telegram-porteiro",
+    "options": {}
+   },
+   "id": "tg-hook",
+   "name": "Telegram chama aqui",
+   "type": "n8n-nodes-base.webhook",
+   "typeVersion": 2,
+   "position": [
+    -620,
+    0
+   ],
+   "webhookId": "vitrine-telegram-porteiro"
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/palavras.json",
+    "options": {}
+   },
+   "id": "tg2-pal",
+   "name": "Baixar palavras",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -380,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "jsCode": "\nconst u = $json.body || $json;\nconst msg = u.message || u.edited_message;\nconst canal = String($env.TELEGRAM_GRUPO || '').trim();\n\nfunction nada(motivo) { return [{ json: { acao: 'nada', motivo } }]; }\nif (!msg) return nada('update sem mensagem');\nconst chat = String(msg.chat?.id ?? '');\nif (canal && chat !== canal) return nada('mensagem de outro chat');\n\n// --------------------------------------------------- quem acabou de chegar\nif (msg.new_chat_members && msg.new_chat_members.length) {\n  const nomes = msg.new_chat_members\n    .filter(m => !m.is_bot)\n    .map(m => (m.first_name || 'gente').replace(/([*_`\\[\\]])/g, ''))\n    .join(', ');\n  if (!nomes) return nada('só bot entrou');\n  const texto = [\n    'Bem-vindo, ' + nomes + '! 👋',\n    '',\n    'Aqui a gente posta achado da Shopee com o preço conferido no dia.',\n    '',\n    '*Como funciona:*',\n    '· Viu um produto e quer o link? Escreva a palavra-chave que aparece no post.',\n    '· Link de divulgação de fora é apagado. Não é nada pessoal, é para o grupo não virar mural de spam.',\n    '· A Vitrine Certa recebe comissão quando você compra pelos nossos links. Para você não muda o preço.',\n  ].join('\\n');\n  return [{ json: { acao: 'boas-vindas',\n    payload: { chat_id: msg.chat.id, text: texto, parse_mode: 'Markdown',\n               reply_to_message_id: msg.message_id } } }];\n}\n\nconst texto = String(msg.text || msg.caption || '');\nif (!texto) return nada('mensagem sem texto');\n\n// --------------------------------------------------------- link de fora\n// Quem pode postar link: voce, e o proprio canal.\n//\n// O segundo caso nao e detalhe. Quando o grupo e o de discussao do\n// canal, TODA oferta publicada no canal reaparece aqui sozinha, com\n// link e tudo. Sem esta linha o porteiro apagaria as nossas proprias\n// ofertas, uma por uma, e ninguem entenderia o porque.\nconst doCanal = !!msg.sender_chat || msg.is_automatic_forward === true;\nconst souDono = doCanal\n  || (String($env.TELEGRAM_DONO || '').trim() &&\n      String(msg.from?.id || '') === String($env.TELEGRAM_DONO).trim());\n\nconst temLink = /(https?:\\/\\/|www\\.|t\\.me\\/|wa\\.me\\/|chat\\.whatsapp\\.com)/i.test(texto)\n  || (msg.entities || []).some(e => ['url', 'text_link'].includes(e.type));\n\nif (temLink && !souDono) {\n  return [{ json: {\n    acao: 'apagar',\n    payload: { chat_id: msg.chat.id, message_id: msg.message_id },\n    aviso: { chat_id: msg.chat.id,\n             text: 'Apaguei um link de fora. Aqui só vão os links dos produtos que a gente confere — '\n                 + 'é o que mantém o grupo limpo. Para pedir o link de um produto, escreva a palavra-chave dele.' },\n  } }];\n}\n\n// ------------------------------------------------------- palavra-chave\nlet pal = {};\ntry {\n  let a = $('Baixar palavras').first().json;\n  if (typeof a.data === 'string') a = JSON.parse(a.data);\n  pal = a || {};\n} catch (e) { pal = {}; }\n\nconst limpo = texto.trim().toUpperCase().replace(/[^A-ZÀ-Ú0-9 ]/g, '');\nlet achado = pal[limpo] ? limpo : '';\nif (!achado) {\n  // a palavra pode vir no meio de uma frase\n  for (const k of Object.keys(pal)) {\n    if (k.length >= 5 && new RegExp('(^| )' + k + '( |$)').test(limpo)) { achado = k; break; }\n  }\n}\nif (!achado) return nada('nenhuma palavra reconhecida');\n\nconst v = pal[achado];\nreturn [{ json: { acao: 'responder', payload: {\n  chat_id: msg.chat.id,\n  reply_to_message_id: msg.message_id,\n  text: '🛒 *' + v.produto.replace(/([*_`\\[\\]])/g, '\\\\$1') + '*\\n\\n'\n      + 'Aqui está o link. A Vitrine Certa recebe comissão se você comprar por ele — para você o preço é o mesmo.',\n  parse_mode: 'Markdown',\n  reply_markup: { inline_keyboard: [[{ text: 'Ver na Shopee', url: v.link }]] },\n} } }];\n"
+   },
+   "id": "tg2-dec",
+   "name": "Decidir o que fazer",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    -140,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "jsCode": "\n// Tres caminhos saem daqui, e cada um fala com um metodo diferente da\n// API. Mando o metodo junto para um no so dar conta dos tres.\nconst d = $json;\nif (d.acao === 'nada') return [];\nif (d.acao === 'apagar') {\n  return [{ json: { metodo: 'deleteMessage', payload: d.payload } },\n          { json: { metodo: 'sendMessage', payload: d.aviso } }];\n}\nreturn [{ json: { metodo: 'sendMessage', payload: d.payload } }];\n"
+   },
+   "id": "tg2-rot",
+   "name": "Separar as chamadas",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    100,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "method": "POST",
+    "url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/{{ $json.metodo }}",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Content-Type",
+       "value": "application/json"
+      }
+     ]
+    },
+    "sendBody": true,
+    "contentType": "raw",
+    "rawContentType": "application/json",
+    "body": "={{ JSON.stringify($json.payload) }}",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "tg2-api",
+   "name": "Telegram: agir",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    340,
+    0
+   ],
+   "onError": "continueRegularOutput"
+  }
+ ],
+ "connections": {
+  "Telegram chama aqui": {
+   "main": [
+    [
+     {
+      "node": "Baixar palavras",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar palavras": {
+   "main": [
+    [
+     {
+      "node": "Decidir o que fazer",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Decidir o que fazer": {
+   "main": [
+    [
+     {
+      "node": "Separar as chamadas",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Separar as chamadas": {
+   "main": [
+    [
+     {
+      "node": "Telegram: agir",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "id": "vitrinecertatgm01",
+ "active": false
+}

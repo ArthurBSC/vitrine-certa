@@ -1,0 +1,278 @@
+{
+ "name": "VC 11 · Telegram: a oferta do dia",
+ "nodes": [
+  {
+   "parameters": {
+    "content": "## VC 11 · A oferta do dia no canal\n\nPublica no canal do Telegram, quatro vezes por dia, o produto com o\nmelhor desconto que ainda nao foi ao ar ali.\n\nO canal nao divide audiencia com algoritmo nenhum: quem assinou, ve. E\no link vai dentro da mensagem, num botao - nada de \"link na bio\".\n\nGuarda em /midia/dados/telegram-postados.json o que ja saiu, para nao\nrepetir. Quando a lista acaba, ele recomeca pelos melhores.\n\nPrecisa de TELEGRAM_BOT_TOKEN e TELEGRAM_CANAL (o @ do canal, ou o id\ncomecando em -100). O bot tem que ser administrador do canal.\n\nPreco vem de precos.json, com a data da conferencia na mensagem: preco\nde afiliado sem data vira mentira em uma semana.",
+    "height": 440,
+    "width": 480
+   },
+   "id": "leiame",
+   "name": "LEIA-ME",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -1180,
+    -260
+   ]
+  },
+  {
+   "parameters": {
+    "rule": {
+     "interval": [
+      {
+       "field": "cronExpression",
+       "expression": "0 9,12,15,20 * * *"
+      }
+     ]
+    }
+   },
+   "id": "cron",
+   "name": "Quatro vezes por dia",
+   "type": "n8n-nodes-base.scheduleTrigger",
+   "typeVersion": 1.2,
+   "position": [
+    -620,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/palavras.json",
+    "options": {}
+   },
+   "id": "tg-pal",
+   "name": "Baixar palavras",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -400,
+    -120
+   ]
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/precos.json",
+    "options": {}
+   },
+   "id": "tg-pre",
+   "name": "Baixar preços",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -400,
+    20
+   ]
+  },
+  {
+   "parameters": {
+    "url": "={{ $env.MIDIA_BASE_URL }}/dados/telegram-postados.json",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "tg-ja",
+   "name": "Baixar o que já saiu",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    -400,
+    160
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "jsCode": "\nfunction ler(nome, campo) {\n  try {\n    let a = $(nome).first().json;\n    if (typeof a.data === 'string') a = JSON.parse(a.data);\n    return campo ? (a && a[campo]) : a;\n  } catch (e) { return campo ? null : {}; }\n}\n\nconst canal = String($env.TELEGRAM_CANAL || '').trim();\nif (!String($env.TELEGRAM_BOT_TOKEN || '').trim() || !canal) {\n  throw new Error('Faltam TELEGRAM_BOT_TOKEN e TELEGRAM_CANAL no ambiente do n8n.');\n}\n\nconst pal = ler('Baixar palavras') || {};\nconst pre = ler('Baixar preços', 'precos') || {};\nconst dia = (ler('Baixar preços', 'conferido_em')) || '';\nconst jaForam = (ler('Baixar o que já saiu', 'postados')) || [];\n\nconst n = v => { const x = parseFloat(String(v ?? '').replace(/[^\\d,.-]/g, '').replace(',', '.')); return isFinite(x) ? x : 0; };\n\n// Candidatos: produto com preco conferido, em pe, e com link.\nlet fila = [];\nfor (const [palavra, v] of Object.entries(pal)) {\n  const p = pre[palavra];\n  if (!p || p.situacao !== 'ok' || !p.pix || !v.link) continue;\n  const agora = n(p.pix), antes = n(p.antes);\n  fila.push({\n    palavra, produto: v.produto, link: v.link, pix: p.pix, antes: p.antes,\n    // Desconto so conta quando o \"antes\" existe e e maior. Sem isso,\n    // zero: nao invento desconto para ordenar.\n    desconto: antes > agora ? Math.round((antes - agora) / antes * 100) : 0,\n  });\n}\nif (!fila.length) throw new Error('Nenhum produto com preço conferido em palavras/precos.');\n\n// Um produto por palavra, e nunca duas palavras do mesmo link seguidas.\nconst porLink = new Map();\nfor (const f of fila) if (!porLink.has(f.link)) porLink.set(f.link, f);\nfila = [...porLink.values()];\n\nconst faltam = fila.filter(f => !jaForam.includes(f.link));\n// Quando todos ja sairam, a volta comeca pelos melhores de novo.\nconst pool = faltam.length ? faltam : fila;\npool.sort((a, b) => b.desconto - a.desconto);\nconst escolhido = pool[0];\n\nconst linhas = [];\nlinhas.push('🔥 *' + escolhido.produto.replace(/([*_`\\[\\]])/g, '\\\\$1') + '*');\nlinhas.push('');\nlinhas.push('💰 *' + escolhido.pix + '* no Pix');\nif (escolhido.desconto > 0) {\n  linhas.push('~' + escolhido.antes + '~  ·  ' + escolhido.desconto + '% de desconto');\n}\nlinhas.push('');\nlinhas.push('_Preço conferido em ' + dia + '. A Shopee muda sem avisar: confirme na página._');\nlinhas.push('');\nlinhas.push('A Vitrine Certa recebe uma comissão se você comprar pelo link. Para você não muda nada.');\n\nreturn [{ json: {\n  escolhido,\n  payload: {\n    chat_id: canal,\n    text: linhas.join('\\n'),\n    parse_mode: 'Markdown',\n    link_preview_options: { is_disabled: false, prefer_large_media: true, url: escolhido.link },\n    reply_markup: { inline_keyboard: [[{ text: '🛒 Ver na Shopee', url: escolhido.link }]] },\n  },\n} }];\n"
+   },
+   "id": "tg-esc",
+   "name": "Escolher a oferta",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    -140,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "method": "POST",
+    "url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Content-Type",
+       "value": "application/json"
+      }
+     ]
+    },
+    "sendBody": true,
+    "contentType": "raw",
+    "rawContentType": "application/json",
+    "body": "={{ JSON.stringify($json.payload) }}",
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "tg-pub",
+   "name": "Telegram: publicar",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    120,
+    0
+   ],
+   "onError": "continueRegularOutput"
+  },
+  {
+   "parameters": {
+    "jsCode": "\nconst r = $('Telegram: publicar').first().json;\nif (r && r.ok === false) {\n  throw new Error('O Telegram recusou: ' + (r.description || JSON.stringify(r)).slice(0, 200));\n}\nconst escolhido = $('Escolher a oferta').first().json.escolhido;\n\nlet antes = [];\ntry {\n  let a = $('Baixar o que já saiu').first().json;\n  if (typeof a.data === 'string') a = JSON.parse(a.data);\n  antes = (a && a.postados) || [];\n} catch (e) { antes = []; }\n\n// Quando a volta recomeca, a lista zera: se nao zerasse, ela so\n// cresceria e o \"ja foi\" nunca mais sairia de la.\nconst postados = antes.includes(escolhido.link) ? [escolhido.link] : [...antes, escolhido.link];\n\nreturn [{ json: {\n  atualizado_em: new Date().toISOString(),\n  ultimo: { palavra: escolhido.palavra, produto: escolhido.produto,\n            pix: escolhido.pix, desconto: escolhido.desconto },\n  quantos: postados.length,\n  postados,\n} }];\n"
+   },
+   "id": "tg-ano",
+   "name": "Anotar que saiu",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    380,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "toJson",
+    "mode": "each",
+    "options": {
+     "fileName": "telegram-postados.json",
+     "format": true
+    }
+   },
+   "id": "tg-arq",
+   "name": "Virar arquivo",
+   "type": "n8n-nodes-base.convertToFile",
+   "typeVersion": 1.1,
+   "position": [
+    620,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "operation": "write",
+    "fileName": "/midia/dados/telegram-postados.json",
+    "options": {}
+   },
+   "id": "tg-sav",
+   "name": "Guardar no servidor",
+   "type": "n8n-nodes-base.readWriteFile",
+   "typeVersion": 1,
+   "position": [
+    860,
+    0
+   ]
+  }
+ ],
+ "connections": {
+  "Quatro vezes por dia": {
+   "main": [
+    [
+     {
+      "node": "Baixar palavras",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar palavras": {
+   "main": [
+    [
+     {
+      "node": "Baixar preços",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar preços": {
+   "main": [
+    [
+     {
+      "node": "Baixar o que já saiu",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Baixar o que já saiu": {
+   "main": [
+    [
+     {
+      "node": "Escolher a oferta",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Escolher a oferta": {
+   "main": [
+    [
+     {
+      "node": "Telegram: publicar",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Telegram: publicar": {
+   "main": [
+    [
+     {
+      "node": "Anotar que saiu",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Anotar que saiu": {
+   "main": [
+    [
+     {
+      "node": "Virar arquivo",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Virar arquivo": {
+   "main": [
+    [
+     {
+      "node": "Guardar no servidor",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "id": "vitrinecertatgp01",
+ "active": false
+}

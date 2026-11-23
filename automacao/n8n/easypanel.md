@@ -63,7 +63,15 @@ ELEVEN_API_KEY=
 ELEVEN_VOICE_ID=
 SHOPEE_APP_ID=
 SHOPEE_APP_SECRET=
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CANAL=
+TELEGRAM_GRUPO=
+TELEGRAM_DONO=
 ```
+
+> As do Telegram saem do @BotFather e do próprio canal; o passo a
+> passo está em `telegram.md`. `TELEGRAM_GRUPO` e `TELEGRAM_DONO` só
+> fazem falta se você criar o grupo de discussão.
 
 > `SHOPEE_APP_ID` e `SHOPEE_APP_SECRET` saem do painel de afiliado,
 > em *Open API*, depois que a Shopee libera o acesso. São o que os
