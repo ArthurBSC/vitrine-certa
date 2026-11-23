@@ -159,6 +159,10 @@ for item in fila:
     pasta = M + item['pasta'] + '/'
     nome = nomes.get(item['palavra'], item['palavra'])
     sai = OUT + item['palavra'].lower() + '.mp4'
+    # o que ja esta pronto fica como esta: refazer so gastaria tempo
+    if os.path.isfile(sai) and os.path.getsize(sai) > 0:
+        feitos.append(os.path.basename(sai))
+        continue
     texto = sobrepor(item['pix'], item['desconto'], nome)
     try:
         if item['video'] and os.path.isfile(pasta + 'video.mp4'):

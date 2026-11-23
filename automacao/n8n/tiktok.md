@@ -38,22 +38,14 @@ falado no vídeo.
 
 ## Os vídeos
 
-Dez vídeos, um por produto, nos maiores descontos conferidos. Todos
-1080x1920, 12 segundos, de 0,8 a 5,5 MB. Estão no servidor de mídia,
-é só abrir no celular e salvar:
+**29 vídeos prontos**, um por produto, nos maiores descontos conferidos.
+Todos 1080x1920, 12 segundos, de 0,8 a 5,5 MB.
 
-| # | Produto | Preço | Desconto | Baixar |
-|---|---|---|---|---|
-| 1 | Tapete para Banheiro de Secagem Rápida e… | R$ 11,49 a R$ 89,99 | 87% | [secagem.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/secagem.mp4) |
-| 2 | ROMANTIC CROWN Meia-Calça Térmica Forrada… | R$ 19,28 a R$ 79,98 | 87% | [meiacalca.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/meiacalca.mp4) |
-| 3 | 12/24/36/48/60/80/100 Colors Oily Dual… | R$ 12,99 a R$ 32,98 | 87% | [marker.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/marker.mp4) |
-| 4 | Fone De Ouvido Earcuffs Condução De Ossos… | R$ 21,88 a R$ 24,88 | 85% | [earcuffs.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/earcuffs.mp4) |
-| 5 | Espelho Flame Com Moldura Em Couro… | R$ 49,00 a R$ 119,00 | 81% | [flame.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/flame.mp4) |
-| 6 | Macaquinho Fitness Alcinha Costas Abertas… | R$ 44,99 | 80% | [macaquinho.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/macaquinho.mp4) |
-| 7 | Utensílios Silicone Cozinha Antiaderente… | R$ 18,90 a R$ 39,98 | 79% | [silicone.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/silicone.mp4) |
-| 8 | Torneira cozinha parede preta flexível… | R$ 22,99 a R$ 32,99 | 77% | [torneira.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/torneira.mp4) |
-| 9 | Kit Utensílios de Cozinha Silicone 12… | R$ 32,99 a R$ 35,99 | 76% | [utensilios.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/utensilios.mp4) |
-| 10 | 30 unidades cabide redondo resistente adulto | R$ 19,98 | 71% | [cabide.mp4](https://vitrine-midia.6lpnbe.easypanel.host/pub/tiktok/cabide.mp4) |
+A lista com a legenda de cada um, pronta para copiar, está em
+[tiktok-posts.md](tiktok-posts.md) — é um mês de post diário.
+
+Ficou de fora só a camiseta térmica: tem uma foto só no acervo, e com
+uma foto não dá para montar vídeo que segure 12 segundos.
 
 Não deu para reaproveitar os Reels do Instagram: eles têm a tarja
 "COMENTA AQUI EMBAIXO" queimada na imagem, que no TikTok não quer dizer
