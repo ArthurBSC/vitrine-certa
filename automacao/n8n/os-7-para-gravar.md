@@ -93,6 +93,14 @@ Dezembro é agora. Esse é o mais urgente dos sete.
 
 *Como gravar:* Grave no escuro, acendendo. As 8 funções piscando é o vídeo inteiro. Se não tiver a cascata, grave qualquer pisca-pisca seu — a cena é a luz, não a marca.
 
+*Os números pra falar em voz alta* (conferidos na API em 25/11/2026):
+vendida 4.400 vezes, nota **4,9**, **60% de desconto**, loja Supreo.
+R$ 123,99 na versão de 10 metros; vai até R$ 233,99 nas maiores.
+
+*O prazo de entrega não está aqui de propósito* — ele muda conforme o
+CEP de quem assiste. Olhe na sua tela na hora de gravar e fale o que
+aparecer pra você, que é mais honesto do que um número fixo.
+
 Link: https://s.shopee.com.br/9pgArIOVhg
 
 ```
