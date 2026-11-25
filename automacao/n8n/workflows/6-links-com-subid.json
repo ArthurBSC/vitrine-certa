@@ -64,7 +64,7 @@
   },
   {
    "parameters": {
-    "jsCode": "\nlet pal = $('Baixar palavras').first().json;\nif (typeof pal.data === 'string') { try { pal = JSON.parse(pal.data); } catch (e) {} }\n\nfunction lerCsv(s) {\n  const linhas = []; let campo = '', linha = [], dentro = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (dentro) {\n      if (c === '\"') { if (s[i + 1] === '\"') { campo += '\"'; i++; } else dentro = false; }\n      else campo += c;\n    } else if (c === '\"') dentro = true;\n    else if (c === ',') { linha.push(campo); campo = ''; }\n    else if (c === '\\r') { /* ignora */ }\n    else if (c === '\\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; }\n    else campo += c;\n  }\n  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }\n  return linhas;\n}\n\nconst bruto = lerCsv($('Baixar calendário').first().json.csv || '').filter(l => l.length > 1);\nconst cab = bruto[0];\nconst cal = bruto.slice(1).map(l => {\n  const o = {}; cab.forEach((c, i) => { o[c] = l[i] === undefined ? '' : l[i]; }); return o;\n});\n\nconst hoje = new Date().toISOString().slice(0, 10);\nconst pedidos = [];\n\n// Um link por palavra, para responder no direct e no comentario.\nfor (const [palavra, v] of Object.entries(pal)) {\n  if (!v.origem_url) continue;\n  pedidos.push({ chave: 'dm:' + palavra, originUrl: v.origem_url,\n                 subIds: ['vitrinecerta', 'dm', palavra, '', ''] });\n}\n\n// E um link por publicacao que ainda vai ao ar, para saber qual post vendeu.\nfor (const r of cal) {\n  if (r.status || r.data < hoje || !r.palavra) continue;\n  const v = pal[r.palavra];\n  if (!v || !v.origem_url) continue;\n  pedidos.push({ chave: 'post:' + r.id, originUrl: v.origem_url,\n                 subIds: ['vitrinecerta', r.tipo, r.palavra, r.id, ''] });\n}\n\n// A Shopee aceita 50 por chamada.\nconst lotes = [];\nfor (let i = 0; i < pedidos.length; i += 50) lotes.push(pedidos.slice(i, i + 50));\nreturn lotes.map((lote, i) => ({ json: { lote: i + 1, de: lotes.length, pedidos: lote } }));\n"
+    "jsCode": "\nlet pal = $('Baixar palavras').first().json;\nif (typeof pal.data === 'string') { try { pal = JSON.parse(pal.data); } catch (e) {} }\n\nfunction lerCsv(s) {\n  const linhas = []; let campo = '', linha = [], dentro = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (dentro) {\n      if (c === '\"') { if (s[i + 1] === '\"') { campo += '\"'; i++; } else dentro = false; }\n      else campo += c;\n    } else if (c === '\"') dentro = true;\n    else if (c === ',') { linha.push(campo); campo = ''; }\n    else if (c === '\\r') { /* ignora */ }\n    else if (c === '\\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; }\n    else campo += c;\n  }\n  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }\n  return linhas;\n}\n\nconst bruto = lerCsv($('Baixar calendário').first().json.csv || '').filter(l => l.length > 1);\nconst cab = bruto[0];\nconst cal = bruto.slice(1).map(l => {\n  const o = {}; cab.forEach((c, i) => { o[c] = l[i] === undefined ? '' : l[i]; }); return o;\n});\n\nconst hoje = new Date().toISOString().slice(0, 10);\nconst pedidos = [];\n\n// A Shopee so aceita letra e numero no sub-ID: com o id da linha\n// inteiro, \"2026-11-26-story-20h\", ela responde \"invalid sub id\" e\n// recusou 128 dos 259 links na primeira rodada. Tirando os hifens,\n// vira 20261126story20h e passa.\nconst limpo = s => String(s || '').replace(/[^A-Za-z0-9]/g, '');\n\n// Um link por palavra, para responder no direct e no comentario.\nfor (const [palavra, v] of Object.entries(pal)) {\n  if (!v.origem_url) continue;\n  pedidos.push({ chave: 'dm:' + palavra, originUrl: v.origem_url,\n                 subIds: ['vitrinecerta', 'dm', limpo(palavra), '', ''] });\n}\n\n// E um link por publicacao que ainda vai ao ar, para saber qual post vendeu.\nfor (const r of cal) {\n  if (r.status || r.data < hoje || !r.palavra) continue;\n  const v = pal[r.palavra];\n  if (!v || !v.origem_url) continue;\n  pedidos.push({ chave: 'post:' + r.id, originUrl: v.origem_url,\n                 subIds: ['vitrinecerta', limpo(r.tipo), limpo(r.palavra), limpo(r.id), ''] });\n}\n\n// A Shopee aceita 50 por chamada.\nconst lotes = [];\nfor (let i = 0; i < pedidos.length; i += 50) lotes.push(pedidos.slice(i, i + 50));\nreturn lotes.map((lote, i) => ({ json: { lote: i + 1, de: lotes.length, pedidos: lote } }));\n"
    },
    "id": "lnk-montar",
    "name": "Montar os pedidos",
@@ -77,7 +77,7 @@
   },
   {
    "parameters": {
-    "jsCode": "\n// Assina do jeito que a propria pagina da Shopee assina.\n// Conferido no explorador oficial: o corpo entra na conta exatamente\n// como vai no fio, entao ele e montado uma vez e reaproveitado.\nasync function assinar(appId, secret, ts, corpo) {\n  const fator = appId + ts + corpo + secret;\n  if (globalThis.crypto && globalThis.crypto.subtle) {\n    const b = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(fator));\n    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');\n  }\n  try {\n    return require('crypto').createHash('sha256').update(fator).digest('hex');\n  } catch (e) {\n    throw new Error('Este n8n nao expoe SHA256 no no de codigo. Ligue NODE_FUNCTION_ALLOW_BUILTIN=crypto.');\n  }\n}\n\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  const secret = String($env.SHOPEE_APP_SECRET || '').trim();\n  if (!appId || !secret) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId, secret };\n}\n\nconst { appId, secret } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\nconst pedidos = $json.pedidos;\n\n// A resposta so devolve originUrl, que se repete entre pedidos do mesmo\n// produto. O casamento e pela ORDEM, entao a ordem vai junto.\nconst links = pedidos.map(p => ({ originUrl: p.originUrl, subIds: p.subIds }));\nconst query = `mutation {\n  generateBatchShortLink(input: ${JSON.stringify({ links })\n    .replace(/\"(\\w+)\":/g, '$1:')}) {\n    total\n    successCount\n    links { originUrl shortLink longLink success errorMessage }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nconst assinatura = await assinar(appId, secret, ts, corpo);\nreturn [{ json: { appId, ts, corpo, assinatura, chaves: pedidos.map(p => p.chave),\n                  lote: $json.lote, de: $json.de } }];\n"
+    "jsCode": "\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  if (!appId || !String($env.SHOPEE_APP_SECRET || '').trim()) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId };\n}\nconst { appId } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\n\n// Um no de codigo roda UMA vez para todos os itens, nao uma por item.\n// Lendo $json ele pegava so o primeiro lote e os outros cinco sumiam:\n// sairam 50 links de 292 na primeira tentativa.\nconst saida = [];\nfor (const item of $input.all()) {\nconst pedidos = item.json.pedidos;\n\n// A resposta so devolve originUrl, que se repete entre pedidos do mesmo\n// produto. O casamento e pela ORDEM, entao a ordem vai junto.\nconst links = pedidos.map(p => ({ originUrl: p.originUrl, subIds: p.subIds }));\nconst query = `mutation {\n  generateBatchShortLink(input: ${JSON.stringify({ links })\n    .replace(/\"(\\w+)\":/g, '$1:')}) {\n    total\n    successCount\n    links { originUrl shortLink longLink success errorMessage }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nsaida.push({ json: { appId, ts, corpo, chaves: pedidos.map(p => p.chave),\n                     lote: item.json.lote, de: item.json.de } });\n}\nreturn saida;\n"
    },
    "id": "lnk-pedir",
    "name": "Pedir os links",
@@ -171,6 +171,23 @@
     1100,
     0
    ]
+  },
+  {
+   "parameters": {
+    "action": "hash",
+    "type": "SHA256",
+    "value": "={{ $json.appId + $json.ts + $json.corpo + $env.SHOPEE_APP_SECRET }}",
+    "dataPropertyName": "assinatura",
+    "encoding": "hex"
+   },
+   "id": "assinar",
+   "name": "Assinar",
+   "type": "n8n-nodes-base.crypto",
+   "typeVersion": 1,
+   "position": [
+    260,
+    150
+   ]
   }
  ],
  "connections": {
@@ -222,7 +239,7 @@
    "main": [
     [
      {
-      "node": "Shopee: gerar os links",
+      "node": "Assinar",
       "type": "main",
       "index": 0
      }
@@ -256,6 +273,17 @@
     [
      {
       "node": "Guardar no servidor",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Assinar": {
+   "main": [
+    [
+     {
+      "node": "Shopee: gerar os links",
       "type": "main",
       "index": 0
      }

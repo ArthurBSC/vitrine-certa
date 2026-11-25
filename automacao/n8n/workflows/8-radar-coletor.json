@@ -38,7 +38,7 @@
   },
   {
    "parameters": {
-    "jsCode": "\n// Assina do jeito que a propria pagina da Shopee assina. O corpo entra\n// na conta exatamente como vai no fio, entao e montado uma vez so.\nasync function assinar(appId, secret, ts, corpo) {\n  const fator = appId + ts + corpo + secret;\n  if (globalThis.crypto && globalThis.crypto.subtle) {\n    const b = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(fator));\n    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');\n  }\n  try {\n    return require('crypto').createHash('sha256').update(fator).digest('hex');\n  } catch (e) {\n    throw new Error('Este n8n nao expoe SHA256 no no de codigo. Ligue NODE_FUNCTION_ALLOW_BUILTIN=crypto.');\n  }\n}\n\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  const secret = String($env.SHOPEE_APP_SECRET || '').trim();\n  if (!appId || !secret) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId, secret };\n}\n\nconst { appId, secret } = chaves();\n\n// O que varrer. Mexer aqui e mexer no que o radar enxerga.\nconst BUSCAS = [\n  { nome: 'maior comissão', listType: 1, pages: [1, 2] },\n  { nome: 'mais vendidos', listType: 2, pages: [1, 2] },\n];\nconst PALAVRAS = ['organizador cozinha', 'cama mesa banho', 'espelho decorativo',\n                  'fone bluetooth', 'moda feminina inverno', 'ferramenta sem fio',\n                  'utensilio cozinha', 'iluminacao led casa'];\n\nconst CAMPOS = `nodes {\n  itemId shopId shopName productName imageUrl productLink offerLink\n  price priceMin priceMax priceDiscountRate sales ratingStar\n  commission commissionRate sellerCommissionRate shopeeCommissionRate\n  productCatIds shopType periodStartTime periodEndTime\n} pageInfo { page limit hasNextPage }`;\n\nconst saida = [];\nlet ts = Math.floor(Date.now() / 1000);\n\nfor (const b of BUSCAS) {\n  for (const p of b.pages) {\n    const query = `{ productOfferV2(listType: ${b.listType}, page: ${p}, limit: 50) { ${CAMPOS} } }`;\n    const corpo = JSON.stringify({ query });\n    saida.push({ busca: b.nome, pagina: p, appId, ts, corpo,\n                 assinatura: await assinar(appId, secret, ts, corpo) });\n  }\n}\nfor (const k of PALAVRAS) {\n  // sortType 2 = mais vendidos primeiro\n  const query = `{ productOfferV2(keyword: ${JSON.stringify(k)}, sortType: 2, page: 1, limit: 50) { ${CAMPOS} } }`;\n  const corpo = JSON.stringify({ query });\n  saida.push({ busca: 'palavra: ' + k, pagina: 1, appId, ts, corpo,\n               assinatura: await assinar(appId, secret, ts, corpo) });\n}\n\nreturn saida.map(json => ({ json }));\n"
+    "jsCode": "\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  if (!appId || !String($env.SHOPEE_APP_SECRET || '').trim()) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId };\n}\nconst { appId } = chaves();\n\n// O que varrer. Mexer aqui e mexer no que o radar enxerga.\nconst BUSCAS = [\n  { nome: 'maior comissão', listType: 1, pages: [1, 2] },\n  { nome: 'mais vendidos', listType: 2, pages: [1, 2] },\n];\nconst PALAVRAS = ['organizador cozinha', 'cama mesa banho', 'espelho decorativo',\n                  'fone bluetooth', 'moda feminina inverno', 'ferramenta sem fio',\n                  'utensilio cozinha', 'iluminacao led casa'];\n\nconst CAMPOS = `nodes {\n  itemId shopId shopName productName imageUrl productLink offerLink\n  price priceMin priceMax priceDiscountRate sales ratingStar\n  commission commissionRate sellerCommissionRate shopeeCommissionRate\n  productCatIds shopType periodStartTime periodEndTime\n} pageInfo { page limit hasNextPage }`;\n\nconst saida = [];\nlet ts = Math.floor(Date.now() / 1000);\n\nfor (const b of BUSCAS) {\n  for (const p of b.pages) {\n    const query = `{ productOfferV2(listType: ${b.listType}, page: ${p}, limit: 50) { ${CAMPOS} } }`;\n    const corpo = JSON.stringify({ query });\n    saida.push({ busca: b.nome, pagina: p, appId, ts, corpo });\n  }\n}\nfor (const k of PALAVRAS) {\n  // sortType 2 = mais vendidos primeiro\n  const query = `{ productOfferV2(keyword: ${JSON.stringify(k)}, sortType: 2, page: 1, limit: 50) { ${CAMPOS} } }`;\n  const corpo = JSON.stringify({ query });\n  saida.push({ busca: 'palavra: ' + k, pagina: 1, appId, ts, corpo });\n}\n\nreturn saida.map(json => ({ json }));\n"
    },
    "id": "rad-buscas",
    "name": "Montar as buscas",
@@ -143,6 +143,23 @@
     -440,
     -160
    ]
+  },
+  {
+   "parameters": {
+    "action": "hash",
+    "type": "SHA256",
+    "value": "={{ $json.appId + $json.ts + $json.corpo + $env.SHOPEE_APP_SECRET }}",
+    "dataPropertyName": "assinatura",
+    "encoding": "hex"
+   },
+   "id": "assinar",
+   "name": "Assinar",
+   "type": "n8n-nodes-base.crypto",
+   "typeVersion": 1,
+   "position": [
+    -100,
+    150
+   ]
   }
  ],
  "connections": {
@@ -161,7 +178,7 @@
    "main": [
     [
      {
-      "node": "Shopee: varrer ofertas",
+      "node": "Assinar",
       "type": "main",
       "index": 0
      }
@@ -206,6 +223,17 @@
     [
      {
       "node": "Montar as buscas",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Assinar": {
+   "main": [
+    [
+     {
+      "node": "Shopee: varrer ofertas",
       "type": "main",
       "index": 0
      }

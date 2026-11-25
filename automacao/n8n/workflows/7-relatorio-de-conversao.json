@@ -38,7 +38,7 @@
   },
   {
    "parameters": {
-    "jsCode": "\n// Assina do jeito que a propria pagina da Shopee assina. O corpo entra\n// na conta exatamente como vai no fio, entao e montado uma vez so.\nasync function assinar(appId, secret, ts, corpo) {\n  const fator = appId + ts + corpo + secret;\n  if (globalThis.crypto && globalThis.crypto.subtle) {\n    const b = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(fator));\n    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');\n  }\n  try {\n    return require('crypto').createHash('sha256').update(fator).digest('hex');\n  } catch (e) {\n    throw new Error('Este n8n nao expoe SHA256 no no de codigo. Ligue NODE_FUNCTION_ALLOW_BUILTIN=crypto.');\n  }\n}\n\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  const secret = String($env.SHOPEE_APP_SECRET || '').trim();\n  if (!appId || !secret) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId, secret };\n}\n\nconst { appId, secret } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\nconst desde = ts - 60 * 60 * 48;\n\nconst query = `{\n  conversionReport(purchaseTimeStart: ${desde}, purchaseTimeEnd: ${ts}, limit: 50) {\n    nodes {\n      conversionId clickTime purchaseTime utmContent device referrer buyerType\n      totalCommission netCommission\n      orders {\n        orderId orderStatus\n        items { itemId itemName itemPrice qty actualAmount refundAmount itemTotalCommission }\n      }\n    }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nconst assinatura = await assinar(appId, secret, ts, corpo);\nreturn [{ json: { appId, ts, corpo, assinatura } }];\n"
+    "jsCode": "\nfunction chaves() {\n  const appId = String($env.SHOPEE_APP_ID || '').trim();\n  if (!appId || !String($env.SHOPEE_APP_SECRET || '').trim()) {\n    throw new Error('Faltam SHOPEE_APP_ID e SHOPEE_APP_SECRET no ambiente do n8n.');\n  }\n  return { appId };\n}\nconst { appId } = chaves();\nconst ts = Math.floor(Date.now() / 1000);\nconst desde = ts - 60 * 60 * 48;\n\nconst query = `{\n  conversionReport(purchaseTimeStart: ${desde}, purchaseTimeEnd: ${ts}, limit: 50) {\n    nodes {\n      conversionId clickTime purchaseTime utmContent device referrer buyerType\n      totalCommission netCommission\n      orders {\n        orderId orderStatus\n        items { itemId itemName itemPrice qty actualAmount refundAmount itemTotalCommission }\n      }\n    }\n  }\n}`;\n\nconst corpo = JSON.stringify({ query });\nreturn [{ json: { appId, ts, corpo } }];\n"
    },
    "id": "cnv-pedir",
    "name": "Pedir o relatório",
@@ -164,6 +164,23 @@
     -420,
     -160
    ]
+  },
+  {
+   "parameters": {
+    "action": "hash",
+    "type": "SHA256",
+    "value": "={{ $json.appId + $json.ts + $json.corpo + $env.SHOPEE_APP_SECRET }}",
+    "dataPropertyName": "assinatura",
+    "encoding": "hex"
+   },
+   "id": "assinar",
+   "name": "Assinar",
+   "type": "n8n-nodes-base.crypto",
+   "typeVersion": 1,
+   "position": [
+    -80,
+    150
+   ]
   }
  ],
  "connections": {
@@ -182,7 +199,7 @@
    "main": [
     [
      {
-      "node": "Shopee: conversões",
+      "node": "Assinar",
       "type": "main",
       "index": 0
      }
@@ -238,6 +255,17 @@
     [
      {
       "node": "Pedir o relatório",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Assinar": {
+   "main": [
+    [
+     {
+      "node": "Shopee: conversões",
       "type": "main",
       "index": 0
      }
