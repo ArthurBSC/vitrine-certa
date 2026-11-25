@@ -1,5 +1,5 @@
 {
- "conferido_em": "19/11/2026",
+ "conferido_em": "25/11/2026",
  "aviso": "Preco da Shopee muda sem aviso. Reconferir antes de reusar.",
  "precos": {
   "POTES": {
@@ -671,6 +671,62 @@
    "pix": "R$ 21,88 a R$ 24,88",
    "antes": "R$ 150,00",
    "situacao": "ok"
+  },
+  "PEDAL": {
+   "pix": "R$ 469,99",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 42,30",
+   "comissao_taxa": "0.09",
+   "vendas": 9554
+  },
+  "PANELAS10": {
+   "pix": "R$ 201,90",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 18,17",
+   "comissao_taxa": "0.09",
+   "vendas": 9708
+  },
+  "VONIXXKIT": {
+   "pix": "R$ 109,90",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 15,39",
+   "comissao_taxa": "0.14",
+   "vendas": 2522
+  },
+  "PARAFUSA": {
+   "pix": "R$ 95,99",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 12,48",
+   "comissao_taxa": "0.13",
+   "vendas": 5904
+  },
+  "CASCATA": {
+   "pix": "R$ 123,99",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 12,40",
+   "comissao_taxa": "0.1",
+   "vendas": 4400
+  },
+  "BOLAS": {
+   "pix": "R$ 79,90",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 10,39",
+   "comissao_taxa": "0.13",
+   "vendas": 2376
+  },
+  "CREATINA300": {
+   "pix": "R$ 39,90",
+   "antes": "",
+   "situacao": "ok",
+   "comissao": "R$ 10,37",
+   "comissao_taxa": "0.26",
+   "vendas": 4849
   }
  }
 }

@@ -11,7 +11,13 @@
 const BASE = process.env.MIDIA_BASE_URL;
 const TOKEN = String(process.env.TELEGRAM_BOT_TOKEN || '').trim();
 const CANAL = String(process.env.TELEGRAM_CANAL || '').trim();
-const QUANTOS = Number(process.argv[2] || 25);
+const ARG = String(process.argv[2] || '25');
+// Ou um numero (quantos postar, do maior desconto para o menor), ou
+// uma lista de palavras separadas por virgula, para empurrar
+// produto escolhido a dedo na frente da fila.
+const ESCOLHIDAS = /^[A-Z0-9,]+$/.test(ARG) && /[A-Z]/.test(ARG)
+  ? ARG.split(',').map(s => s.trim()).filter(Boolean) : null;
+const QUANTOS = ESCOLHIDAS ? ESCOLHIDAS.length : Number(ARG);
 const PAUSA = 4000;   // O Telegram corta em ~20 mensagens por minuto: a
                       // 1,6s ele recusou 7 de 30 com "Too Many Requests".
                       // 4s da 15 por minuto e passa inteiro.
@@ -52,10 +58,12 @@ async function pegar(arquivo) {
     });
   }
 
-  const fila = [...vistos.values()]
-    .filter(x => !jaForam.has(x.link))
-    .sort((a, b) => b.desconto - a.desconto)
-    .slice(0, QUANTOS);
+  const fila = ESCOLHIDAS
+    ? ESCOLHIDAS.map(p => [...vistos.values()].find(x => x.palavra === p)).filter(Boolean)
+    : [...vistos.values()]
+        .filter(x => !jaForam.has(x.link))
+        .sort((a, b) => b.desconto - a.desconto)
+        .slice(0, QUANTOS);
 
   console.log(`no catálogo: ${vistos.size} | já no canal: ${jaForam.size} | a postar agora: ${fila.length}`);
 
